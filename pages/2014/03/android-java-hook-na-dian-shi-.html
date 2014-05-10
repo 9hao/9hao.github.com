@@ -1,0 +1,288 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>android java hook 那点事(-)</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+<!-- Fork me on github -->
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                 <!-- <h1><a href="/">9Hao <strong>人若无名,正是安心练剑之时</strong></a></h1>  -->
+                 <h1><a href="/"><strong>9Hao</strong><p style="font-size:50%">人若无名,正是安心练剑之时</p></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="/">Home</a></li>
+					<!--<li class="active"><a href="/category/android.html">Android</a></li>-->
+					<li><a href="/category/android.html">Android</a></li>
+					<!--<li><a href="/category/internet.html">Internet</a></li>-->
+					<li><a href="/category/internet.html">Internet</a></li>
+				<li><a href="/functions/archives.html">Archives</a></li>
+				<!--<li><a href="/functions/random.html">Random Article</a></li>
+				<!--
+				
+				-->
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/pages/2014/03/android-java-hook-na-dian-shi-" rel="bookmark"
+                   title="Permalink to android java hook 那点事(-)">android java hook 那点事(-)</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <!--
+			  <abbr class="published" title="2014-03-20T00:00:00">
+                四 20 三月 2014
+              </abbr>
+              <address class="vcard author">
+                By <a class="url fn" href="/author/qxia.html">Qxia</a>
+              </address>
+			  -->
+			  <address class="vcard author" style="font-style:italic;margin-bottom:-10px;">
+				四 20 三月 2014
+					&nbsp;&nbsp;Write By <a class="url fn" href="/author/qxia.html">Qxia</a>
+	
+			  </address>
+			  <hr />			  
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>&emsp;&emsp;通过这篇<a href="http://blog.csdn.net/luoshengyang/article/details/8914953">老罗的日志</a>，我们可以了解到 dalvik在执行函数时会先调用dvmIsNativeMethod来判断一个method是否是native方法。如果是native函数的话，那么它所指向的一个Method对象的成员变量nativeFunc就指向该JNI方法的地址，因此就可以直接对它进行调用。否则的话，就说明参数method描述的是一个Java函数，这时候就需要继续调用函数dvmInterpret来执行它的代码。因此我们可以把一个非native的java函数变成native method，让dalvik执行我们的native方法而达到hook的目的。</p>
+<p>&emsp;&emsp;先看android代码的两个片段</p>
+<p><strong>0x01</strong>  <a href="http://androidxref.com/4.1.2/xref/dalvik/vm/oo/Class.cpp#2148">loadMethodFromDex</a></p>
+<div class="highlight"><pre> <span class="k">if</span> <span class="o">(</span><span class="n">pDexCode</span> <span class="o">!=</span> <span class="n">NULL</span><span class="o">)</span> <span class="o">{</span>
+        <span class="cm">/* integer constants, copy over for faster access */</span>
+        <span class="n">meth</span><span class="o">-&gt;</span><span class="n">registersSize</span> <span class="o">=</span> <span class="n">pDexCode</span><span class="o">-&gt;</span><span class="n">registersSize</span><span class="o">;</span>
+        <span class="n">meth</span><span class="o">-&gt;</span><span class="n">insSize</span> <span class="o">=</span> <span class="n">pDexCode</span><span class="o">-&gt;</span><span class="n">insSize</span><span class="o">;</span>
+        <span class="n">meth</span><span class="o">-&gt;</span><span class="n">outsSize</span> <span class="o">=</span> <span class="n">pDexCode</span><span class="o">-&gt;</span><span class="n">outsSize</span><span class="o">;</span>
+
+        <span class="cm">/* pointer to code area */</span>
+        <span class="n">meth</span><span class="o">-&gt;</span><span class="n">insns</span> <span class="o">=</span> <span class="n">pDexCode</span><span class="o">-&gt;</span><span class="n">insns</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="cm">/*</span>
+<span class="cm">         * We don&#39;t have a DexCode block, but we still want to know how</span>
+<span class="cm">         * much space is needed for the arguments (so we don&#39;t have to</span>
+<span class="cm">         * compute it later).  We also take this opportunity to compute</span>
+<span class="cm">         * JNI argument info.</span>
+<span class="cm">         *</span>
+<span class="cm">         * We do this for abstract methods as well, because we want to</span>
+<span class="cm">         * be able to substitute our exception-throwing &quot;stub&quot; in.</span>
+<span class="cm">         */</span>
+        <span class="kt">int</span> <span class="n">argsSize</span> <span class="o">=</span> <span class="n">dvmComputeMethodArgsSize</span><span class="o">(</span><span class="n">meth</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="n">dvmIsStaticMethod</span><span class="o">(</span><span class="n">meth</span><span class="o">))</span>
+            <span class="n">argsSize</span><span class="o">++;</span>
+        <span class="n">meth</span><span class="o">-&gt;</span><span class="n">registersSize</span> <span class="o">=</span> <span class="n">meth</span><span class="o">-&gt;</span><span class="n">insSize</span> <span class="o">=</span> <span class="n">argsSize</span><span class="o">;</span>
+        <span class="k">assert</span><span class="o">(</span><span class="n">meth</span><span class="o">-&gt;</span><span class="n">outsSize</span> <span class="o">==</span> <span class="mi">0</span><span class="o">);</span>
+        <span class="k">assert</span><span class="o">(</span><span class="n">meth</span><span class="o">-&gt;</span><span class="n">insns</span> <span class="o">==</span> <span class="n">NULL</span><span class="o">);</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">dvmIsNativeMethod</span><span class="o">(</span><span class="n">meth</span><span class="o">))</span> <span class="o">{</span>
+            <span class="n">meth</span><span class="o">-&gt;</span><span class="n">nativeFunc</span> <span class="o">=</span> <span class="n">dvmResolveNativeMethod</span><span class="o">;</span>
+            <span class="n">meth</span><span class="o">-&gt;</span><span class="n">jniArgInfo</span> <span class="o">=</span> <span class="n">computeJniArgInfo</span><span class="o">(&amp;</span><span class="n">meth</span><span class="o">-&gt;</span><span class="n">prototype</span><span class="o">);</span>
+       <span class="o">}</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>该函数会从dex 文件中解析DexMethod 成dalvik中执行的method,if(pDexCode != NULL) 判断是否存在dex代码，看else部分说明,可以知道该部分是dalvik对java native method处理过程。</p>
+<p>我们再看看dvmResolveNativeMethod函数。</p>
+<p><strong>0x02</strong>  <a href="http://androidxref.com/4.1.2/xref/dalvik/vm/Native.cpp#70">dvmResolveNativeMethod</a></p>
+<p>&emsp;&emsp;该函数调用了<strong>dvmLookupInternalNativeMethod</strong>和<strong>lookupSharedLibMethod</strong>来查找jni中注册的native函数。
+dalvik最后将执行得到的java native函数.  </p>
+<p>&emsp;&emsp;通过上面的代码片段，我们了解到要对一个java函数进行hook需要步骤有  </p>
+<blockquote>
+<p>[1] 把修改method的属性修改成native<br />
+[2] 修改method的registersSize、insSize、nativeFunc、computeJniArgInfo<br />
+[3] RegisterNatives注册目标method的native函数  </p>
+</blockquote>
+<p>[1][2]示例代码如下(涉及到的一些函数可以从源码中复制或引入头文件)</p>
+<div class="highlight"><pre>    <span class="kd">static</span> <span class="n">inline</span> <span class="kt">void</span> <span class="nf">setTargetMethodNative</span><span class="o">(</span><span class="n">Method</span><span class="o">*</span> <span class="n">method</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">method</span> <span class="o">!=</span> <span class="n">NULL</span><span class="o">)</span>
+        <span class="o">{</span>
+            <span class="n">SET_METHOD_FLAG</span><span class="o">(</span><span class="n">method</span><span class="o">,</span> <span class="n">ACC_NATIVE</span><span class="o">);</span>
+            <span class="kt">int</span> <span class="n">argsSize</span> <span class="o">=</span> <span class="n">dvmComputeMethodArgsSize</span><span class="o">(</span><span class="n">method</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(!</span><span class="n">dvmIsStaticMethod</span><span class="o">(</span><span class="n">method</span><span class="o">))</span><span class="c1">//非静态方法需要增加参数 this</span>
+                <span class="n">argsSize</span><span class="o">++;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">dvmIsNativeMethod</span><span class="o">(</span><span class="n">method</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">method</span><span class="o">-&gt;</span><span class="n">registersSize</span> <span class="o">=</span> <span class="n">method</span><span class="o">-&gt;</span><span class="n">insSize</span><span class="o">;</span>
+                <span class="n">method</span><span class="o">-&gt;</span><span class="n">outsSize</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+                <span class="n">method</span><span class="o">-&gt;</span><span class="n">nativeFunc</span> <span class="o">=</span> <span class="n">dvmResolveNativeMethod</span><span class="o">;</span>
+                <span class="n">method</span><span class="o">-&gt;</span><span class="n">jniArgInfo</span> <span class="o">=</span> <span class="n">computeJniArgInfo</span><span class="o">(&amp;</span><span class="n">method</span><span class="o">-&gt;</span><span class="n">prototype</span><span class="o">);</span>
+             <span class="o">}</span>  
+        <span class="o">}</span>
+    <span class="o">}</span>
+</pre></div>
+
+
+<p>会写jni的，RegisterNatives就不用说了吧.</p>
+<p>看雪上有篇以该原理实现的<a href="http://www.kanxue.com/bbs/showthread.php?t=186054">帖子</a>，可以参考。</p>
+            </div><!-- /.entry-content -->
+			            <aside>
+            <hr/>
+            <!-- all by Qxia -->
+
+            <nav>
+            <ul class="articles_timeline">
+ 
+                <li class="previous_article">« <a href="/pages/2014/03/losermen-de-gong-tong-te-zheng" title="Previous: loser们的共同特征">loser们的共同特征</a></li>
+            </ul>
+            </nav>
+            </aside>
+			<!--neighbors plugin take -->
+			<ul style="float:right;">
+			</ul>
+			
+			
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "pages/2014/03/android-java-hook-na-dian-shi-";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://9haoblog.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+        
+<div class="three columns">
+
+<div class="sidebarbg">
+	<h4>Pages</h4>
+	<ul>
+	</ul>
+</div>
+
+<div class="sidebarbg">
+<h4>Categories</h4>
+	<ul>
+			<li><a href="/category/android.html">Android</a></li>
+			<li><a href="/category/internet.html">Internet</a></li>
+	</ul>
+</div>
+
+<div class="sidebarbg">
+	<h4>Tags</h4>
+		<ul>
+			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
+			<li class="tag-4"><a href="/tag/hook.html">Hook</a></li>
+			<li class="tag-4"><a href="/tag/android.html">Android</a></li>
+		</ul>
+</div>
+
+
+
+<nav class="widget sidebarbg">
+  <h4>Links</h4>
+  <ul>
+	<li><a target="_blank" href="http://getpelican.com/">Pelican</a></li>
+	<li><a target="_blank" href="http://python.org/">Python.org</a></li>
+	<li><a target="_blank" href="http://pallergabor.uw.hu/androidblog/dalvik_opcodes.html">Dalvik opcodes</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+					本博客使用Pelican+GitHub Pages搭建，详细请参考<a href="http://www.xycoding.com/articles/2013/11/21/blog-create/" class="active" target="_blank">教程</a>。
+				   </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = '9haoblog';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+      <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+	<script>
+	(function() {
+		var $backToTopTxt = "返回顶部", $backToTopEle = $('<div class="backToTop"></div>').appendTo($("body"))
+			.text($backToTopTxt).attr("title", $backToTopTxt).click(function() {
+				$("html, body").animate({ scrollTop: 0 }, 120);
+		}), $backToTopFun = function() {
+			var st = $(document).scrollTop(), winh = $(window).height();
+			(st > 0)? $backToTopEle.show(): $backToTopEle.hide();
+			//IE6下的定位
+			if (!window.XMLHttpRequest) {
+				$backToTopEle.css("top", st + winh - 166);
+			}
+		};
+		$(window).bind("scroll", $backToTopFun);
+		$(function() { $backToTopFun(); });
+	})();
+	</script>
+</body>
+</html>
