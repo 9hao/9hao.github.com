@@ -1,0 +1,289 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>android逆向分析之初探敌营</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+<!-- Fork me on github -->
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                 <!-- <h1><a href="/">9Hao <strong>人若无名,正是安心练剑之时</strong></a></h1>  -->
+                 <h1><a href="/"><strong>9Hao</strong><p style="font-size:50%">人若无名,正是安心练剑之时</p></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="/">Home</a></li>
+					<!--<li class="active"><a href="/category/android.html">Android</a></li>-->
+					<li><a href="/category/android.html">Android</a></li>
+					<!--<li><a href="/category/internet.html">Internet</a></li>-->
+					<li><a href="/category/internet.html">Internet</a></li>
+				<li><a href="/functions/archives.html">Archives</a></li>
+				<!--<li><a href="/functions/random.html">Random Article</a></li>
+				<!--
+				
+				-->
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-chu-tan-di-ying" rel="bookmark"
+                   title="Permalink to android逆向分析之初探敌营">android逆向分析之初探敌营</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <!--
+			  <abbr class="published" title="2014-07-15T00:00:00">
+                二 15 七月 2014
+              </abbr>
+              <address class="vcard author">
+                By <a class="url fn" href="/author/123.html">#123</a>
+              </address>
+			  -->
+			  <address class="vcard author" style="font-style:italic;margin-bottom:-10px;">
+				二 15 七月 2014
+					&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+	
+			  </address>
+			  <hr />			  
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>(不知攻，焉知防！)</p>
+<div class="highlight"><pre><span class="err">前言</span>
+</pre></div>
+
+
+<p>&emsp;&emsp;参考非虫大大的书和写一些个人经验。在逆向一个Android程序，如果盲目的分析，有可能遇到阅读成千上万的反汇编代码才能找到程序的关键点，这无疑是浪费时间的表现。那么我们要对一个陌生的apk后怎么入手？</p>
+<div class="highlight"><pre><span class="mh">0x01</span> <span class="err">初探</span>
+</pre></div>
+
+
+<p>&emsp;&emsp;1 拿到一个apk，不要急于直接看汇编代码，先浏览一下apk的字符串信息，再大略浏览一下类和函数,大体在脑子里留个印象。</p>
+<p>&emsp;&emsp;2 application类 apk一般初始化配置的地方，壳初始化,如果有要注意下。</p>
+<p>&emsp;&emsp;3 主activity,程序的一般入口。</p>
+<p>&emsp;&emsp;4 如果是搞病毒木马分析，要注意 server和 广播。</p>
+<div class="highlight"><pre><span class="mh">0x02</span> <span class="err">定位</span>
+</pre></div>
+
+
+<p>&emsp;&emsp;1 信息反馈法</p>
+<div class="highlight"><pre>    <span class="n">a</span> <span class="err">上面我们提到先看字符串信息，根据你需求，你应该对一些字符串很敏感。比如你是想找内支付的，那有可能出现“支付成功”</span><span class="p">,</span><span class="err">“支付失败”；你要找登录验证的，可能有</span><span class="s">&quot;登录成功&quot;</span><span class="err">、“登录失败”；</span>
+<span class="err">病毒木马可能有“指令”“</span><span class="n">xxx</span><span class="err">成功等“，这些看自己的需求注意。</span>
+    <span class="n">b</span>  <span class="err">运行时过程中的反馈信息，</span><span class="n">activity</span><span class="err">名，控件名，图片，提示信息（比如“</span><span class="n">xxx</span><span class="err">注册失败”）</span>
+    <span class="err">通过这些特殊找到引用的地方。</span>
+</pre></div>
+
+
+<p>&emsp;&emsp;2 特征函数法</p>
+<div class="highlight"><pre>    <span class="err">程序的编写，总离不开系统提供的</span><span class="n">api</span><span class="err">函数，你可以从这些函数入手</span><span class="p">.</span><span class="err">控件的事件函数</span><span class="n">onXXXClick</span><span class="p">,</span> <span class="n">Show</span><span class="p">(),</span><span class="err">如果你要找网络方面的信息</span><span class="n">HttpGet</span><span class="err">、</span><span class="n">HttpPost</span><span class="err">、</span><span class="n">HttpUriRequest</span><span class="err">、</span><span class="n">socket</span><span class="err">等等，追踪隐私</span><span class="n">IMSI</span><span class="err">、</span><span class="n">IMEI</span><span class="p">,</span><span class="err">敏感操作，发送短信、拨打电话</span>
+</pre></div>
+
+
+<p>&emsp;&emsp;3 顺序查看法</p>
+<div class="highlight"><pre>    <span class="err">从软件的启动代码开始，一步步分析</span><span class="p">(</span><span class="err">这个</span><span class="mi">0</span><span class="n">_0</span><span class="p">)</span>
+</pre></div>
+
+
+<p>&emsp;&emsp; 4 代码注入法</p>
+<div class="highlight"><pre>    <span class="err">在关键的地方，加入是的</span><span class="n">log</span><span class="err">调试函数来追踪程序的运行（</span><span class="n">log</span><span class="err">技巧，后面将写篇日志介绍）。</span>
+</pre></div>
+
+
+<p>&emsp;&emsp;5 堆栈跟踪法</p>
+<div class="highlight"><pre>    <span class="err">通过堆栈信息，查看函数调用流程。</span>
+</pre></div>
+
+
+<p>&emsp;&emsp; 6 Method Profiling</p>
+<div class="highlight"><pre>    <span class="err">在追踪按下一个按钮时调用函数调用特别有效，具体用法度娘</span><span class="o">/</span><span class="n">google</span><span class="err">。</span>
+</pre></div>
+
+
+<p>&emsp;&emsp; 7 Log开关</p>
+<div class="highlight"><pre>    <span class="err">软件编写过程，开发人员会使用</span><span class="n">log</span><span class="err">或者</span><span class="n">system</span><span class="p">.</span><span class="n">printf</span><span class="err">来输出一些调试信息</span><span class="p">,</span><span class="err">有时候开发人员自己实现一个调试类或函数，里面有个</span><span class="kt">bool</span><span class="err">标识来判断是否输出调试信息（</span><span class="n">C</span><span class="o">/</span><span class="n">C</span><span class="o">++</span><span class="err">有预编译，让编译时不把调试函数编译进去，</span><span class="n">java</span><span class="err">不行，因此这些信息会留在汇编代码中</span><span class="p">)</span><span class="err">，把调试标识打开，运行看下日志，有时会有惊喜</span> <span class="mi">0</span><span class="n">v0</span><span class="err">。</span>
+</pre></div>
+
+
+<p>&emsp;&emsp;  8 logcat输出信息</p>
+<div class="highlight"><pre>    <span class="err">通过</span><span class="n">apk</span><span class="err">运行中的输出日志，找到一些</span><span class="n">apk</span><span class="err">运行信息</span><span class="p">.</span>
+    <span class="n">Trying</span> <span class="n">to</span> <span class="n">load</span> <span class="n">lib</span> <span class="n">xxxxxxx</span><span class="p">.</span><span class="n">so</span>   <span class="err">加载了哪些</span><span class="n">so</span>
+
+    <span class="n">InputMethodManager</span>  <span class="n">focusOut</span><span class="o">:</span> <span class="n">com</span><span class="p">.</span><span class="n">iflytek</span><span class="p">.</span><span class="n">chang</span><span class="p">.</span><span class="n">morelist</span><span class="p">.</span><span class="n">MoreListView</span><span class="err">@</span><span class="mi">41764490</span> <span class="n">mServedView</span><span class="o">=</span><span class="n">com</span><span class="p">.</span><span class="n">android</span><span class="p">.</span><span class="n">internal</span><span class="p">.</span><span class="n">policy</span><span class="p">.</span><span class="n">impl</span><span class="p">.</span><span class="n">PhoneWindow</span><span class="err">$</span><span class="n">DecorView</span><span class="err">@</span><span class="mf">419e5470</span> <span class="n">winFocus</span><span class="o">=</span><span class="nb">false</span><span class="err">可以知道在</span><span class="n">com</span><span class="p">.</span><span class="n">iflytek</span><span class="p">.</span><span class="n">chang</span><span class="p">.</span><span class="n">morelist</span><span class="p">.</span><span class="n">MoreListView</span><span class="err">这个类里面的控件等待用户输入</span>
+
+    <span class="n">ActivityManager</span> <span class="n">com</span><span class="p">.</span><span class="n">ryg</span><span class="p">.</span><span class="n">dynamicloadclient</span><span class="o">/</span><span class="p">.</span><span class="n">MainActivity</span><span class="o">:</span> <span class="n">task</span><span class="o">=</span><span class="n">TaskRecord</span><span class="p">{</span><span class="mi">41</span><span class="n">c97358</span> <span class="err">#</span><span class="mi">21</span> <span class="n">A</span> <span class="n">com</span><span class="p">.</span><span class="n">ryg</span><span class="p">.</span><span class="n">dynamicloadclient</span> <span class="n">U</span> <span class="mi">0</span><span class="p">}</span> <span class="err">可以知道</span><span class="n">apk</span><span class="err">启动了</span><span class="n">com</span><span class="p">.</span><span class="n">ryg</span><span class="p">.</span><span class="n">dynamicloadclien</span><span class="p">.</span><span class="n">MainActivity</span>
+
+     <span class="n">DEX</span> <span class="n">prep</span> <span class="err">&#39;</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">com</span><span class="p">.</span><span class="n">sxiaoao</span><span class="p">.</span><span class="n">car3d3</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">app_sdk73100_</span><span class="p">.</span><span class="n">jar</span><span class="err">&#39;</span><span class="o">:</span> <span class="n">unzip</span> <span class="n">in</span> <span class="mi">1</span><span class="n">ms</span><span class="p">,</span> <span class="n">rewrite</span> <span class="mi">87</span><span class="n">ms</span>   <span class="err">可以知道</span><span class="n">apk</span><span class="err">动态加载了</span><span class="n">app_sdk73100_</span><span class="p">.</span><span class="n">jar</span>
+</pre></div>
+
+
+<p>&emsp;&emsp; 初步分析的时候可以从上面提到技巧入手，后面熟悉之后可以自己写脚本，提取字符串，自己要关注的特征函数（适当的收集一些特征函数），可以写个沙盒才分析（那就嗖嗖的^^）,也可以使用一些成熟的工具androguard,沙盒droidbox、Apimonitor。同时在分析过程中，要思考下，如果你是开发人员，怎么开发这个app？</p>
+            </div><!-- /.entry-content -->
+			            <aside>
+            <hr/>
+            <!-- all by Qxia -->
+
+            <nav>
+            <ul class="articles_timeline">
+ 
+                <li class="previous_article">« <a href="/pages/2014/05/android-java-hook-na-dian-shi-2" title="Previous: android java hook 那点事(2)">android java hook 那点事(2)</a></li>
+            </ul>
+            </nav>
+            </aside>
+			<!--neighbors plugin take -->
+			<ul style="float:right;">
+			</ul>
+			
+			
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "pages/2014/07/androidni-xiang-fen-xi-zhi-chu-tan-di-ying";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://9haoblog.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+        
+<div class="three columns">
+
+<div class="sidebarbg">
+	<h4>Pages</h4>
+	<ul>
+	</ul>
+</div>
+
+<div class="sidebarbg">
+<h4>Categories</h4>
+	<ul>
+			<li><a href="/category/android.html">Android</a></li>
+			<li><a href="/category/internet.html">Internet</a></li>
+	</ul>
+</div>
+
+<div class="sidebarbg">
+	<h4>Tags</h4>
+		<ul>
+			<li class="tag-2"><a href="/tag/hook.html">Hook</a></li>
+			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
+			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
+			<li class="tag-4"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
+		</ul>
+</div>
+
+
+
+<nav class="widget sidebarbg">
+  <h4>Links</h4>
+  <ul>
+	<li><a target="_blank" href="http://getpelican.com/">Pelican</a></li>
+	<li><a target="_blank" href="http://python.org/">Python.org</a></li>
+	<li><a target="_blank" href="http://pallergabor.uw.hu/androidblog/dalvik_opcodes.html">Dalvik opcodes</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+					本博客使用Pelican+GitHub Pages搭建，详细请参考<a href="http://www.xycoding.com/articles/2013/11/21/blog-create/" class="active" target="_blank">教程</a>。
+				   </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = '9haoblog';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+      <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+	<script>
+	(function() {
+		var $backToTopTxt = "返回顶部", $backToTopEle = $('<div class="backToTop"></div>').appendTo($("body"))
+			.text($backToTopTxt).attr("title", $backToTopTxt).click(function() {
+				$("html, body").animate({ scrollTop: 0 }, 120);
+		}), $backToTopFun = function() {
+			var st = $(document).scrollTop(), winh = $(window).height();
+			(st > 0)? $backToTopEle.show(): $backToTopEle.hide();
+			//IE6下的定位
+			if (!window.XMLHttpRequest) {
+				$backToTopEle.css("top", st + winh - 166);
+			}
+		};
+		$(window).bind("scroll", $backToTopFun);
+		$(function() { $backToTopFun(); });
+	})();
+	</script>
+</body>
+</html>
