@@ -81,32 +81,29 @@
 			  <hr />			  
             </footer><!-- /.post-info -->
             <div class="entry-content">
-              <p>(不知攻，焉知防！)<br />
-</p>
-<p>&emsp;&emsp;要说到<strong>android</strong> 的<strong>java hook</strong>不得不提国外大神的<a href="https://github.com/rovo89">xposed框架</a>（<a href="http://www.kanxue.com/bbs/showthread.php?t=181436&amp;viewgoodnees=1&amp;prefixid=">看雪上有贴子对它的分析</a>），刚开始看源码的时候，有些地方不知道为什么这么做，why？why？,一直在脑子里转。带着疑问研究<strong>android</strong>源码的之后，才晓其理。<br />
-</p>
-<p>&emsp;&emsp;通过<a href="/pages/2014/03/android-java-hook-na-dian-shi-1">之前的日志</a>我们知道了基本的<strong>android java hook</strong> 原理，里面有一步是把method的nativeFunc值设为<strong>dvmResolveNativeMethod</strong>，为什么这么做，可以看看<a href="http://shyluo.blog.51cto.com/5725845/1229257">老罗的日志Dalvik虚拟机JNI方法的注册过程分析</a>。<strong>xposed</strong>和我们不同的是自己写了处理函数<strong>xposedCallHandler</strong>,我好奇的是大神为什么这样实现？思路？记得<strong>java</strong>里面有个<strong>proxy</strong>类，也修改函数的执行，因此我看<strong>android</strong>里这个类的实现源码，后面我追到了<a href="http://androidxref.com/4.1.2/xref/dalvik/vm/reflect/Proxy.cpp">Proxy.cpp</a>,发现...... <br />
-```c++
-/<em>
- * Create a method in our Proxy class with the name and signature of
- * the interface method it implements.
- </em>/
-static void createHandlerMethod(ClassObject<em> clazz, Method</em> dstMeth,
-    const Method<em> srcMeth)
-{
-        ...略
-    dstMeth-&gt;accessFlags = ACC_PUBLIC | ACC_NATIVE;//@1 变为native函数
-        ...略
-    int argsSize = dvmComputeMethodArgsSize(dstMeth) + 1;//</em>@2 非静态函数，参数值加1,参数里面对了this
-    dstMeth-&gt;registersSize = dstMeth-&gt;insSize = argsSize;//*@3 </p>
-<div class="highlight"><pre><span class="n">dstMeth</span><span class="o">-&gt;</span><span class="n">nativeFunc</span> <span class="o">=</span> <span class="n">proxyInvoker</span><span class="p">;</span><span class="c1">//*@native处理函数</span>
+              <p>(不知攻，焉知防！)  </p>
+<p>&emsp;&emsp;要说到<strong>android</strong> 的<strong>java hook</strong>不得不提国外大神的<a href="https://github.com/rovo89">xposed框架</a>（<a href="http://www.kanxue.com/bbs/showthread.php?t=181436&amp;viewgoodnees=1&amp;prefixid=">看雪上有贴子对它的分析</a>），刚开始看源码的时候，有些地方不知道为什么这么做，why？why？,一直在脑子里转。带着疑问研究<strong>android</strong>源码的之后，才晓其理。  </p>
+<p>&emsp;&emsp;通过<a href="/pages/2014/03/android-java-hook-na-dian-shi-1">之前的日志</a>我们知道了基本的<strong>android java hook</strong> 原理，里面有一步是把method的nativeFunc值设为<strong>dvmResolveNativeMethod</strong>，为什么这么做，可以看看<a href="http://shyluo.blog.51cto.com/5725845/1229257">老罗的日志Dalvik虚拟机JNI方法的注册过程分析</a>。<strong>xposed</strong>和我们不同的是自己写了处理函数<strong>xposedCallHandler</strong>,我好奇的是大神为什么这样实现？思路？记得<strong>java</strong>里面有个<strong>proxy</strong>类，也修改函数的执行，因此我看<strong>android</strong>里这个类的实现源码，后面我追到了<a href="http://androidxref.com/4.1.2/xref/dalvik/vm/reflect/Proxy.cpp">Proxy.cpp</a>,发现......   </p>
+<div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * Create a method in our Proxy class with the name and signature of</span>
+<span class="cm"> * the interface method it implements.</span>
+<span class="cm"> */</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">createHandlerMethod</span><span class="p">(</span><span class="n">ClassObject</span><span class="o">*</span> <span class="n">clazz</span><span class="p">,</span> <span class="n">Method</span><span class="o">*</span> <span class="n">dstMeth</span><span class="p">,</span>
+    <span class="k">const</span> <span class="n">Method</span><span class="o">*</span> <span class="n">srcMeth</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="p">...</span><span class="err">略</span>
+    <span class="n">dstMeth</span><span class="o">-&gt;</span><span class="n">accessFlags</span> <span class="o">=</span> <span class="n">ACC_PUBLIC</span> <span class="o">|</span> <span class="n">ACC_NATIVE</span><span class="p">;</span><span class="c1">//@1 变为native函数</span>
+        <span class="p">...</span><span class="err">略</span>
+    <span class="kt">int</span> <span class="n">argsSize</span> <span class="o">=</span> <span class="n">dvmComputeMethodArgsSize</span><span class="p">(</span><span class="n">dstMeth</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span><span class="c1">//*@2 非静态函数，参数值加1,参数里面对了this</span>
+    <span class="n">dstMeth</span><span class="o">-&gt;</span><span class="n">registersSize</span> <span class="o">=</span> <span class="n">dstMeth</span><span class="o">-&gt;</span><span class="n">insSize</span> <span class="o">=</span> <span class="n">argsSize</span><span class="p">;</span><span class="c1">//*@3 </span>
+
+    <span class="n">dstMeth</span><span class="o">-&gt;</span><span class="n">nativeFunc</span> <span class="o">=</span> <span class="n">proxyInvoker</span><span class="p">;</span><span class="c1">//*@native处理函数</span>
+<span class="p">}</span>
 </pre></div>
 
 
-<p>}</p>
-<div class="highlight"><pre><span class="o">&amp;</span><span class="n">emsp</span><span class="p">;</span><span class="o">&amp;</span><span class="n">emsp</span><span class="p">;</span><span class="err">如果看了上一篇文章</span><span class="p">,</span><span class="err">很熟悉是不是</span><span class="p">,</span><span class="err">我们再看看</span><span class="o">**</span><span class="n">proxyInvoker</span><span class="o">**</span><span class="err">函数</span>
-<span class="err">```</span><span class="n">c</span><span class="o">++</span>
-<span class="k">static</span> <span class="kt">void</span> <span class="n">proxyInvoker</span><span class="p">(</span><span class="k">const</span> <span class="n">u4</span><span class="o">*</span> <span class="n">args</span><span class="p">,</span> <span class="n">JValue</span><span class="o">*</span> <span class="n">pResult</span><span class="p">,</span>
+<p>&emsp;&emsp;如果看了上一篇文章,很熟悉是不是,我们再看看<strong>proxyInvoker</strong>函数</p>
+<div class="highlight"><pre><span class="k">static</span> <span class="kt">void</span> <span class="nf">proxyInvoker</span><span class="p">(</span><span class="k">const</span> <span class="n">u4</span><span class="o">*</span> <span class="n">args</span><span class="p">,</span> <span class="n">JValue</span><span class="o">*</span> <span class="n">pResult</span><span class="p">,</span>
     <span class="k">const</span> <span class="n">Method</span><span class="o">*</span> <span class="n">method</span><span class="p">,</span> <span class="n">Thread</span><span class="o">*</span> <span class="n">self</span><span class="p">)</span>
 <span class="p">{</span>
     <span class="n">Object</span><span class="o">*</span> <span class="n">thisObj</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="o">*</span><span class="p">)</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
@@ -121,131 +118,125 @@ static void createHandlerMethod(ClassObject<em> clazz, Method</em> dstMeth,
 
 
 <p>我在源码中搜索声明为<strong>(const u4<em> args, JValue</em> pResult,
-    const Method<em> method, Thread</em> self)</strong>的函数，在<a href="http://androidxref.com/4.1.2/xref/dalvik/vm/Jni.cpp">jni.cpp</a>中找到
-```c++
-/<em>
- * General form, handles all cases.
- </em>/
-void dvmCallJNIMethod(const u4<em> args, JValue</em> pResult, const Method<em> method, Thread</em> self) {
-    u4<em> modArgs = (u4</em>) args;
-            ...略
-    int idx = 0;
-    Object<em> lockObj;
-    if ((accessFlags &amp; ACC_STATIC) != 0) {
-        lockObj = (Object</em>) method-&gt;clazz;
-        /<em> add the class object we pass in </em>/
-        staticMethodClass = (jclass) addLocalReference(self, (Object<em>) method-&gt;clazz);
-    } else {
-        lockObj = (Object</em>) args[0];
-        /<em> add "this" </em>/
-        modArgs[idx++] = (u4) addLocalReference(self, (Object*) modArgs[0]);
-    }</p>
-<div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">method</span><span class="o">-&gt;</span><span class="n">noRef</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">shorty</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">method</span><span class="o">-&gt;</span><span class="n">shorty</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>        <span class="cm">/* skip return type */</span>
-    <span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">shorty</span> <span class="o">!=</span> <span class="sc">&#39;\0&#39;</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">switch</span> <span class="p">(</span><span class="o">*</span><span class="n">shorty</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">case</span> <span class="sc">&#39;L&#39;</span>:
-            <span class="c1">//ALOGI(&quot;  local %d: 0x%08x&quot;, idx, modArgs[idx]);</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">modArgs</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">modArgs</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">u4</span><span class="p">)</span> <span class="n">addLocalReference</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="p">(</span><span class="n">Object</span><span class="o">*</span><span class="p">)</span> <span class="n">modArgs</span><span class="p">[</span><span class="n">idx</span><span class="p">]);</span>
-            <span class="p">}</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="k">case</span> <span class="sc">&#39;D&#39;</span>:
-        <span class="k">case</span> <span class="sc">&#39;J&#39;</span>:
-            <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="nl">default:</span>
-            <span class="cm">/* Z B C S I -- do nothing */</span>
-            <span class="k">break</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
+    const Method<em> method, Thread</em> self)</strong>的函数，在<a href="http://androidxref.com/4.1.2/xref/dalvik/vm/Jni.cpp">jni.cpp</a>中找到</p>
+<div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * General form, handles all cases.</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="nf">dvmCallJNIMethod</span><span class="p">(</span><span class="k">const</span> <span class="n">u4</span><span class="o">*</span> <span class="n">args</span><span class="p">,</span> <span class="n">JValue</span><span class="o">*</span> <span class="n">pResult</span><span class="p">,</span> <span class="k">const</span> <span class="n">Method</span><span class="o">*</span> <span class="n">method</span><span class="p">,</span> <span class="n">Thread</span><span class="o">*</span> <span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">u4</span><span class="o">*</span> <span class="n">modArgs</span> <span class="o">=</span> <span class="p">(</span><span class="n">u4</span><span class="o">*</span><span class="p">)</span> <span class="n">args</span><span class="p">;</span>
+            <span class="p">...</span><span class="err">略</span>
+    <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">Object</span><span class="o">*</span> <span class="n">lockObj</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">accessFlags</span> <span class="o">&amp;</span> <span class="n">ACC_STATIC</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">lockObj</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="o">*</span><span class="p">)</span> <span class="n">method</span><span class="o">-&gt;</span><span class="n">clazz</span><span class="p">;</span>
+        <span class="cm">/* add the class object we pass in */</span>
+        <span class="n">staticMethodClass</span> <span class="o">=</span> <span class="p">(</span><span class="n">jclass</span><span class="p">)</span> <span class="n">addLocalReference</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="p">(</span><span class="n">Object</span><span class="o">*</span><span class="p">)</span> <span class="n">method</span><span class="o">-&gt;</span><span class="n">clazz</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">lockObj</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="o">*</span><span class="p">)</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="cm">/* add &quot;this&quot; */</span>
+        <span class="n">modArgs</span><span class="p">[</span><span class="n">idx</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">u4</span><span class="p">)</span> <span class="n">addLocalReference</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="p">(</span><span class="n">Object</span><span class="o">*</span><span class="p">)</span> <span class="n">modArgs</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
     <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">method</span><span class="o">-&gt;</span><span class="n">noRef</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">shorty</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">method</span><span class="o">-&gt;</span><span class="n">shorty</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>        <span class="cm">/* skip return type */</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">shorty</span> <span class="o">!=</span> <span class="sc">&#39;\0&#39;</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="o">*</span><span class="n">shorty</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="sc">&#39;L&#39;</span>:
+                <span class="c1">//ALOGI(&quot;  local %d: 0x%08x&quot;, idx, modArgs[idx]);</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">modArgs</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">modArgs</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">u4</span><span class="p">)</span> <span class="n">addLocalReference</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="p">(</span><span class="n">Object</span><span class="o">*</span><span class="p">)</span> <span class="n">modArgs</span><span class="p">[</span><span class="n">idx</span><span class="p">]);</span>
+                <span class="p">}</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="sc">&#39;D&#39;</span>:
+            <span class="k">case</span> <span class="sc">&#39;J&#39;</span>:
+                <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="nl">default:</span>
+                <span class="cm">/* Z B C S I -- do nothing */</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="n">idx</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+             <span class="p">...</span><span class="err">略</span>
+    <span class="n">dvmPlatformInvoke</span><span class="p">(</span><span class="n">env</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">ClassObject</span><span class="o">*</span><span class="p">)</span> <span class="n">staticMethodClass</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">-&gt;</span><span class="n">jniArgInfo</span><span class="p">,</span> <span class="n">method</span><span class="o">-&gt;</span><span class="n">insSize</span><span class="p">,</span> <span class="n">modArgs</span><span class="p">,</span> <span class="n">method</span><span class="o">-&gt;</span><span class="n">shorty</span><span class="p">,</span>
+            <span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span> <span class="n">method</span><span class="o">-&gt;</span><span class="n">insns</span><span class="p">,</span> <span class="n">pResult</span><span class="p">);</span>
+    <span class="n">CHECK_STACK_SUM</span><span class="p">(</span><span class="n">self</span><span class="p">);</span>
+    <span class="n">dvmChangeStatus</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">oldStatus</span><span class="p">);</span>
+    <span class="n">convertReferenceResult</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">pResult</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">self</span><span class="p">);</span>
+            <span class="p">...</span><span class="err">略</span>
 <span class="p">}</span>
-         <span class="p">...</span><span class="err">略</span>
-<span class="n">dvmPlatformInvoke</span><span class="p">(</span><span class="n">env</span><span class="p">,</span>
-        <span class="p">(</span><span class="n">ClassObject</span><span class="o">*</span><span class="p">)</span> <span class="n">staticMethodClass</span><span class="p">,</span>
-        <span class="n">method</span><span class="o">-&gt;</span><span class="n">jniArgInfo</span><span class="p">,</span> <span class="n">method</span><span class="o">-&gt;</span><span class="n">insSize</span><span class="p">,</span> <span class="n">modArgs</span><span class="p">,</span> <span class="n">method</span><span class="o">-&gt;</span><span class="n">shorty</span><span class="p">,</span>
-        <span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span> <span class="n">method</span><span class="o">-&gt;</span><span class="n">insns</span><span class="p">,</span> <span class="n">pResult</span><span class="p">);</span>
-<span class="n">CHECK_STACK_SUM</span><span class="p">(</span><span class="n">self</span><span class="p">);</span>
-<span class="n">dvmChangeStatus</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">oldStatus</span><span class="p">);</span>
-<span class="n">convertReferenceResult</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">pResult</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">self</span><span class="p">);</span>
-        <span class="p">...</span><span class="err">略</span>
 </pre></div>
 
 
-<p>}</p>
-<div class="highlight"><pre><span class="err">结合这两个函数，你会发现</span><span class="o">**</span><span class="n">xposed</span><span class="o">**</span><span class="err">的</span><span class="o">**</span><span class="n">xposedCallHandler</span><span class="o">**</span><span class="err">是参照了上面两个函数</span><span class="p">.</span><span class="err">再看看</span><span class="n">proxyInvoker</span><span class="err">函数使用了</span><span class="o">**</span><span class="n">dvmCallMethod</span> <span class="n">invoke</span><span class="o">**</span><span class="err">函数</span><span class="p">,</span><span class="err">对函数进行分析，来到</span><span class="p">[</span><span class="n">dalvik</span><span class="o">/</span><span class="n">vm</span><span class="o">/</span><span class="n">interp</span><span class="o">/</span><span class="n">Stack</span><span class="p">.</span><span class="n">cpp</span><span class="p">](</span><span class="n">http</span><span class="o">:</span><span class="c1">//androidxref.com/4.1.2/xref/dalvik/vm/interp/Stack.cpp)，这个类是**dalvik**实现执行java函数的地方。翻翻里面的函数，发现**dvmInvokeMethod**函数：</span>
+<p>结合这两个函数，你会发现<strong>xposed</strong>的<strong>xposedCallHandler</strong>是参照了上面两个函数.再看看proxyInvoker函数使用了<strong>dvmCallMethod invoke</strong>函数,对函数进行分析，来到<a href="http://androidxref.com/4.1.2/xref/dalvik/vm/interp/Stack.cpp">dalvik/vm/interp/Stack.cpp</a>，这个类是<strong>dalvik</strong>实现执行java函数的地方。翻翻里面的函数，发现<strong>dvmInvokeMethod</strong>函数：</p>
+<div class="highlight"><pre><span class="o">*</span> <span class="n">Invoke</span> <span class="n">a</span> <span class="n">method</span><span class="p">,</span> <span class="n">using</span> <span class="n">the</span> <span class="n">specified</span> <span class="n">arguments</span> <span class="n">and</span> <span class="k">return</span> <span class="n">type</span><span class="p">,</span> <span class="n">through</span>
+<span class="o">*</span> <span class="n">one</span> <span class="n">of</span> <span class="n">the</span> <span class="n">reflection</span> <span class="n">interfaces</span><span class="p">.</span>  <span class="n">Could</span> <span class="n">be</span> <span class="n">a</span> <span class="n">virtual</span> <span class="n">or</span> <span class="n">direct</span> <span class="n">method</span>
+<span class="o">*</span> <span class="p">(</span><span class="n">including</span> <span class="n">constructors</span><span class="p">).</span>  <span class="n">Used</span> <span class="k">for</span> <span class="n">reflection</span><span class="p">.</span>
 </pre></div>
 
 
-<ul>
-<li>Invoke a method, using the specified arguments and return type, through</li>
-<li>one of the reflection interfaces.  Could be a virtual or direct method</li>
-<li>(including constructors).  Used for reflection.</li>
-</ul>
-<div class="highlight"><pre><span class="o">**</span><span class="n">java</span><span class="o">**</span> <span class="err">类</span><span class="o">**</span><span class="n">Method</span><span class="p">.</span><span class="n">invoke</span><span class="o">**</span><span class="err">最终实现的函数。</span><span class="o">**</span><span class="n">xposed</span><span class="o">**</span><span class="err">通过该函数实现了调用</span><span class="n">hook</span> <span class="err">后的原始函数</span><span class="p">.</span>  
-
-<span class="o">&amp;</span><span class="n">emsp</span><span class="p">;</span><span class="o">&amp;</span><span class="n">emsp</span><span class="p">;</span><span class="err">结合</span><span class="o">**</span><span class="n">xposed</span><span class="o">**</span><span class="err">和源码，就可以写个自己的</span><span class="o">**</span><span class="n">hook</span><span class="o">**</span><span class="err">框架了</span><span class="p">,</span><span class="err">在自己实现的过程中，研究源码，又发现了好玩的东东</span><span class="o">^^</span><span class="err">。</span>
-
-<span class="err">```</span><span class="n">java</span>
-
-<span class="cm">/*</span>
+<p><strong>java</strong> 类<strong>Method.invoke</strong>最终实现的函数。<strong>xposed</strong>通过该函数实现了调用hook 后的原始函数.  </p>
+<p>&emsp;&emsp;结合<strong>xposed</strong>和源码，就可以写个自己的<strong>hook</strong>框架了,在自己实现的过程中，研究源码，又发现了好玩的东东^^。</p>
+<div class="highlight"><pre><span class="cm">/*</span>
 <span class="cm">    函数参考proxyInvoker  dalvik\vm\reflect\Proxy.cpp   learn from xposed</span>
 <span class="cm">*/</span>
 
-<span class="k">static</span> <span class="kt">void</span> <span class="n">handleInvoker</span><span class="p">(</span><span class="k">const</span> <span class="n">u4</span><span class="o">*</span> <span class="n">args</span><span class="p">,</span> <span class="n">JValue</span><span class="o">*</span> <span class="n">pResult</span><span class="p">,</span> <span class="k">const</span> <span class="n">Method</span><span class="o">*</span> <span class="n">method</span><span class="p">,</span> <span class="o">::</span><span class="n">Thread</span><span class="o">*</span> <span class="n">self</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">LOGI</span><span class="p">(</span><span class="s">&quot;JNI calling %p (%s.%s:%s):&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">-&gt;</span><span class="n">insns</span><span class="p">,</span><span class="n">method</span><span class="o">-&gt;</span><span class="n">clazz</span><span class="o">-&gt;</span><span class="n">descriptor</span><span class="p">,</span> <span class="n">method</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span> <span class="n">method</span><span class="o">-&gt;</span><span class="n">shorty</span><span class="p">);</span>
+<span class="kd">static</span> <span class="kt">void</span> <span class="nf">handleInvoker</span><span class="o">(</span><span class="kd">const</span> <span class="n">u4</span><span class="o">*</span> <span class="n">args</span><span class="o">,</span> <span class="n">JValue</span><span class="o">*</span> <span class="n">pResult</span><span class="o">,</span> <span class="kd">const</span> <span class="n">Method</span><span class="o">*</span> <span class="n">method</span><span class="o">,</span> <span class="o">::</span><span class="n">Thread</span><span class="o">*</span> <span class="n">self</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">LOGI</span><span class="o">(</span><span class="s">&quot;JNI calling %p (%s.%s:%s):&quot;</span><span class="o">,</span> <span class="n">method</span><span class="o">-&gt;</span><span class="n">insns</span><span class="o">,</span><span class="n">method</span><span class="o">-&gt;</span><span class="n">clazz</span><span class="o">-&gt;</span><span class="n">descriptor</span><span class="o">,</span> <span class="n">method</span><span class="o">-&gt;</span><span class="n">name</span><span class="o">,</span> <span class="n">method</span><span class="o">-&gt;</span><span class="n">shorty</span><span class="o">);</span>
 
-        <span class="n">ThreadStatus</span> <span class="n">oldThreadStatus</span> <span class="o">=</span> <span class="n">MEMBER_VAL</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">Thread</span><span class="p">,</span> <span class="n">status</span><span class="p">);</span>
-        <span class="n">JNIEnv</span><span class="o">*</span> <span class="n">localenv</span> <span class="o">=</span> <span class="n">GetEnv</span><span class="p">();</span>
+        <span class="n">ThreadStatus</span> <span class="n">oldThreadStatus</span> <span class="o">=</span> <span class="n">MEMBER_VAL</span><span class="o">(</span><span class="n">self</span><span class="o">,</span> <span class="n">Thread</span><span class="o">,</span> <span class="n">status</span><span class="o">);</span>
+        <span class="n">JNIEnv</span><span class="o">*</span> <span class="n">localenv</span> <span class="o">=</span> <span class="n">GetEnv</span><span class="o">();</span>
 
-        <span class="n">MethodOriginalIt</span> <span class="n">it</span> <span class="o">=</span> <span class="n">findOriginalIt</span><span class="p">(</span><span class="n">method</span><span class="p">);</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">it</span><span class="o">==</span><span class="n">methodOrList</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
-        <span class="p">{</span>
-            <span class="n">LOGE</span><span class="p">(</span><span class="s">&quot;Can&#39;t not find %s in original list!&quot;</span><span class="p">,</span><span class="n">method</span><span class="o">-&gt;</span><span class="n">clazz</span><span class="o">-&gt;</span><span class="n">descriptor</span><span class="p">);</span>
-            <span class="k">return</span> <span class="p">;</span>
-        <span class="p">}</span>
+        <span class="n">MethodOriginalIt</span> <span class="n">it</span> <span class="o">=</span> <span class="n">findOriginalIt</span><span class="o">(</span><span class="n">method</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">it</span><span class="o">==</span><span class="n">methodOrList</span><span class="o">.</span><span class="na">end</span><span class="o">())</span>
+        <span class="o">{</span>
+            <span class="n">LOGE</span><span class="o">(</span><span class="s">&quot;Can&#39;t not find %s in original list!&quot;</span><span class="o">,</span><span class="n">method</span><span class="o">-&gt;</span><span class="n">clazz</span><span class="o">-&gt;</span><span class="n">descriptor</span><span class="o">);</span>
+            <span class="k">return</span> <span class="o">;</span>
+        <span class="o">}</span>
 
-        <span class="n">jclass</span> <span class="n">handleClass</span><span class="o">=</span><span class="nb">NULL</span><span class="p">;</span>
+        <span class="n">jclass</span> <span class="n">handleClass</span><span class="o">=</span><span class="n">NULL</span><span class="o">;</span>
 
-        <span class="n">handleClass</span><span class="o">=</span> <span class="n">findclass</span><span class="p">(</span><span class="n">localenv</span><span class="p">,</span><span class="n">HANDLE_CLASS</span><span class="p">);</span> <span class="c1">//返回值是用NewLocalRef生成的，使用完后用DeleteLocalRef释放</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">handleClass</span><span class="o">==</span><span class="nb">NULL</span><span class="p">)</span>
-            <span class="k">return</span> <span class="p">;</span>
+        <span class="n">handleClass</span><span class="o">=</span> <span class="n">findclass</span><span class="o">(</span><span class="n">localenv</span><span class="o">,</span><span class="n">HANDLE_CLASS</span><span class="o">);</span> <span class="c1">//返回值是用NewLocalRef生成的，使用完后用DeleteLocalRef释放</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">handleClass</span><span class="o">==</span><span class="n">NULL</span><span class="o">)</span>
+            <span class="k">return</span> <span class="o">;</span>
         <span class="c1">// get java.lang.reflect.Method object for original method</span>
-        <span class="n">jobject</span> <span class="n">originalReflected</span> <span class="o">=</span> <span class="n">localenv</span><span class="o">-&gt;</span><span class="n">ToReflectedMethod</span><span class="p">(</span> <span class="p">(</span><span class="n">jclass</span><span class="p">)</span><span class="n">addLocalReference</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">clazz</span><span class="p">),(</span><span class="n">jmethodID</span><span class="p">)</span><span class="n">method</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span>
+        <span class="n">jobject</span> <span class="n">originalReflected</span> <span class="o">=</span> <span class="n">localenv</span><span class="o">-&gt;</span><span class="n">ToReflectedMethod</span><span class="o">(</span> <span class="o">(</span><span class="n">jclass</span><span class="o">)</span><span class="n">addLocalReference</span><span class="o">(</span><span class="n">self</span><span class="o">,</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">clazz</span><span class="o">),(</span><span class="n">jmethodID</span><span class="o">)</span><span class="n">method</span><span class="o">,</span><span class="kc">true</span><span class="o">);</span>
 
         <span class="c1">// convert/box arguments</span>
-        <span class="n">jobjectArray</span> <span class="n">argsArray</span><span class="o">=</span><span class="nb">NULL</span><span class="p">;</span>
-        <span class="n">Object</span><span class="o">*</span> <span class="n">thisObject</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-        <span class="n">Method</span><span class="o">*</span> <span class="n">orMethod</span> <span class="o">=</span> <span class="o">&amp;</span><span class="p">(</span><span class="o">*</span><span class="n">it</span><span class="p">);</span>
-        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">dvmIsStaticMethod</span><span class="p">(</span><span class="n">orMethod</span><span class="p">))</span>
-        <span class="p">{</span>
-           <span class="n">thisObject</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="o">*</span><span class="p">)</span> <span class="n">addLocalReference</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="p">(</span><span class="n">Object</span><span class="o">*</span><span class="p">)</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
-           <span class="n">argsArray</span> <span class="o">=</span> <span class="n">boxMethodArgs</span><span class="p">(</span><span class="n">method</span><span class="p">,</span><span class="n">args</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
-        <span class="p">}</span>
+        <span class="n">jobjectArray</span> <span class="n">argsArray</span><span class="o">=</span><span class="n">NULL</span><span class="o">;</span>
+        <span class="n">Object</span><span class="o">*</span> <span class="n">thisObject</span> <span class="o">=</span> <span class="n">NULL</span><span class="o">;</span>
+        <span class="n">Method</span><span class="o">*</span> <span class="n">orMethod</span> <span class="o">=</span> <span class="o">&amp;(*</span><span class="n">it</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(!</span><span class="n">dvmIsStaticMethod</span><span class="o">(</span><span class="n">orMethod</span><span class="o">))</span>
+        <span class="o">{</span>
+           <span class="n">thisObject</span> <span class="o">=</span> <span class="o">(</span><span class="n">Object</span><span class="o">*)</span> <span class="n">addLocalReference</span><span class="o">(</span><span class="n">self</span><span class="o">,</span> <span class="o">(</span><span class="n">Object</span><span class="o">*)</span><span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+           <span class="n">argsArray</span> <span class="o">=</span> <span class="n">boxMethodArgs</span><span class="o">(</span><span class="n">method</span><span class="o">,</span><span class="n">args</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span>
         <span class="k">else</span>
-           <span class="n">argsArray</span> <span class="o">=</span> <span class="n">boxMethodArgs</span><span class="p">(</span><span class="n">method</span><span class="p">,</span><span class="n">args</span><span class="p">);</span> 
+           <span class="n">argsArray</span> <span class="o">=</span> <span class="n">boxMethodArgs</span><span class="o">(</span><span class="n">method</span><span class="o">,</span><span class="n">args</span><span class="o">);</span> 
 
-        <span class="n">jobject</span> <span class="n">resultRef</span> <span class="o">=</span><span class="n">localenv</span><span class="o">-&gt;</span><span class="n">CallStaticObjectMethod</span><span class="p">(</span><span class="n">handleClass</span><span class="p">,</span><span class="n">g_handleMethodID</span><span class="p">,</span><span class="n">originalReflected</span><span class="p">,</span> <span class="n">thisObject</span><span class="p">,</span> <span class="n">argsArray</span><span class="p">);</span>
-        <span class="n">localenv</span><span class="o">-&gt;</span><span class="n">DeleteLocalRef</span><span class="p">(</span><span class="n">handleClass</span><span class="p">);</span>
+        <span class="n">jobject</span> <span class="n">resultRef</span> <span class="o">=</span><span class="n">localenv</span><span class="o">-&gt;</span><span class="n">CallStaticObjectMethod</span><span class="o">(</span><span class="n">handleClass</span><span class="o">,</span><span class="n">g_handleMethodID</span><span class="o">,</span><span class="n">originalReflected</span><span class="o">,</span> <span class="n">thisObject</span><span class="o">,</span> <span class="n">argsArray</span><span class="o">);</span>
+        <span class="n">localenv</span><span class="o">-&gt;</span><span class="n">DeleteLocalRef</span><span class="o">(</span><span class="n">handleClass</span><span class="o">);</span>
 
-        <span class="n">Object</span><span class="o">*</span> <span class="n">result</span> <span class="o">=</span> <span class="n">dvmDecodeIndirectRef</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">resultRef</span><span class="p">);</span>
+        <span class="n">Object</span><span class="o">*</span> <span class="n">result</span> <span class="o">=</span> <span class="n">dvmDecodeIndirectRef</span><span class="o">(</span><span class="n">self</span><span class="o">,</span> <span class="n">resultRef</span><span class="o">);</span>
 
-        <span class="n">ClassObject</span><span class="o">*</span> <span class="n">returnType</span> <span class="o">=</span> <span class="n">dvmGetBoxedReturnType</span><span class="p">(</span><span class="n">method</span><span class="p">);</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">returnType</span><span class="o">-&gt;</span><span class="n">primitiveType</span> <span class="o">==</span> <span class="n">PRIM_VOID</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">ClassObject</span><span class="o">*</span> <span class="n">returnType</span> <span class="o">=</span> <span class="n">dvmGetBoxedReturnType</span><span class="o">(</span><span class="n">method</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">returnType</span><span class="o">-&gt;</span><span class="n">primitiveType</span> <span class="o">==</span> <span class="n">PRIM_VOID</span><span class="o">)</span> <span class="o">{</span>
             <span class="c1">// ignored</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">result</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">dvmIsPrimitiveClass</span><span class="p">(</span><span class="n">returnType</span><span class="p">))</span> <span class="p">{</span>
-                <span class="n">dvmThrowNullPointerException</span><span class="p">(</span><span class="s">&quot;null result when primitive expected&quot;</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="n">pResult</span><span class="o">-&gt;</span><span class="n">l</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">dvmUnboxPrimitive</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">returnType</span><span class="p">,</span> <span class="n">pResult</span><span class="p">))</span> <span class="p">{</span>
-                <span class="n">dvmThrowClassCastException</span><span class="p">(</span><span class="n">result</span><span class="o">-&gt;</span><span class="n">clazz</span><span class="p">,</span> <span class="n">returnType</span><span class="p">);</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-       <span class="n">dvmChangeStatus</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">oldThreadStatus</span><span class="p">);</span>
-<span class="p">}</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">result</span> <span class="o">==</span> <span class="n">NULL</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">dvmIsPrimitiveClass</span><span class="o">(</span><span class="n">returnType</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">dvmThrowNullPointerException</span><span class="o">(</span><span class="s">&quot;null result when primitive expected&quot;</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="n">pResult</span><span class="o">-&gt;</span><span class="n">l</span> <span class="o">=</span> <span class="n">NULL</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(!</span><span class="n">dvmUnboxPrimitive</span><span class="o">(</span><span class="n">result</span><span class="o">,</span> <span class="n">returnType</span><span class="o">,</span> <span class="n">pResult</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">dvmThrowClassCastException</span><span class="o">(</span><span class="n">result</span><span class="o">-&gt;</span><span class="n">clazz</span><span class="o">,</span> <span class="n">returnType</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+       <span class="n">dvmChangeStatus</span><span class="o">(</span><span class="n">self</span><span class="o">,</span> <span class="n">oldThreadStatus</span><span class="o">);</span>
+<span class="o">}</span>
 </pre></div>
             </div><!-- /.entry-content -->
 			            <aside>
@@ -301,10 +292,10 @@ void dvmCallJNIMethod(const u4<em> args, JValue</em> pResult, const Method<em> m
 <div class="sidebarbg">
 	<h4>Tags</h4>
 		<ul>
-			<li class="tag-2"><a href="/tag/hook.html">Hook</a></li>
 			<li class="tag-4"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
-			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
 			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
+			<li class="tag-2"><a href="/tag/hook.html">Hook</a></li>
+			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
 		</ul>
 </div>
 
