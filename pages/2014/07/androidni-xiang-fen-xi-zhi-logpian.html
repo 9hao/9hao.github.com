@@ -97,7 +97,7 @@
 </pre></div>
 
 
-<p>&emsp;&emsp;我们看看smali调用<strong>invoke-static {v0}, Lcom/mydebug;-&gt;log(Ljava/lang/String;)V </strong>这样是不是只要一个寄存器？举一反三，比如<strong>int、long、boolean</strong> 等等，自己在log上面封装一层(代码是死的，人是活的，妈妈再也不担心我找不到寄存器了)
+<p>&emsp;&emsp;我们看看smali调用<strong>invoke-static {v0}, Lcom/mydebug;-&gt;log(Ljava/lang/String;)V </strong>这样是不是只要一个寄存器？举一反三，比如<strong>int、long、boolean</strong> 等等，自己在log上面封装一层(代码是死的，人是活的，妈妈再也不担心我找不到寄存器了)<br />
 &emsp;&emsp;如果log重复，或者你只是需要你执行了哪个函数，你可以实现个标记函数  </p>
 <div class="highlight"><pre><span class="n">public</span> <span class="k">static</span> <span class="kt">void</span> <span class="nf">flag_a</span><span class="p">()</span> <span class="p">{</span>
     <span class="n">Log</span><span class="p">.</span><span class="n">v</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="s">&quot;Run to here a&quot;</span><span class="p">);</span>
@@ -105,7 +105,7 @@
 </pre></div>
 
 
-<p>&emsp;&emsp;调用<strong><em>invoke-static {}, Lcom/mydebug;-&gt;flag_a()V</em></strong>，log日志的信息，就知道调用哪了，同样自己实现几个标记函数<strong><em>flag_b,flag_c</em></strong>啊等等.
+<p>&emsp;&emsp;调用<strong><em>invoke-static {}, Lcom/mydebug;-&gt;flag_a()V</em></strong>，log日志的信息，就知道调用哪了，同样自己实现几个标记函数<strong><em>flag_b,flag_c</em></strong>啊等等.<br />
 &emsp;&emsp;哥们儿看了一篇帖子《Smali注入之打造属于自己的安卓crack利器》，然后推荐给我说，这方法精妙 00.  我诧异了，我去，骚年，我这不是好早就教你这招了？#24我于是看看这哥怎么加注入代码的，他把调试类的函数复制到要追踪的类，本来invoke-static {v0}, Lcom/mydebug;-&gt;log(Ljava/lang/String;)V 是这样调用，最后他是invoke-static {v0}, Lcom/需要调试类名;-&gt;log(Ljava/lang/String;)V ，每新分析一个apk，都要这样加一次。0 0 ，好吧，我这老师没做好，没教他自己归纳调试类.<br />
 &emsp;&emsp;<strong><em>自己要实现自己调试类，加入自己常需要打印的类型，这样收集起来，这将会成为你smali log 注入利器。</em></strong></p>
 <blockquote>
@@ -245,17 +245,17 @@ public static void flag_a<span class="p">()</span> <span class="p">{</span>
 <div class="highlight"><pre><span class="err">在</span><span class="n">ddms</span> <span class="n">log</span><span class="err">过滤输入正则</span><span class="o">:</span>
 <span class="nl">tag:</span><span class="o">^</span><span class="p">(</span><span class="o">?!</span><span class="p">.</span><span class="o">*</span><span class="p">(</span><span class="n">webkit</span><span class="o">|</span><span class="n">Network</span><span class="o">|</span><span class="n">MSThread</span><span class="o">|</span><span class="n">SurfaceTextureClient</span><span class="o">|</span><span class="n">IMG_MMU</span><span class="o">|</span><span class="n">skia</span><span class="o">|</span><span class="n">IspDrv</span><span class="o">|</span><span class="n">JpegDecDriver</span><span class="o">|</span><span class="n">CdpDrv</span><span class="o">|</span><span class="n">JpgDecComp</span><span class="o">|</span><span class="n">ImgScaler</span><span class="o">|</span><span class="n">iio</span><span class="o">|</span><span class="n">Drv</span><span class="p">)).</span><span class="o">*</span><span class="err">$</span>
 
-<span class="n">webkit</span><span class="o">|</span><span class="n">Network</span><span class="o">|</span><span class="n">MSThread</span><span class="o">|</span><span class="n">SurfaceTextureClient</span><span class="o">|</span><span class="n">IMG_MMU</span><span class="o">|</span><span class="n">skia</span><span class="o">|</span><span class="n">IspDrv</span><span class="o">|</span><span class="n">JpegDecDriver</span><span class="o">|</span><span class="n">CdpDrv</span><span class="o">|</span><span class="n">JpgDecComp</span><span class="o">|</span><span class="n">ImgScaler</span><span class="o">|</span><span class="n">iio</span><span class="o">|</span><span class="n">Drv</span>  <span class="err">是不想抓取的</span><span class="n">log</span> <span class="n">tag</span><span class="err">，自己个超着加进入</span>
+<span class="n">webkit</span><span class="o">|</span><span class="n">Network</span><span class="o">|</span><span class="n">MSThread</span><span class="o">|</span><span class="n">SurfaceTextureClient</span><span class="o">|</span><span class="n">IMG_MMU</span><span class="o">|</span><span class="n">skia</span><span class="o">|</span><span class="n">IspDrv</span><span class="o">|</span><span class="n">JpegDecDriver</span><span class="o">|</span><span class="n">CdpDrv</span><span class="o">|</span><span class="n">JpgDecComp</span><span class="o">|</span><span class="n">ImgScaler</span><span class="o">|</span><span class="n">iio</span><span class="o">|</span><span class="n">Drv</span>  <span class="err">是不想抓取的</span><span class="n">log</span> <span class="n">tag</span><span class="err">，自己个照着加进入</span>
 </pre></div>
 
 
-<p>刚开接触android逆向就开始用上面的日志方法，对那些软件防护不是特别强的软件，函数追踪，变量查看输出，无往不利 00, 这还没需要用到动态调试的地步.</p>
+<p>&emsp;&emsp;刚开接触android逆向就开始用上面的日志方法，对那些软件防护不是特别强的软件，函数追踪，变量查看输出，无往不利 00, 这还没需要用到动态调试的地步.</p>
 <blockquote>
 <p><strong>0x05 题外话</strong>    </p>
 </blockquote>
-<p>代码是死的，人是活。<br />
-要学会举一反三，归纳小结，类比分析。<br />
-别人给的东西，终究是别人的轮子，要了解别人怎么造轮子，或者学会用别人的轮子来做东西，这样才是自己的，站在巨人的肩膀上。  </p>
+<p>&emsp;&emsp;代码是死的，人是活。<br />
+&emsp;&emsp;要学会举一反三，归纳小结，类比分析。<br />
+&emsp;&emsp;别人给的东西，终究是别人的轮子，要了解别人怎么造轮子，或者学会用别人的轮子来做东西，这样才是自己的，站在巨人的肩膀上。  </p>
             </div><!-- /.entry-content -->
 			            <aside>
             <hr/>
@@ -310,10 +310,10 @@ public static void flag_a<span class="p">()</span> <span class="p">{</span>
 <div class="sidebarbg">
 	<h4>Tags</h4>
 		<ul>
+			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
+			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
 			<li class="tag-2"><a href="/tag/hook.html">Hook</a></li>
 			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
-			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
-			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
 		</ul>
 </div>
 

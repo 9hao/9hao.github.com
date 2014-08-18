@@ -95,7 +95,7 @@
 </blockquote>
 <p><a href="http://blog.csdn.net/xbalien29/article/details/27564365">apktool + eclipse 动态调试APK</a></p>
 <p>个人用eclipse习惯了，比较倾向于eclipse。</p>
-<p>动态调试还有jdb，andbug，JSwat Debugger，ida等等，谈谈每种调试的优劣.</p>
+<p>动态调试还有jdb，andbug，JSwat Debugger，ida等等，谈谈每种调试的优劣.  </p>
 <blockquote>
 <p>jdb</p>
 </blockquote>
@@ -121,24 +121,26 @@
 <p>ida</p>
 </blockquote>
 <div class="highlight"><pre><span class="n">ida</span> <span class="mf">6.6</span><span class="err">之后可以动态调试</span><span class="n">apk</span><span class="err">，小试一把，感觉就像有界面的</span><span class="n">jdb</span><span class="err">，</span><span class="n">jdb</span><span class="err">的预断点没有，群里有人说能像</span><span class="n">apktool</span> <span class="o">+</span> <span class="n">eclipse</span><span class="err">一样看寄存器的值？</span> <span class="err">我试了试，只能看到类成员信息，难道我打开方式有错？</span>
- <span class="err">```</span>
-
-<span class="o">&gt;</span><span class="n">apktool</span> <span class="o">+</span> <span class="n">eclipse</span>
 </pre></div>
 
 
-<p>可以单步调试，可以动态查看寄存的值（NB，原理是什么？）,但是不能在系统函数下断点</p>
-<div class="highlight"><pre> <span class="err">个人感觉，动态调试最起码要知道</span><span class="n">apktool</span> <span class="o">+</span> <span class="n">eclipse</span><span class="err">和</span><span class="n">jdb</span><span class="err">调试，</span><span class="n">apktool</span> <span class="o">+</span> <span class="n">eclipse</span> <span class="err">但碰到以下场景就不合适了。</span>
+<blockquote>
+<p>apktool + eclipse</p>
+</blockquote>
+<div class="highlight"><pre><span class="err">可以单步调试，可以动态查看寄存的值（</span><span class="n">NB</span><span class="err">，原理是什么？）</span><span class="p">,</span><span class="err">但是不能在系统函数下断点</span>
 </pre></div>
 
 
-<p>[1]动态加载的apk，apktool + eclipse 就歇菜了
-[2]系统函数下断点，比如你要对网络请求感兴趣，可以直接用jdb预下断点系统网络请求函数上
-[3]有完整性检测的apk
-[4]so启动时附加
-```
-每种调试工具都接触下，技多不压身^^.
-<strong>ps:不必每次都在目标APK中的manifest文件中加入android:debuggable="true"，root手机把ro.debuggable设置为1，默认所有的apk都可调试</strong></p>
+<p>个人感觉，动态调试最起码要知道apktool + eclipse和jdb调试，apktool + eclipse 但碰到以下场景就不合适了。</p>
+<div class="highlight"><pre><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="err">动态加载的</span><span class="n">apk</span><span class="err">，</span><span class="n">apktool</span> <span class="o">+</span> <span class="n">eclipse</span> <span class="err">就歇菜了</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="err">系统函数下断点，比如你要对网络请求感兴趣，可以直接用</span><span class="n">jdb</span><span class="err">预下断点系统网络请求函数上</span>
+<span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="err">有完整性检测的</span><span class="n">apk</span>
+<span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="n">so</span><span class="err">启动时附加</span>
+</pre></div>
+
+
+<p>每种调试工具都接触下，技多不压身^^。  </p>
+<p><strong>ps:不必每次都在目标APK中的manifest文件中加入android:debuggable="true"，root手机把ro.debuggable设置为1，默认所有的apk都可调试</strong></p>
             </div><!-- /.entry-content -->
 			            <aside>
             <hr/>
@@ -191,10 +193,10 @@
 <div class="sidebarbg">
 	<h4>Tags</h4>
 		<ul>
+			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
+			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
 			<li class="tag-2"><a href="/tag/hook.html">Hook</a></li>
 			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
-			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
-			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
 		</ul>
 </div>
 
