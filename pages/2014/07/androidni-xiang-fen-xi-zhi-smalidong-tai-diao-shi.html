@@ -1,0 +1,278 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>android逆向分析之smali动态调试</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+<!-- Fork me on github -->
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                 <!-- <h1><a href="/">9Hao <strong>人若无名,正是安心练剑之时</strong></a></h1>  -->
+                 <h1><a href="/"><strong>9Hao</strong><p style="font-size:50%">人若无名,正是安心练剑之时</p></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="/">Home</a></li>
+					<!--<li class="active"><a href="/category/android.html">Android</a></li>-->
+					<li><a href="/category/android.html">Android</a></li>
+					<!--<li><a href="/category/internet.html">Internet</a></li>-->
+					<li><a href="/category/internet.html">Internet</a></li>
+				<li><a href="/functions/archives.html">Archives</a></li>
+				<!--<li><a href="/functions/random.html">Random Article</a></li>
+				<!--
+				
+				-->
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-smalidong-tai-diao-shi" rel="bookmark"
+                   title="Permalink to android逆向分析之smali动态调试">android逆向分析之smali动态调试</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <!--
+			  <abbr class="published" title="2014-07-21T00:00:00">
+                一 21 七月 2014
+              </abbr>
+              <address class="vcard author">
+                By <a class="url fn" href="/author/123.html">#123</a>
+              </address>
+			  -->
+			  <address class="vcard author" style="font-style:italic;margin-bottom:-10px;">
+				一 21 七月 2014
+					&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+	
+			  </address>
+			  <hr />			  
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>(不知攻，焉知防！) </p>
+<p>smali动态调试网上已经有很多文章了，刚开始开始是Apktool1.4.2支持，后面后面几个版本就阉割，貌似不稳定，到了 Apktool 2.0之后的版本又重新放出。给几个教程连接：</p>
+<p><a href="http://code.google.com/p/android-apktool/wiki/SmaliDebugging">官网说明SmaliDebugging</a></p>
+<blockquote>
+<p><strong>Netbean</strong> </p>
+</blockquote>
+<p>[1]<a href="http://www.rover12421.com/2012/11/05/using-netbean-and-apktool-debugging-smali-code.html">使用Netbean和Apktool调试smali</a>
+[2]<a href="http://www.colordancer.net/blog/2013/09/16/apktool-2-0-netbeans-7-3-%E8%B0%83%E8%AF%95apk/">apktool 2.0+netbeans 7.3调试apk</a>
+[3]<a href="http://0nly3nd.sinaapp.com/?p=576">Netbeans 6.8 + apktool_2.0.0b9 动态调试smali文件</a></p>
+<blockquote>
+<p><strong>eclipse</strong> </p>
+</blockquote>
+<p><a href="http://blog.csdn.net/xbalien29/article/details/27564365">apktool + eclipse 动态调试APK</a></p>
+<p>个人用eclipse习惯了，比较倾向于eclipse。</p>
+<p>动态调试还有jdb，andbug，JSwat Debugger，ida等等，谈谈每种调试的优劣.</p>
+<blockquote>
+<p>jdb</p>
+</blockquote>
+<div class="highlight"><pre><span class="err">刚开始接触动态调试的时候是</span><span class="n">jdb</span><span class="err">，支持调试的基本功能，优点：可以在配置文件里面预下断点、批量下断点、给系统函数下载断点；缺点：没有界面，不支持查看寄存器的值，单步时跑着跑着就飞了。</span>
+</pre></div>
+
+
+<blockquote>
+<p>andbug</p>
+</blockquote>
+<div class="highlight"><pre><span class="err">没怎么用过，看了一些文档介绍，感觉跟</span><span class="n">jdb</span><span class="err">差不多，它能做到的</span><span class="n">jdb</span><span class="err">也能做到（好吧，如果比</span><span class="n">jdb</span><span class="err">强，求打脸</span> <span class="mo">00</span><span class="err">）</span>
+</pre></div>
+
+
+<blockquote>
+<p>JSwat Debugger</p>
+</blockquote>
+<div class="highlight"><pre><span class="n">jdb</span> <span class="err">界面版，暂时没找到预下断点的地方</span>
+</pre></div>
+
+
+<blockquote>
+<p>ida</p>
+</blockquote>
+<div class="highlight"><pre><span class="n">ida</span> <span class="mf">6.6</span><span class="err">之后可以动态调试</span><span class="n">apk</span><span class="err">，小试一把，感觉就像有界面的</span><span class="n">jdb</span><span class="err">，</span><span class="n">jdb</span><span class="err">的预断点没有，群里有人说能像</span><span class="n">apktool</span> <span class="o">+</span> <span class="n">eclipse</span><span class="err">一样看寄存器的值？</span> <span class="err">我试了试，只能看到类成员信息，难道我打开方式有错？</span>
+ <span class="err">```</span>
+
+<span class="o">&gt;</span><span class="n">apktool</span> <span class="o">+</span> <span class="n">eclipse</span>
+</pre></div>
+
+
+<p>可以单步调试，可以动态查看寄存的值（NB，原理是什么？）,但是不能在系统函数下断点</p>
+<div class="highlight"><pre> <span class="err">个人感觉，动态调试最起码要知道</span><span class="n">apktool</span> <span class="o">+</span> <span class="n">eclipse</span><span class="err">和</span><span class="n">jdb</span><span class="err">调试，</span><span class="n">apktool</span> <span class="o">+</span> <span class="n">eclipse</span> <span class="err">但碰到以下场景就不合适了。</span>
+</pre></div>
+
+
+<p>[1]动态加载的apk，apktool + eclipse 就歇菜了
+[2]系统函数下断点，比如你要对网络请求感兴趣，可以直接用jdb预下断点系统网络请求函数上
+[3]有完整性检测的apk
+[4]so启动时附加
+```
+每种调试工具都接触下，技多不压身^^.
+<strong>ps:不必每次都在目标APK中的manifest文件中加入android:debuggable="true"，root手机把ro.debuggable设置为1，默认所有的apk都可调试</strong></p>
+            </div><!-- /.entry-content -->
+			            <aside>
+            <hr/>
+            <!-- all by Qxia -->
+
+            <nav>
+            <ul class="articles_timeline">
+ 
+                <li class="previous_article">« <a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-logpian" title="Previous: android逆向分析之log篇">android逆向分析之log篇</a></li>
+            </ul>
+            </nav>
+            </aside>
+			<!--neighbors plugin take -->
+			<ul style="float:right;">
+			</ul>
+			
+			
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "pages/2014/07/androidni-xiang-fen-xi-zhi-smalidong-tai-diao-shi";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://9haoblog.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+        
+<div class="three columns">
+
+<div class="sidebarbg">
+	<h4>Pages</h4>
+	<ul>
+	</ul>
+</div>
+
+<div class="sidebarbg">
+<h4>Categories</h4>
+	<ul>
+			<li><a href="/category/android.html">Android</a></li>
+			<li><a href="/category/internet.html">Internet</a></li>
+	</ul>
+</div>
+
+<div class="sidebarbg">
+	<h4>Tags</h4>
+		<ul>
+			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
+			<li class="tag-2"><a href="/tag/hook.html">Hook</a></li>
+			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
+			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
+		</ul>
+</div>
+
+
+
+<nav class="widget sidebarbg">
+  <h4>Links</h4>
+  <ul>
+	<li><a target="_blank" href="http://getpelican.com/">Pelican</a></li>
+	<li><a target="_blank" href="http://python.org/">Python.org</a></li>
+	<li><a target="_blank" href="http://pallergabor.uw.hu/androidblog/dalvik_opcodes.html">Dalvik opcodes</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+					本博客使用Pelican+GitHub Pages搭建，详细请参考<a href="http://www.xycoding.com/articles/2013/11/21/blog-create/" class="active" target="_blank">教程</a>。
+				   </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = '9haoblog';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+      <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+	<script>
+	(function() {
+		var $backToTopTxt = "返回顶部", $backToTopEle = $('<div class="backToTop"></div>').appendTo($("body"))
+			.text($backToTopTxt).attr("title", $backToTopTxt).click(function() {
+				$("html, body").animate({ scrollTop: 0 }, 120);
+		}), $backToTopFun = function() {
+			var st = $(document).scrollTop(), winh = $(window).height();
+			(st > 0)? $backToTopEle.show(): $backToTopEle.hide();
+			//IE6下的定位
+			if (!window.XMLHttpRequest) {
+				$backToTopEle.css("top", st + winh - 166);
+			}
+		};
+		$(window).bind("scroll", $backToTopFun);
+		$(function() { $backToTopFun(); });
+	})();
+	</script>
+</body>
+</html>

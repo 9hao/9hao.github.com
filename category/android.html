@@ -61,6 +61,80 @@
 		
 		         <ol id="post-list">
 				        <li><article class="hentry">
+				                <header> <h2 class="entry-title"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-smalidong-tai-diao-shi" rel="bookmark" title="Permalink to android逆向分析之smali动态调试">android逆向分析之smali动态调试</a></h2> </header>
+				                <footer class="post-info">
+				                    <!--<abbr class="published" title="2014-07-21T00:00:00"> 一 21 七月 2014 </abbr>
+<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
+								 <address class="vcard author" style="font-style:italic;">
+									一 21 七月 2014
+										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+								  </address>
+									
+				                </footer><!-- /.post-info -->
+				                <div class="entry-content"> <p>(不知攻，焉知防！) </p>
+<p>smali动态调试网上已经有很多文章了，刚开始开始是Apktool1.4.2支持，后面后面几个版本就阉割，貌似不稳定，到了 Apktool 2.0之后的版本又重新放出。给几个教程连接：</p>
+<p><a href="http://code.google.com/p/android-apktool/wiki/SmaliDebugging">官网说明SmaliDebugging</a></p>
+<blockquote>
+<p><strong>Netbean</strong> </p>
+</blockquote>
+<p>[1]<a href="http://www.rover12421.com/2012/11/05/using-netbean-and-apktool-debugging-smali-code.html">使用Netbean和Apktool调试smali</a>
+[2]<a href="http://www.colordancer.net/blog/2013/09/16/apktool-2-0-netbeans-7-3-%E8%B0%83%E8%AF%95apk/">apktool 2.0+netbeans 7.3调试apk</a>
+[3]<a href="http://0nly3nd.sinaapp.com/?p=576">Netbeans 6.8 + apktool_2.0.0b9 动态调试smali文件</a></p>
+<blockquote>
+<p><strong>eclipse</strong> </p>
+</blockquote>
+<p><a href="http://blog.csdn.net/xbalien29/article/details/27564365">apktool + eclipse 动态调试APK</a></p>
+<p>个人用eclipse习惯了，比较倾向于eclipse。</p>
+<p>动态调试还有jdb，andbug，JSwat Debugger，ida等等，谈谈每种调试的优劣.</p>
+<blockquote>
+<p>jdb</p>
+</blockquote>
+<div class="highlight"><pre><span class="err">刚开始接触动态调试的时候是</span><span class="n">jdb</span><span class="err">，支持调试的基本功能，优点：可以在配置文件里面预下断点 ...</span></pre></div> </div><!-- /.entry-content -->
+
+								<div class="medium primary btn"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-smalidong-tai-diao-shi" rel="bookmark" title="Permalink to android逆向分析之smali动态调试">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+								<div class="row tag-row">
+										<span>Tagged as : </span>
+											<a class="danger label" href="/tag/android.html">Android</a>
+											<a class="danger label" href="/tag/ni-xiang-fen-xi.html">逆向分析</a>
+								</div>
+
+
+
+				        </article></li>
+				        <li><article class="hentry">
+				                <header> <h2 class="entry-title"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-logpian" rel="bookmark" title="Permalink to android逆向分析之log篇">android逆向分析之log篇</a></h2> </header>
+				                <footer class="post-info">
+				                    <!--<abbr class="published" title="2014-07-20T00:00:00"> 日 20 七月 2014 </abbr>
+<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
+								 <address class="vcard author" style="font-style:italic;">
+									日 20 七月 2014
+										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+								  </address>
+									
+				                </footer><!-- /.post-info -->
+				                <div class="entry-content"> <p>(不知攻，焉知防！)</p>
+<p>0x0 前言
+  在以前逆向分析的分析，动态调试不成熟的时候，需要在反汇编程序smali插入汇编代码来追踪apk运行信息（也有人叫这种为smali注入）。想一下程序调试过程，断点，单步跟踪，查看寄存器/变量信息，看函数调用堆栈等等，通过调试过程来反馈的信息来分析apk。那么我们怎么用smali注入来达到“动态调试”目的?</p>
+<p>0x1 "断点"，"单步跟踪"，查看寄存器/变量信息
+   我们在关键的地方插入了log打印，如果程序执行到这个我们插入log的地方，输出我们打印的信息，这样是不是有点像"断点"触发","跟踪"，还输出了寄存器/变量信息? 最然不能单步调试，至少能拿到一些信息。刚开始接触日志打印的时候，网上给的经验都是用系统log类调试。你用这个类会发现一个问题，他需要两个寄存器的值，invoke-static {vx, vy}, Landroid/util/Log;-&gt;v(Ljava/lang/String;Ljava/lang ...</p> </div><!-- /.entry-content -->
+
+								<div class="medium primary btn"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-logpian" rel="bookmark" title="Permalink to android逆向分析之log篇">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+								<div class="row tag-row">
+										<span>Tagged as : </span>
+											<a class="danger label" href="/tag/android.html">Android</a>
+											<a class="danger label" href="/tag/ni-xiang-fen-xi.html">逆向分析</a>
+								</div>
+
+
+
+				        </article></li>
+				        <li><article class="hentry">
 				                <header> <h2 class="entry-title"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-chu-tan-di-ying" rel="bookmark" title="Permalink to android逆向分析之初探敌营">android逆向分析之初探敌营</a></h2> </header>
 				                <footer class="post-info">
 				                    <!--<abbr class="published" title="2014-07-15T00:00:00"> 二 15 七月 2014 </abbr>
@@ -198,10 +272,10 @@
 <div class="sidebarbg">
 	<h4>Tags</h4>
 		<ul>
-			<li class="tag-4"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
 			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
 			<li class="tag-2"><a href="/tag/hook.html">Hook</a></li>
 			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
+			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
 		</ul>
 </div>
 
