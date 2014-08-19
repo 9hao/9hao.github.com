@@ -91,7 +91,7 @@
 <blockquote>
 <p><strong>0x1 "断点"，"单步跟踪"，查看寄存器/变量信息</strong>  </p>
 </blockquote>
-<p>&emsp;&emsp; 我们在关键的地方插入了log打印，如果程序执行到这个我们插入log的地方，输出我们打印的信息，这样是不是有点像"断点"触发","跟踪"，还输出了寄存器/变量信息?  最然不能单步调试，至少能拿到一些信息。刚开始接触日志打印的时候，网上给的经验都是用系统log类调试。你用这个类会发现一个问题，他需要两个寄存器的值，invoke-static {vx, vy}, Landroid/util/Log;-&gt;v(Ljava/lang/String;Ljava/lang/String;)I  ，vy不是String类型怎么办？vx没有需要构造寄存器，向上下翻看有没有可用的，不影响的，不行又要在.local加寄存器（- -#），这样做超级麻烦。要是只用一个寄存器就好了，那么怎么做？想想log类是系统提供的，我们在它基础上实现一个？</p>
+<p>&emsp;&emsp; 我们在关键的地方插入了log打印，如果程序执行到这个我们插入log的地方，输出我们打印的信息，这样是不是有点像"断点"触发","跟踪"，还输出了寄存器/变量信息?  虽然不能单步调试，至少能拿到一些信息。刚开始接触日志打印的时候，网上给的经验都是用系统log类调试。你用这个类会发现一个问题，他需要两个寄存器的值，invoke-static {vx, vy}, Landroid/util/Log;-&gt;v(Ljava/lang/String;Ljava/lang/String;)I  ，vy不是String类型怎么办？vx没有需要构造寄存器，向上下翻看有没有可用的，不影响的，不行又要在.local加寄存器（- -#），这样做超级麻烦。要是只用一个寄存器就好了，那么怎么做？想想log类是系统提供的，我们在它基础上实现一个？</p>
 <div class="highlight"><pre><span class="n">public</span> <span class="k">static</span> <span class="kt">void</span> <span class="nf">log</span><span class="p">(</span><span class="n">String</span> <span class="n">str</span><span class="p">)</span>
 <span class="p">{</span>
    <span class="n">Log</span><span class="p">.</span><span class="n">v</span><span class="p">(</span><span class="n">tag</span> <span class="p">,</span> <span class="s">&quot;str-&gt;&quot;</span> <span class="o">+</span> <span class="n">str</span><span class="p">);</span>
@@ -113,7 +113,7 @@
 <blockquote>
 <p><strong>0x2 查看函数调用堆栈</strong></p>
 </blockquote>
-<p>&emsp;&emsp;我发现好些刚接触Android逆向的不知函数堆栈，更不用说log里面使用堆栈了，我面试新人的时候，问知道函数堆栈不，连这个都不知道的话，就不是我的菜了 00 。网上也有一些log堆栈的，居然是让程序报错来查看堆栈？我开始介绍Android逆向的时候，搜索最多是Android调试，java调试，如何查看堆栈，了解一个平台的调试方法，看哪些能用到Android逆向上，而不是直接上去死磕。  </p>
+<p>&emsp;&emsp;我发现好些刚接触Android逆向的不知函数堆栈，更不用说log里面使用堆栈了，我面试新人的时候，问知道函数堆栈不，连这个都不知道的话，就不是我的菜了 00 。网上也有一些log堆栈的，居然是让程序报错来查看堆栈？我开始接触Android逆向的时候，搜索最多是Android调试，java调试，如何查看堆栈，了解一个平台的调试方法，看哪些能用到Android逆向上，而不是直接上去死磕。  </p>
 <p>&emsp;&emsp;其实Android打印堆栈的代码很简单  </p>
 <div class="highlight"><pre>    <span class="cm">/***</span>
 <span class="cm">     * 调试栈函数！</span>
@@ -313,11 +313,11 @@ public static void flag_a<span class="p">()</span> <span class="p">{</span>
 <div class="sidebarbg">
 	<h4>Tags</h4>
 		<ul>
+			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
 			<li class="tag-0"><a href="/tag/android.html">Android</a></li>
 			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
-			<li class="tag-2"><a href="/tag/hook.html">Hook</a></li>
 			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
-			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
+			<li class="tag-2"><a href="/tag/hook.html">Hook</a></li>
 		</ul>
 </div>
 
