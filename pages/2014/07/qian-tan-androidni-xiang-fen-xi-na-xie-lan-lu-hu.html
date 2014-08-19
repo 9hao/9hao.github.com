@@ -97,7 +97,7 @@
 </pre></div>
 
 
-<p>~~<strong>反混淆</strong>~~
+<p>~~<strong>反混淆</strong>~~<br />
 &emsp;&emsp;有些apk混淆不完全，smali会有混淆前的类名,比如   </p>
 <div class="highlight"><pre><span class="p">.</span><span class="n">class</span> <span class="n">public</span> <span class="n">interface</span> <span class="n">abstract</span> <span class="n">La</span><span class="o">/</span><span class="n">b</span><span class="o">/</span><span class="n">a</span><span class="p">;</span>
 <span class="p">.</span><span class="n">super</span> <span class="n">Ljava</span><span class="o">/</span><span class="n">lang</span><span class="o">/</span><span class="n">Object</span><span class="p">;</span>
@@ -135,14 +135,14 @@
 <blockquote>
 <p><strong>0x4 动态加载</strong>   </p>
 </blockquote>
-<p>&emsp;&emsp;动态加载被大家所之后，慢慢的加固软件就出现了。
-~~刚开始的动态加载比较简单，你可以从log看出~~   </p>
+<p>&emsp;&emsp;动态加载被大家所之后，慢慢的加固软件就出现了。<br />
+<strong>~~刚开始的动态加载比较简单，你可以从log看出~~</strong>   </p>
 <div class="highlight"><pre> <span class="n">DEX</span> <span class="n">prep</span> <span class="err">&#39;</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">com</span><span class="p">.</span><span class="n">sxiaoao</span><span class="p">.</span><span class="n">car3d3</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">app_sdk73100_</span><span class="p">.</span><span class="n">jar</span><span class="err">&#39;</span><span class="o">:</span> <span class="n">unzip</span> <span class="n">in</span> <span class="mi">1</span><span class="n">ms</span><span class="p">,</span> <span class="n">rewrite</span> <span class="mi">87</span><span class="n">ms</span>   <span class="err">可以知道</span><span class="n">apk</span><span class="err">动态加载了</span><span class="n">app_sdk73100_</span><span class="p">.</span><span class="n">jar</span>  <span class="p">,</span><span class="err">这样就找到</span><span class="n">apk</span><span class="err">动态加载的包</span><span class="p">.</span>
 </pre></div>
 
 
 <p>ps:加固软件自己实现了dexopt，这段日志就没有  </p>
-<p>~~接着是加载后删除~~<br />
+<p><strong>~~接着是加载后删除~~</strong><br />
 几种拿到动态加载dex方法 :<br />
 <strong><em>a 使用lsof</em></strong>   </p>
 <div class="highlight"><pre><span class="n">root</span><span class="err">@</span><span class="n">android</span><span class="o">:/</span> <span class="err">#</span> <span class="n">lsof</span> <span class="o">|</span><span class="n">busybox</span> <span class="n">grep</span> <span class="n">com</span><span class="p">.</span><span class="n">sxiaoao</span><span class="p">.</span><span class="n">car3d3</span>
@@ -163,11 +163,11 @@
 
 
 <p><strong><em>b 调试工具附加内存dump</em></strong><br />
-ida、gdb  这样，就不用说了
+ida、gdb  这样，就不用说了<br />
 <strong><em>c 系统定制/hook</em></strong>   </p>
-<p>~~再后来是内存加载，反ptrace~~   <br />
+<p><strong>~~再后来是内存加载，反ptrace~~</strong>   <br />
 后来网上放出内存dump之后，加固软件升级后,内存加载，反ptrace，ptrace之后附加dump暂时歇菜了
-这个时候要跟踪调试或者定制系统了
+这个时候要跟踪调试或者定制系统了<br />
 <strong><em>跟踪调试，关键断点函数</em></strong></p>
 <div class="highlight"><pre><span class="n">dvmjarFileOpen</span>
 <span class="n">dvmDexFileOpenPartial</span>
@@ -225,8 +225,9 @@ ida、gdb  这样，就不用说了
 </pre></div>
 
 
-<p>&emsp;&emsp;hoho，后面出现了脱壳神器ZjDroid，移植了baksmali，把正确的dex内存指向给baksmali，在内存中反编译，证明了我想法是可行。~~ps: 作为Android安全研究的业余人士跟这些专业人士没得比，想起句话“这个世界上有好想法的人很多，但有能力去实现的人很少。”诚交对移动安全（漏洞挖掘、逆向分析、软件防护、反编译工具研究）感兴趣的小伙伴~~  </p>
-<p>&emsp;&emsp; android加固的一些突破方法慢慢放出 ，加固的小伙伴已经开始考虑vm壳了（个人感觉还没必要用到这个），这些家伙，不带这么玩的 00。android平台语言也开始多样化，主流的java，c/c++不变，小众lua 、js、html5、ruby、python等也开始多了, 路漫漫其修远兮......</p>
+<p>&emsp;&emsp;hoho，后面出现了脱壳神器ZjDroid，移植了baksmali，把正确的dex内存指向给baksmali，在内存中反编译，证明了我想法是可行。     <br />
+~~ps: 作为Android安全研究的业余人士跟这些专业人士没得比，想起句话“这个世界上有好想法的人很多，但有能力去实现的人很少。”诚交对移动安全（漏洞挖掘、逆向分析、软件防护、反编译工具研究）感兴趣的小伙伴~~  </p>
+<p>&emsp;&emsp; android加固的一些突破方法慢慢放出 ，加固的小伙伴已经开始考虑vm壳了（个人感觉还没必要用到这个，这些家伙，不带这么玩的 00）。android平台语言也开始多样化，主流的java，c/c++不变，小众lua 、js、html5、ruby、python等也开始多了, 路漫漫其修远兮......</p>
             </div><!-- /.entry-content -->
 			            <aside>
             <hr/>
@@ -280,10 +281,10 @@ ida、gdb  这样，就不用说了
 <div class="sidebarbg">
 	<h4>Tags</h4>
 		<ul>
-			<li class="tag-0"><a href="/tag/android.html">Android</a></li>
-			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
 			<li class="tag-2"><a href="/tag/hook.html">Hook</a></li>
 			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
+			<li class="tag-0"><a href="/tag/android.html">Android</a></li>
+			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
 			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
 		</ul>
 </div>
