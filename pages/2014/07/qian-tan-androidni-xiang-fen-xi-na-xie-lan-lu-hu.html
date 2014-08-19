@@ -1,0 +1,368 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>浅谈android逆向分析那些拦路虎</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+<!-- Fork me on github -->
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                 <!-- <h1><a href="/">9Hao <strong>人若无名,正是安心练剑之时</strong></a></h1>  -->
+                 <h1><a href="/"><strong>9Hao</strong><p style="font-size:50%">人若无名,正是安心练剑之时</p></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="/">Home</a></li>
+					<!--<li><a href="/category/about-me.html">About me</a></li>-->
+					<li><a href="/category/about-me.html">About me</a></li>
+					<!--<li class="active"><a href="/category/android.html">Android</a></li>-->
+					<li><a href="/category/android.html">Android</a></li>
+					<!--<li><a href="/category/internet.html">Internet</a></li>-->
+					<li><a href="/category/internet.html">Internet</a></li>
+				<li><a href="/functions/archives.html">Archives</a></li>
+				<!--<li><a href="/functions/random.html">Random Article</a></li>
+				<!--
+				
+				-->
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/pages/2014/07/qian-tan-androidni-xiang-fen-xi-na-xie-lan-lu-hu" rel="bookmark"
+                   title="Permalink to 浅谈android逆向分析那些拦路虎">浅谈android逆向分析那些拦路虎</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <!--
+			  <abbr class="published" title="2014-07-27T00:00:00">
+                日 27 七月 2014
+              </abbr>
+              <address class="vcard author">
+                By <a class="url fn" href="/author/123.html">#123</a>
+              </address>
+			  -->
+			  <address class="vcard author" style="font-style:italic;margin-bottom:-10px;">
+				日 27 七月 2014
+					&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+	
+			  </address>
+			  <hr />			  
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <blockquote>
+<p><strong>0x0 前言</strong>   </p>
+</blockquote>
+<p>&emsp;&emsp;接触android逆向分析一年有余,碰到好些Android的逆向的拦路虎，也见证了android软件防护在一年中的发展历程，记录下遇到的一些问题。   </p>
+<blockquote>
+<p><strong>0x1 混淆</strong>    </p>
+</blockquote>
+<p>&emsp;&emsp;刚开始的android软件没经过代码混淆，这中些apk的smali看起来很明了，把dex转换成jar，用jd-gui查看，跟看源码差不多了（ps：jd-gui处理多重异常会出问题），后面混淆出现，大概有三种：   </p>
+<div class="highlight"><pre><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="err">普通混淆，类名、变量名、函数名变成</span> <span class="n">a</span><span class="err">、</span><span class="n">b</span><span class="err">、</span><span class="n">c</span><span class="err">这种，最常见</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="err">自定义混淆，类名、变量名、函数名变成</span> <span class="mi">0</span><span class="n">oOO0o</span><span class="err">、</span><span class="n">li1Ll</span><span class="err">这种，你看</span><span class="n">smali</span><span class="err">就眼花撩乱</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="n">unicode</span><span class="err">混淆</span> <span class="o">?</span>  <span class="err">这种混淆没还研究到，类名、变量名、函数名变成</span> <span class="err">中文乱码，样本是</span> <span class="err">豌豆荚</span>
+</pre></div>
+
+
+<p>~~<strong>反混淆</strong>~~
+&emsp;&emsp;有些apk混淆不完全，smali会有混淆前的类名,比如   </p>
+<div class="highlight"><pre><span class="p">.</span><span class="n">class</span> <span class="n">public</span> <span class="n">interface</span> <span class="n">abstract</span> <span class="n">La</span><span class="o">/</span><span class="n">b</span><span class="o">/</span><span class="n">a</span><span class="p">;</span>
+<span class="p">.</span><span class="n">super</span> <span class="n">Ljava</span><span class="o">/</span><span class="n">lang</span><span class="o">/</span><span class="n">Object</span><span class="p">;</span>
+<span class="p">.</span><span class="n">source</span> <span class="s">&quot;IWindowManager.java&quot;</span>
+</pre></div>
+
+
+<p>&emsp;&emsp;这个你可以写个脚本把类修正为La/b/IWindowManage.有时候字段注解也会暴露混淆前的字段名，可以根据这些信息重命名.<br />
+&emsp;&emsp; 混淆彻底的你没有 .source这些的，这怎么办？自己定义命名规则，比如La/b/a;继承的是Thread，你可以命名为La/b/aThread，通过父类来重命名子类，这样把混淆的名字变成有意义的名字。<br />
+&emsp;&emsp; 总的来说你要需要做的:  </p>
+<div class="highlight"><pre><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="err">定义命名规则</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="err">修改脚本</span>
+</pre></div>
+
+
+<blockquote>
+<p><strong>0x2 触发反编译工具的bug</strong>   </p>
+</blockquote>
+<p>&emsp;&emsp; 触发反编译工具漏洞的bug使反编译工具崩溃而正常的反编译，比如:  </p>
+<div class="highlight"><pre><span class="err">​</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="err">加入垃圾类，里面包含不正确的指令</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="err">超长类或数组</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="err">不存在的类指向</span>
+<span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="err">文件后缀和文件魔术头不符</span>
+<span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="mf">.9</span><span class="err">文件</span>
+<span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="n">values</span><span class="err">里加一个字符串资源，值等于“</span><span class="o">/</span><span class="n">res</span><span class="err">”</span>
+<span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="err">空资源</span>
+</pre></div>
+
+
+<p>这种五花八门，就不再列举，apktool现在修复了好多bug，目前碰到问题大多是资源那块。    </p>
+<blockquote>
+<p><strong>0x3 完整性检测</strong>   </p>
+</blockquote>
+<p>&emsp;&emsp;  签名、dex文件md5和hash等。  </p>
+<blockquote>
+<p><strong>0x4 动态加载</strong>   </p>
+</blockquote>
+<p>&emsp;&emsp;动态加载被大家所之后，慢慢的加固软件就出现了。
+~~刚开始的动态加载比较简单，你可以从log看出~~   </p>
+<div class="highlight"><pre> <span class="n">DEX</span> <span class="n">prep</span> <span class="err">&#39;</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">com</span><span class="p">.</span><span class="n">sxiaoao</span><span class="p">.</span><span class="n">car3d3</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">app_sdk73100_</span><span class="p">.</span><span class="n">jar</span><span class="err">&#39;</span><span class="o">:</span> <span class="n">unzip</span> <span class="n">in</span> <span class="mi">1</span><span class="n">ms</span><span class="p">,</span> <span class="n">rewrite</span> <span class="mi">87</span><span class="n">ms</span>   <span class="err">可以知道</span><span class="n">apk</span><span class="err">动态加载了</span><span class="n">app_sdk73100_</span><span class="p">.</span><span class="n">jar</span>  <span class="p">,</span><span class="err">这样就找到</span><span class="n">apk</span><span class="err">动态加载的包</span><span class="p">.</span>
+</pre></div>
+
+
+<p>ps:加固软件自己实现了dexopt，这段日志就没有  </p>
+<p>~~接着是加载后删除~~<br />
+几种拿到动态加载dex方法 :<br />
+<strong><em>a 使用lsof</em></strong>   </p>
+<div class="highlight"><pre><span class="n">root</span><span class="err">@</span><span class="n">android</span><span class="o">:/</span> <span class="err">#</span> <span class="n">lsof</span> <span class="o">|</span><span class="n">busybox</span> <span class="n">grep</span> <span class="n">com</span><span class="p">.</span><span class="n">sxiaoao</span><span class="p">.</span><span class="n">car3d3</span>
+<span class="n">lsof</span> <span class="o">|</span><span class="n">busybox</span> <span class="n">grep</span> <span class="n">com</span><span class="p">.</span><span class="n">sxiaoao</span><span class="p">.</span><span class="n">car3d3</span>
+<span class="n">system_se</span>   <span class="mi">523</span>     <span class="n">system</span>  <span class="mi">298</span>        <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">app</span><span class="o">/</span><span class="n">com</span><span class="p">.</span><span class="n">sxiaoao</span><span class="p">.</span><span class="n">car3d3</span><span class="o">-</span><span class="mf">2.</span><span class="n">apk</span>
+<span class="n">com</span><span class="p">.</span><span class="n">sxiao</span> <span class="mi">10370</span>     <span class="n">u0_a65</span>   <span class="mi">44</span>      <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">com</span><span class="p">.</span><span class="n">sxiaoao</span><span class="p">.</span><span class="n">car3d3</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">app_sdk103700_</span><span class="p">.</span><span class="n">jar</span> <span class="p">(</span><span class="n">deleted</span><span class="p">)</span>
+<span class="n">com</span><span class="p">.</span><span class="n">sxiao</span> <span class="mi">10370</span>     <span class="n">u0_a65</span>   <span class="mi">48</span>      <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">app</span><span class="o">/</span><span class="n">com</span><span class="p">.</span><span class="n">sxiaoao</span><span class="p">.</span><span class="n">car3d3</span><span class="o">-</span><span class="mf">2.</span><span class="n">apk</span>
+<span class="n">com</span><span class="p">.</span><span class="n">sxiao</span> <span class="mi">10370</span>     <span class="n">u0_a65</span>   <span class="mi">49</span>       <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">app</span><span class="o">/</span><span class="n">com</span><span class="p">.</span><span class="n">sxiaoao</span><span class="p">.</span><span class="n">car3d3</span><span class="o">-</span><span class="mf">2.</span><span class="n">apk</span>
+
+<span class="err">通过命令反馈，可以知道</span><span class="n">app_sdk103700_</span><span class="p">.</span><span class="n">jar</span><span class="err">已经被删除</span>
+<span class="err">在</span><span class="n">linux</span><span class="err">，当进程打开了某个文件时，只要该进程保持打开该文件，即使将其删除，它依然存在于磁盘中。这意味着，进程并不知道文件已经被删除，它仍然可以向打开该文件时提供给它的文件描述符进行读取和写入。除了该进程之外，这个文件是不可见的，因为已经删除了其相应的目录索引节点。</span>
+<span class="mi">10370</span><span class="err">是进程号</span>  <span class="mi">44</span><span class="err">是打开文件的</span><span class="n">fd</span> <span class="err">文件</span><span class="n">fd</span><span class="err">映射在</span><span class="o">/</span><span class="n">prop</span><span class="o">/</span><span class="n">pid</span><span class="o">/</span><span class="n">fd</span><span class="err">里面</span>
+<span class="err">用</span><span class="n">cat</span><span class="err">命令把文件拷贝出来</span>
+<span class="mi">1</span><span class="o">|</span><span class="n">root</span><span class="err">@</span><span class="n">android</span><span class="o">:/</span> <span class="err">#</span> <span class="n">cat</span> <span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="mi">10370</span><span class="o">/</span><span class="n">fd</span><span class="o">/</span><span class="mi">44</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">test</span><span class="p">.</span><span class="n">jar</span>
+<span class="n">cat</span> <span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="mi">10370</span><span class="o">/</span><span class="n">fd</span><span class="o">/</span><span class="mi">44</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">test</span><span class="p">.</span><span class="n">jar</span>
+ <span class="err">把文件</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">test</span><span class="p">.</span><span class="n">jar</span> <span class="n">push</span><span class="err">出来就拿到了删除的文件</span>   
+</pre></div>
+
+
+<p><strong><em>b 调试工具附加内存dump</em></strong><br />
+ida、gdb  这样，就不用说了
+<strong><em>c 系统定制/hook</em></strong>   </p>
+<p>~~再后来是内存加载，反ptrace~~   <br />
+后来网上放出内存dump之后，加固软件升级后,内存加载，反ptrace，ptrace之后附加dump暂时歇菜了
+这个时候要跟踪调试或者定制系统了
+<strong><em>跟踪调试，关键断点函数</em></strong></p>
+<div class="highlight"><pre><span class="n">dvmjarFileOpen</span>
+<span class="n">dvmDexFileOpenPartial</span>
+<span class="n">openDexFile</span>
+</pre></div>
+
+
+<p><strong><em>hook或定制系统处理函数</em></strong>  </p>
+<div class="highlight"><pre><span class="n">dexclassloader</span>
+<span class="n">dvmjarFileOpen</span>
+<span class="n">dvmDexFileOpenPartial</span>
+<span class="n">openDexFile</span>
+<span class="n">java</span> <span class="n">zipfile</span><span class="err">的构造函数</span>
+<span class="err">自己实现</span><span class="n">dump</span>
+</pre></div>
+
+
+<blockquote>
+<p><strong>0x5 dex修改处理</strong>  </p>
+</blockquote>
+<p>现在主流加固商都对dex的结构进行修改，内存我们内存dump出来的dex不是完整的，需要经过修正，碰到样本特征如下:</p>
+<div class="highlight"><pre><span class="cp">[</span><span class="mi">0</span><span class="cp">]</span>方法隐藏，指向空函数
+<span class="cp">[</span><span class="mi">1</span><span class="cp">]</span>函数方法都是native
+<span class="cp">[</span><span class="mi">2</span><span class="cp">]</span>动态修改字节码
+<span class="cp">[</span><span class="mi">3</span><span class="cp">]</span>函数hook重定向
+可以看看这样子：  
+
+# direct methods
+.method public constructor <span class="nt">&lt;init&gt;</span>()V
+    .registers 1
+    .prologue
+    .line 34
+    nop
+    nop
+    nop
+    nop
+.end method
+</pre></div>
+
+
+<blockquote>
+<p><strong>0x6 so加壳</strong>     </p>
+</blockquote>
+<p>这个就不详谈了，大概的原理是：  </p>
+<div class="highlight"><pre><span class="err">把源码的</span><span class="n">dlopen</span><span class="err">复制出来修改，在把自己</span><span class="n">so</span><span class="err">加载起来的时候</span> <span class="p">,</span><span class="err">把自己内存里面某部分地址解密后</span><span class="p">,</span><span class="err">用自己的</span><span class="n">dlopen</span><span class="err">打开返回一个</span><span class="n">soinfo</span><span class="err">结构体</span> <span class="err">然后把当前</span><span class="n">soinfo</span><span class="err">结构体替换原来的</span><span class="n">soinfo</span><span class="err">结构体</span>
+</pre></div>
+
+
+<blockquote>
+<p><strong>谈谈我对脱壳的想法</strong>  </p>
+</blockquote>
+<p>&emsp;&emsp;经过一段时间的研究，也大概了解apk加固的基本原理。不管如何加固，apk运行时终归要把隐藏的dex解密加载，虽然可以dump，但是dex解密修改一般是修正内存的 DexFile结构，而不影响到内存映射的那部分dex（因此我们dump出来还是未修正的），我们想拿到一个正确的dex，要从修正内存的 DexFile结构开始解析。跟加固的小伙伴提过我的想法:  </p>
+<div class="highlight"><pre><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="err">从内存修正的</span><span class="n">dexfile</span><span class="err">逆推回去，还原正确的</span><span class="n">dex</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="err">在内存中反编译</span>
+</pre></div>
+
+
+<p>&emsp;&emsp;hoho，后面出现了脱壳神器ZjDroid，移植了baksmali，把正确的dex内存指向给baksmali，在内存中反编译，证明了我想法是可行。~~ps: 作为Android安全研究的业余人士跟这些专业人士没得比，想起句话“这个世界上有好想法的人很多，但有能力去实现的人很少。”诚交对移动安全（漏洞挖掘、逆向分析、软件防护、反编译工具研究）感兴趣的小伙伴~~  </p>
+<p>&emsp;&emsp; android加固的一些突破方法慢慢放出 ，加固的小伙伴已经开始考虑vm壳了（个人感觉还没必要用到这个），这些家伙，不带这么玩的 00。android平台语言也开始多样化，主流的java，c/c++不变，小众lua 、js、html5、ruby、python等也开始多了, 路漫漫其修远兮......</p>
+            </div><!-- /.entry-content -->
+			            <aside>
+            <hr/>
+            <!-- all by Qxia -->
+
+            <nav>
+            <ul class="articles_timeline">
+ 
+                <li class="previous_article">« <a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-smalidong-tai-diao-shi" title="Previous: android逆向分析之smali动态调试">android逆向分析之smali动态调试</a></li>
+            </ul>
+            </nav>
+            </aside>
+			<!--neighbors plugin take -->
+			<ul style="float:right;">
+			</ul>
+			
+			
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "pages/2014/07/qian-tan-androidni-xiang-fen-xi-na-xie-lan-lu-hu";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://9haoblog.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+        
+<div class="three columns">
+
+<div class="sidebarbg">
+	<h4>Pages</h4>
+	<ul>
+	</ul>
+</div>
+
+<div class="sidebarbg">
+<h4>Categories</h4>
+	<ul>
+			<li><a href="/category/about-me.html">About me</a></li>
+			<li><a href="/category/android.html">Android</a></li>
+			<li><a href="/category/internet.html">Internet</a></li>
+	</ul>
+</div>
+
+<div class="sidebarbg">
+	<h4>Tags</h4>
+		<ul>
+			<li class="tag-0"><a href="/tag/android.html">Android</a></li>
+			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
+			<li class="tag-2"><a href="/tag/hook.html">Hook</a></li>
+			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
+			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
+		</ul>
+</div>
+
+
+
+<nav class="widget sidebarbg">
+  <h4>Links</h4>
+  <ul>
+	<li><a target="_blank" href="http://getpelican.com/">Pelican</a></li>
+	<li><a target="_blank" href="http://python.org/">Python.org</a></li>
+	<li><a target="_blank" href="http://pallergabor.uw.hu/androidblog/dalvik_opcodes.html">Dalvik opcodes</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+					本博客使用Pelican+GitHub Pages搭建，详细请参考<a href="http://www.xycoding.com/articles/2013/11/21/blog-create/" class="active" target="_blank">教程</a>。
+				   </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = '9haoblog';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+      <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+	<script>
+	(function() {
+		var $backToTopTxt = "返回顶部", $backToTopEle = $('<div class="backToTop"></div>').appendTo($("body"))
+			.text($backToTopTxt).attr("title", $backToTopTxt).click(function() {
+				$("html, body").animate({ scrollTop: 0 }, 120);
+		}), $backToTopFun = function() {
+			var st = $(document).scrollTop(), winh = $(window).height();
+			(st > 0)? $backToTopEle.show(): $backToTopEle.hide();
+			//IE6下的定位
+			if (!window.XMLHttpRequest) {
+				$backToTopEle.css("top", st + winh - 166);
+			}
+		};
+		$(window).bind("scroll", $backToTopFun);
+		$(function() { $backToTopFun(); });
+	})();
+	</script>
+</body>
+</html>

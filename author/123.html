@@ -40,6 +40,8 @@
              
               <ul class="columns">
                 <li><a href="/">Home</a></li>
+					<!--<li><a href="/category/about-me.html">About me</a></li>-->
+					<li><a href="/category/about-me.html">About me</a></li>
 					<!--<li><a href="/category/android.html">Android</a></li>-->
 					<li><a href="/category/android.html">Android</a></li>
 					<!--<li><a href="/category/internet.html">Internet</a></li>-->
@@ -60,6 +62,46 @@
 <h2>Articles by #123</h2>
 		
 		         <ol id="post-list">
+				        <li><article class="hentry">
+				                <header> <h2 class="entry-title"><a href="/pages/2014/07/qian-tan-androidni-xiang-fen-xi-na-xie-lan-lu-hu" rel="bookmark" title="Permalink to 浅谈android逆向分析那些拦路虎">浅谈android逆向分析那些拦路虎</a></h2> </header>
+				                <footer class="post-info">
+				                    <!--<abbr class="published" title="2014-07-27T00:00:00"> 日 27 七月 2014 </abbr>
+<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
+								 <address class="vcard author" style="font-style:italic;">
+									日 27 七月 2014
+										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+								  </address>
+									
+				                </footer><!-- /.post-info -->
+				                <div class="entry-content"> <blockquote>
+<p><strong>0x0 前言</strong>   </p>
+</blockquote>
+<p>&emsp;&emsp;接触android逆向分析一年有余,碰到好些Android的逆向的拦路虎，也见证了android软件防护在一年中的发展历程，记录下遇到的一些问题。   </p>
+<blockquote>
+<p><strong>0x1 混淆</strong>    </p>
+</blockquote>
+<p>&emsp;&emsp;刚开始的android软件没经过代码混淆，这中些apk的smali看起来很明了，把dex转换成jar，用jd-gui查看，跟看源码差不多了（ps：jd-gui处理多重异常会出问题），后面混淆出现，大概有三种：   </p>
+<div class="highlight"><pre><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="err">普通混淆，类名、变量名、函数名变成</span> <span class="n">a</span><span class="err">、</span><span class="n">b</span><span class="err">、</span><span class="n">c</span><span class="err">这种，最常见</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="err">自定义混淆，类名、变量名、函数名变成</span> <span class="mi">0</span><span class="n">oOO0o</span><span class="err">、</span><span class="n">li1Ll</span><span class="err">这种，你看</span><span class="n">smali</span><span class="err">就眼花撩乱</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="n">unicode</span><span class="err">混淆</span> <span class="o">?</span>  <span class="err">这种混淆没还研究到，类名、变量名、函数名变成</span> <span class="err">中文乱码，样本是</span> <span class="err">豌豆荚</span>
+</pre></div>
+
+
+<p>~~<strong>反混淆 ...</strong></p> </div><!-- /.entry-content -->
+
+								<div class="medium primary btn"><a href="/pages/2014/07/qian-tan-androidni-xiang-fen-xi-na-xie-lan-lu-hu" rel="bookmark" title="Permalink to 浅谈android逆向分析那些拦路虎">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+								<div class="row tag-row">
+										<span>Tagged as : </span>
+											<a class="danger label" href="/tag/android.html">Android</a>
+											<a class="danger label" href="/tag/ni-xiang-fen-xi.html">逆向分析</a>
+								</div>
+
+
+
+				        </article></li>
 				        <li><article class="hentry">
 				                <header> <h2 class="entry-title"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-smalidong-tai-diao-shi" rel="bookmark" title="Permalink to android逆向分析之smali动态调试">android逆向分析之smali动态调试</a></h2> </header>
 				                <footer class="post-info">
@@ -183,6 +225,35 @@
 
 
 				        </article></li>
+				        <li><article class="hentry">
+				                <header> <h2 class="entry-title"><a href="/pages/2014/06/about-me" rel="bookmark" title="Permalink to About me">About me</a></h2> </header>
+				                <footer class="post-info">
+				                    <!--<abbr class="published" title="2014-06-20T00:00:00"> 五 20 六月 2014 </abbr>
+<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
+								 <address class="vcard author" style="font-style:italic;">
+									五 20 六月 2014
+										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+								  </address>
+									
+				                </footer><!-- /.post-info -->
+				                <div class="entry-content"> <p>~~伪码农一枚~~<br />
+~~伪安全工作者一枚~~<br />
+~~业余Android安全研究人员~~<br />
+~~擅长apk逆向分析，逆向工具编写~~   </p>
+<p>~~邮箱:feiqishizu2014#foxmail.com(把#换成@)~~   </p> </div><!-- /.entry-content -->
+
+								<div class="medium primary btn"><a href="/pages/2014/06/about-me" rel="bookmark" title="Permalink to About me">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+								<div class="row tag-row">
+										<span>Tagged as : </span>
+											<a class="danger label" href="/tag/guan-yu-wo.html">关于我</a>
+								</div>
+
+
+
+				        </article></li>
 				</ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -198,6 +269,7 @@
 <div class="sidebarbg">
 <h4>Categories</h4>
 	<ul>
+			<li><a href="/category/about-me.html">About me</a></li>
 			<li><a href="/category/android.html">Android</a></li>
 			<li><a href="/category/internet.html">Internet</a></li>
 	</ul>
@@ -206,10 +278,11 @@
 <div class="sidebarbg">
 	<h4>Tags</h4>
 		<ul>
-			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
-			<li class="tag-2"><a href="/tag/hook.html">Hook</a></li>
-			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
+			<li class="tag-0"><a href="/tag/android.html">Android</a></li>
 			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
+			<li class="tag-2"><a href="/tag/hook.html">Hook</a></li>
+			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
+			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
 		</ul>
 </div>
 
