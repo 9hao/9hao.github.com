@@ -254,6 +254,76 @@
 
 
 				        </article></li>
+				        <li><article class="hentry">
+				                <header> <h2 class="entry-title"><a href="/pages/2014/05/android-java-hook-na-dian-shi-2" rel="bookmark" title="Permalink to android java hook 那点事(2)">android java hook 那点事(2)</a></h2> </header>
+				                <footer class="post-info">
+				                    <!--<abbr class="published" title="2014-05-11T00:00:00"> 日 11 五月 2014 </abbr>
+<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
+								 <address class="vcard author" style="font-style:italic;">
+									日 11 五月 2014
+										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+								  </address>
+									
+				                </footer><!-- /.post-info -->
+				                <div class="entry-content"> <p>(不知攻，焉知防！)  </p>
+<p>&emsp;&emsp;要说到<strong>android</strong> 的<strong>java hook</strong>不得不提国外大神的<a href="https://github.com/rovo89">xposed框架</a>（<a href="http://www.kanxue.com/bbs/showthread.php?t=181436&amp;viewgoodnees=1&amp;prefixid=">看雪上有贴子对它的分析</a>），刚开始看源码的时候，有些地方不知道为什么这么做，why？why？,一直在脑子里转。带着疑问研究<strong>android</strong>源码的之后，才晓其理。  </p>
+<p>&emsp;&emsp;通过<a href="/pages/2014/03/android-java-hook-na-dian-shi-1">之前的日志</a>我们知道了基本的<strong>android java hook</strong> 原理，里面有一步是把method的nativeFunc值设为<strong>dvmResolveNativeMethod</strong>，为什么这么做，可以看看<a href="http://shyluo.blog.51cto.com/5725845/1229257">老罗的日志Dalvik虚拟机JNI方法的注册过程分析</a>。<strong>xposed</strong>和我们不同的是自己写了处理函数<strong>xposedCallHandler</strong>,我好奇的是大神为什么这样实现？思路？记得<strong>java</strong>里面有个<strong>proxy</strong>类，也修改函数的执行，因此我看<strong>android</strong>里这个类的实现源码，后面我追到了<a href="http://androidxref.com/4.1.2/xref/dalvik/vm/reflect/Proxy.cpp">Proxy.cpp</a>,发现......   </p>
+<div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * Create ...</span></pre></div> </div><!-- /.entry-content -->
+
+								<div class="medium primary btn"><a href="/pages/2014/05/android-java-hook-na-dian-shi-2" rel="bookmark" title="Permalink to android java hook 那点事(2)">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+								<div class="row tag-row">
+										<span>Tagged as : </span>
+											<a class="danger label" href="/tag/android.html">Android</a>
+											<a class="danger label" href="/tag/hook.html">Hook</a>
+								</div>
+
+
+
+				        </article></li>
+				        <li><article class="hentry">
+				                <header> <h2 class="entry-title"><a href="/pages/2014/03/android-java-hook-na-dian-shi-1" rel="bookmark" title="Permalink to android java hook 那点事(1)">android java hook 那点事(1)</a></h2> </header>
+				                <footer class="post-info">
+				                    <!--<abbr class="published" title="2014-03-20T00:00:00"> 四 20 三月 2014 </abbr>
+<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
+								 <address class="vcard author" style="font-style:italic;">
+									四 20 三月 2014
+										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+								  </address>
+									
+				                </footer><!-- /.post-info -->
+				                <div class="entry-content"> <p>(不知攻，焉知防)  </p>
+<p>&emsp;&emsp;通过这篇<a href="http://blog.csdn.net/luoshengyang/article/details/8914953">老罗的日志</a>，我们可以了解到 dalvik在执行函数时会先调用dvmIsNativeMethod来判断一个method是否是native方法。如果是native函数的话，那么它所指向的一个Method对象的成员变量nativeFunc就指向该JNI方法的地址，因此就可以直接对它进行调用。否则的话，就说明参数method描述的是一个Java函数，这时候就需要继续调用函数dvmInterpret来执行它的代码。因此我们可以把一个非native的java函数变成native method，让dalvik执行我们的native方法而达到hook的目的。</p>
+<p>&emsp;&emsp;先看android代码的两个片段</p>
+<p><strong>0x01</strong>  <a href="http://androidxref.com/4.1.2/xref/dalvik/vm/oo/Class.cpp#2148">loadMethodFromDex</a></p>
+<div class="highlight"><pre> <span class="k">if</span> <span class="o">(</span><span class="n">pDexCode</span> <span class="o">!=</span> <span class="n">NULL</span><span class="o">)</span> <span class="o">{</span>
+        <span class="cm">/* integer constants, copy over for faster access */</span>
+        <span class="n">meth</span><span class="o">-&gt;</span><span class="n">registersSize</span> <span class="o">=</span> <span class="n">pDexCode</span><span class="o">-&gt;</span><span class="n">registersSize</span><span class="o">;</span>
+        <span class="n">meth</span><span class="o">-&gt;</span><span class="n">insSize</span> <span class="o">=</span> <span class="n">pDexCode</span><span class="o">-&gt;</span><span class="n">insSize</span><span class="o">;</span>
+        <span class="n">meth</span><span class="o">-&gt;</span><span class="n">outsSize</span> <span class="o">=</span> <span class="n">pDexCode</span><span class="o">-&gt;</span><span class="n">outsSize</span><span class="o">;</span>
+
+        <span class="cm">/* pointer to code area */</span>
+        <span class="n">meth</span><span class="o">-&gt;</span><span class="n">insns</span> <span class="o">=</span> <span class="n">pDexCode</span><span class="o">-&gt;</span><span class="n">insns</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="cm">/*</span>
+<span class="cm">         * We ...</span></pre></div> </div><!-- /.entry-content -->
+
+								<div class="medium primary btn"><a href="/pages/2014/03/android-java-hook-na-dian-shi-1" rel="bookmark" title="Permalink to android java hook 那点事(1)">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+								<div class="row tag-row">
+										<span>Tagged as : </span>
+											<a class="danger label" href="/tag/android.html">Android</a>
+											<a class="danger label" href="/tag/hook.html">Hook</a>
+								</div>
+
+
+
+				        </article></li>
 				</ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -278,11 +348,11 @@
 <div class="sidebarbg">
 	<h4>Tags</h4>
 		<ul>
-			<li class="tag-2"><a href="/tag/hook.html">Hook</a></li>
-			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
-			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
-			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
 			<li class="tag-0"><a href="/tag/android.html">Android</a></li>
+			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
+			<li class="tag-2"><a href="/tag/hook.html">Hook</a></li>
+			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
+			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
 		</ul>
 </div>
 
