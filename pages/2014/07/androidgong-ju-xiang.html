@@ -1,0 +1,290 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>android工具箱</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+<!-- Fork me on github -->
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                 <!-- <h1><a href="/">9Hao <strong>人若无名,正是安心练剑之时</strong></a></h1>  -->
+                 <h1><a href="/"><strong>9Hao</strong><p style="font-size:50%">人若无名,正是安心练剑之时</p></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="/">Home</a></li>
+					<!--<li><a href="/category/about-me.html">About me</a></li>-->
+					<li><a href="/category/about-me.html">About me</a></li>
+					<!--<li class="active"><a href="/category/android.html">Android</a></li>-->
+					<li><a href="/category/android.html">Android</a></li>
+					<!--<li><a href="/category/internet.html">Internet</a></li>-->
+					<li><a href="/category/internet.html">Internet</a></li>
+				<li><a href="/functions/archives.html">Archives</a></li>
+				<!--<li><a href="/functions/random.html">Random Article</a></li>
+				<!--
+				
+				-->
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/pages/2014/07/androidgong-ju-xiang" rel="bookmark"
+                   title="Permalink to android工具箱">android工具箱</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <!--
+			  <abbr class="published" title="2014-07-30T00:00:00">
+                三 30 七月 2014
+              </abbr>
+              <address class="vcard author">
+                By <a class="url fn" href="/author/123.html">#123</a>
+              </address>
+			  -->
+			  <address class="vcard author" style="font-style:italic;margin-bottom:-10px;">
+				三 30 七月 2014
+					&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+	
+			  </address>
+			  <hr />			  
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <blockquote>
+<p><strong>0x0 前言</strong> </p>
+</blockquote>
+<p>&emsp;&emsp; 工欲善其事必先利其器。  </p>
+<blockquote>
+<p><strong>一些工具脚本</strong></p>
+</blockquote>
+<p>&emsp;&emsp;发现windows下发送到这个东西蛮方便的，研究一下脚本用来提高效率.  </p>
+<div class="highlight"><pre><span class="mi">1</span><span class="n">Apk</span><span class="err">反编译或回编译</span><span class="p">.</span><span class="n">bat</span>                        
+<span class="mi">2</span><span class="err">用</span><span class="n">jd</span><span class="o">-</span><span class="n">gui</span><span class="err">查看</span><span class="p">(</span><span class="err">或者转</span><span class="n">jar</span><span class="err">文件</span><span class="p">).</span><span class="n">bat</span>        <span class="err">可以直接用</span><span class="n">jd</span><span class="o">-</span><span class="n">gui</span><span class="err">打开</span><span class="n">apk</span><span class="err">或</span><span class="n">dex</span><span class="err">看</span><span class="n">java</span><span class="err">代码</span>
+<span class="mi">3</span><span class="n">baksmali</span><span class="err">或</span><span class="n">smali</span><span class="p">.</span><span class="n">bat</span>
+<span class="mi">4</span><span class="n">Apk</span><span class="err">反或回编译（调试）</span><span class="p">.</span><span class="n">bat</span>               <span class="err">主要用于</span><span class="n">smali</span><span class="err">调试打包</span>
+<span class="mi">5</span><span class="n">smali</span><span class="err">生成</span><span class="n">dex</span><span class="err">文件</span><span class="p">.</span><span class="n">bat</span>
+<span class="mi">6</span><span class="err">对</span><span class="n">Apk</span><span class="err">进行签名</span><span class="p">.</span><span class="n">bat</span>
+<span class="mi">7</span><span class="err">启动调试</span><span class="n">apk</span><span class="p">.</span><span class="n">bat</span>     <span class="n">ida</span><span class="err">附加调试</span><span class="n">so</span><span class="err">时、</span><span class="n">jdb</span><span class="err">调试、</span><span class="n">smali</span><span class="err">调试</span>
+<span class="mi">8</span><span class="err">安装</span><span class="n">APK</span><span class="p">.</span><span class="n">bat</span>    <span class="err">管家这些老是乱装东西，真不爽，直接用命令多好</span>
+<span class="mi">9</span><span class="err">用</span><span class="n">jeb</span><span class="err">打开</span><span class="p">.</span><span class="n">bat</span>     <span class="n">jeb</span> <span class="n">smali</span><span class="o">-&gt;</span><span class="n">java</span><span class="err">的神器</span>
+</pre></div>
+
+
+<p>使用</p>
+<div class="highlight"><pre><span class="err">把</span><span class="mi">1</span><span class="n">Apk</span><span class="err">反编译</span><span class="p">.</span><span class="n">bat</span><span class="err">到</span><span class="mi">9</span><span class="err">用</span><span class="n">jeb</span><span class="err">打开</span><span class="p">.</span><span class="n">bat</span><span class="err">生成快捷方式再把快捷方式剪贴到用户的</span><span class="n">sendto</span><span class="err">文件夹</span>  
+
+<span class="n">sendto</span><span class="err">文件夹快速打开方式</span><span class="p">.</span><span class="err">按下</span><span class="n">win</span><span class="err">键，再搜索输入</span><span class="n">shell</span><span class="o">:</span><span class="n">sendto</span>  
+
+<span class="err">反编译回编译</span><span class="n">apk</span><span class="err">可以右键发送至对应的操作，可以自行修改编号来排序</span>  
+</pre></div>
+
+
+<p>工具脚本   <br />
+<img alt="工具脚本" src="http://www.opendrive.com/files/Ml82MjI1OTI2MF94bWdBZQ/%E5%B7%A5%E5%85%B7%E8%84%9A%E6%9C%AC.jpg" />  </p>
+<p><strong>使用启动apk调试</strong>
+<img alt="启动调试" src="http://www.opendrive.com/files/Ml82MjI1OTY2Nl85TXpFWQ/%E5%90%AF%E5%8A%A8%E8%B0%83%E8%AF%95.jpg" />  </p>
+<blockquote>
+<p><strong>smali阅读工具</strong>  </p>
+</blockquote>
+<div class="highlight"><pre><span class="n">apkstudio</span>
+<span class="n">sublime</span>
+<span class="n">ue</span>
+<span class="n">notepad</span><span class="o">++</span>
+<span class="n">apk</span><span class="err">修改之理</span>
+<span class="n">SmaliViewer</span>
+<span class="n">ida</span>
+</pre></div>
+
+
+<p>每个工具各有优点，尝试一番，最后选择了notepad++，配合notepad++的一些插件，可以diy一个强大的smali ide</p>
+<div class="highlight"><pre><span class="mi">1</span> <span class="err">语法高亮配色</span>
+<span class="mi">2</span> <span class="err">搜索</span> <span class="err">当前文件搜索、文件夹搜索、所有打开问题搜索</span>
+<span class="mi">3</span> <span class="n">Explorer</span> <span class="err">文件浏览插件</span>  <span class="n">Python</span> <span class="n">Script</span> <span class="n">python</span><span class="err">插件，通过这个插件可以</span><span class="n">python</span><span class="err">写些工具脚本</span>
+</pre></div>
+
+
+<p><img alt="mynotepad++" src="http://www.opendrive.com/files/Ml82MjI3MzIwN19oc2Z4eg/mynotepad.jpg" />    </p>
+<p><em>加上自己写的几个插件</em><br />
+<img alt="myplugin++" src="http://www.opendrive.com/files/Ml82MjI3MzQzOF9UY2hXaQ/myplugin.jpg" />  </p>
+<p><strong>openjava  可直接跳到java类（jd-gui，jeb研究中）</strong>
+<img alt="openjava" src="http://www.opendrive.com/files/Ml82MjI3NDIyMV9LRXJaaQ/openjava.jpg" />  </p>
+<p><strong>jumpsmali 调转到定义函数</strong>
+比如一个引用了invoke-static {v0}, Lcom/mydebug;-&gt;log([B)V，使用插件后快速调转到mydebug.smali的.method public static log([B)V   </p>
+<p><strong>jumpback 从调转到定义函数返回</strong>  </p>
+<p><strong>gotosmalifile  快速调转到想打开的smali文件</strong>
+ <img alt="  jump1 " src="http://www.opendrive.com/files/Ml82MjI3NDUzNF9BbFJ4SA/jump1.jpg" /> <img alt="  jump2" src="http://www.opendrive.com/files/Ml82MjI3NDUzNl9VNEhiYw/jump2.jpg" />  </p>
+<p><strong>apktoolb  回编译并签名插件 </strong> 
+<img alt="apktoolb" src="http://www.opendrive.com/files/Ml82MjI3NTQwOV9QUUFFWA/apktoolb.jpg" />  </p>
+<p>未完 .........</p>
+            </div><!-- /.entry-content -->
+			            <aside>
+            <hr/>
+            <!-- all by Qxia -->
+
+            <nav>
+            <ul class="articles_timeline">
+ 
+                <li class="previous_article">« <a href="/pages/2014/07/qian-tan-androidni-xiang-fen-xi-na-xie-lan-lu-hu" title="Previous: 浅谈android逆向分析那些拦路虎">浅谈android逆向分析那些拦路虎</a></li>
+            </ul>
+            </nav>
+            </aside>
+			<!--neighbors plugin take -->
+			<ul style="float:right;">
+			</ul>
+			
+			
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "pages/2014/07/androidgong-ju-xiang";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://9haoblog.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+        
+<div class="three columns">
+
+<div class="sidebarbg">
+	<h4>Pages</h4>
+	<ul>
+	</ul>
+</div>
+
+<div class="sidebarbg">
+<h4>Categories</h4>
+	<ul>
+			<li><a href="/category/about-me.html">About me</a></li>
+			<li><a href="/category/android.html">Android</a></li>
+			<li><a href="/category/internet.html">Internet</a></li>
+	</ul>
+</div>
+
+<div class="sidebarbg">
+	<h4>Tags</h4>
+		<ul>
+			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
+			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
+			<li class="tag-2"><a href="/tag/hook.html">Hook</a></li>
+			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
+			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
+		</ul>
+</div>
+
+
+
+<nav class="widget sidebarbg">
+  <h4>Links</h4>
+  <ul>
+	<li><a target="_blank" href="http://getpelican.com/">Pelican</a></li>
+	<li><a target="_blank" href="http://python.org/">Python.org</a></li>
+	<li><a target="_blank" href="http://pallergabor.uw.hu/androidblog/dalvik_opcodes.html">Dalvik opcodes</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+					本博客使用Pelican+GitHub Pages搭建，详细请参考<a href="http://www.xycoding.com/articles/2013/11/21/blog-create/" class="active" target="_blank">教程</a>。
+				   </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = '9haoblog';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+      <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+	<script>
+	(function() {
+		var $backToTopTxt = "返回顶部", $backToTopEle = $('<div class="backToTop"></div>').appendTo($("body"))
+			.text($backToTopTxt).attr("title", $backToTopTxt).click(function() {
+				$("html, body").animate({ scrollTop: 0 }, 120);
+		}), $backToTopFun = function() {
+			var st = $(document).scrollTop(), winh = $(window).height();
+			(st > 0)? $backToTopEle.show(): $backToTopEle.hide();
+			//IE6下的定位
+			if (!window.XMLHttpRequest) {
+				$backToTopEle.css("top", st + winh - 166);
+			}
+		};
+		$(window).bind("scroll", $backToTopFun);
+		$(function() { $backToTopFun(); });
+	})();
+	</script>
+</body>
+</html>
