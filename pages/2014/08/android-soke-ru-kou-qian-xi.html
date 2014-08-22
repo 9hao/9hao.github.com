@@ -274,8 +274,8 @@
 </pre></div>
 
 
-<p>DEBUG的说明 constructors (init func)和constructors (init_array)
-我们再看看一份文档<a href="http://www.netmite.com/android/mydroid/1.6/bionic/linker/README.TXT">Android Dynamic Linker Design Notes</a></p>
+<p>DEBUG里面说明了constructors (init func)和constructors (init_array)。<br />
+&emsp;&emsp;我们再看看一份文档<a href="http://www.netmite.com/android/mydroid/1.6/bionic/linker/README.TXT">Android Dynamic Linker Design Notes</a></p>
 <div class="highlight"><pre><span class="nx">DT_INIT</span>
       <span class="nx">Points</span> <span class="nx">to</span> <span class="nx">the</span> <span class="nx">address</span> <span class="nx">of</span> <span class="nx">an</span> <span class="nx">initialization</span> <span class="kd">function</span>
       <span class="nx">that</span> <span class="nx">must</span> <span class="nx">be</span> <span class="nx">called</span> <span class="nx">when</span> <span class="nx">the</span> <span class="nx">file</span> <span class="nx">is</span> <span class="nx">loaded</span><span class="p">.</span>
@@ -289,7 +289,7 @@
 </pre></div>
 
 
-<p>通过层层分析，我们很清楚知道了系统加载so，在完成装载、映射和重定向以后，就首先执行<strong>.init</strong>和<strong>.init_array</strong>段的代码   </p>
+<p>&emsp;&emsp;通过层层分析，我们很清楚知道了系统加载so，在完成装载、映射和重定向以后，就首先执行<strong>.init</strong>和<strong>.init_array</strong>段的代码.   </p>
 <p>前面有一篇文章我已经对so加壳进行简单说明  </p>
 <div class="highlight"><pre><span class="err">把源码的</span><span class="n">dlopen</span><span class="err">复制出来修改，在把自己</span><span class="n">so</span><span class="err">加载起来的时候</span> <span class="p">,</span><span class="err">把自己内存里面某部分地址解密后</span><span class="p">,</span><span class="err">用自己的</span><span class="n">dlopen</span><span class="err">打开返回一个</span><span class="n">soinfo</span><span class="err">结构体</span> <span class="err">然后把当前</span><span class="n">soinfo</span><span class="err">结构体替换原来的</span><span class="n">soinfo</span><span class="err">结构体</span>   
 </pre></div>
@@ -298,7 +298,7 @@
 <blockquote>
 <p>小结  </p>
 </blockquote>
-<p>系统加载so，在完成装载、映射和重定向以后，就首先执行<strong>.init</strong>和<strong>.init_array</strong>段的代码，之后如果存在<strong>JNI_OnLoad</strong> 就调用该函数.我们要对一个so进行分析，需要先看看有没有<strong>.init_array section</strong>和<strong>.init   section</strong>，so加壳一般会在初始化函数进行脱壳操作。  </p>
+<p>&emsp;&emsp;系统加载so，在完成装载、映射和重定向以后，就首先执行<strong>.init</strong>和<strong>.init_array</strong>段的代码，之后如果存在<strong>JNI_OnLoad</strong> 就调用该函数.我们要对一个so进行分析，需要先看看有没有<strong>.init_array section</strong>和<strong>.init   section</strong>，so加壳一般会在初始化函数进行脱壳操作。  </p>
 <blockquote>
 <p>如何在<strong>.init</strong>和<strong>.init_array</strong>段添加我们的函数  </p>
 </blockquote>
@@ -333,11 +333,11 @@
 </pre></div>
 
 
-<p>参考： 
-[1] 《深入理解Android卷1》
-[2] 《程序员的自我修养-链接、装载与库》
-[3] <a href="http://blog.csdn.net/dinuliang/article/details/5509009">android linker 浅析</a>
-[4] <a href="http://www.netmite.com/android/mydroid/1.6/bionic/linker/README.TXT">Android Dynamic Linker Design Notes</a></p>
+<p>参考： <br />
+[1] 《深入理解Android卷1》<br />
+[2] 《程序员的自我修养-链接、装载与库》<br />
+[3] <a href="http://blog.csdn.net/dinuliang/article/details/5509009">android linker 浅析</a><br />
+[4] <a href="http://www.netmite.com/android/mydroid/1.6/bionic/linker/README.TXT">Android Dynamic Linker Design Notes</a>  </p>
             </div><!-- /.entry-content -->
 			            <aside>
             <hr/>
@@ -391,11 +391,11 @@
 <div class="sidebarbg">
 	<h4>Tags</h4>
 		<ul>
-			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
-			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
+			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
 			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
 			<li class="tag-3"><a href="/tag/hook.html">Hook</a></li>
-			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
+			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
+			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
 		</ul>
 </div>
 
