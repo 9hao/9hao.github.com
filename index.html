@@ -253,179 +253,6 @@
 
 
 				        </article></li>
-				        <li><article class="hentry">
-				                <header> <h2 class="entry-title"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-chu-tan-di-ying" rel="bookmark" title="Permalink to android逆向分析之初探敌营">android逆向分析之初探敌营</a></h2> </header>
-				                <footer class="post-info">
-				                    <!--<abbr class="published" title="2014-07-15T00:00:00"> 二 15 七月 2014 </abbr>
-<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
-								 <address class="vcard author" style="font-style:italic;">
-									二 15 七月 2014
-										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
-								  </address>
-									
-				                </footer><!-- /.post-info -->
-				                <div class="entry-content"> <p>(不知攻，焉知防！)</p>
-<div class="highlight"><pre><span class="err">前言</span>
-</pre></div>
-
-
-<p>&emsp;&emsp;参考非虫大大的书和写一些个人经验。在逆向一个Android程序，如果盲目的分析，有可能遇到阅读成千上万的反汇编代码才能找到程序的关键点，这无疑是浪费时间的表现。那么我们要对一个陌生的apk后怎么入手？</p>
-<div class="highlight"><pre><span class="mh">0x01</span> <span class="err">初探</span>
-</pre></div>
-
-
-<p>&emsp;&emsp;1 拿到一个apk，不要急于直接看汇编代码，先浏览一下apk的字符串信息，再大略浏览一下类和函数,大体在脑子里留个印象。</p>
-<p>&emsp;&emsp;2 application类 apk一般初始化配置的地方，壳初始化,如果有要注意下。</p>
-<p>&emsp;&emsp;3 主activity,程序的一般入口。</p>
-<p>&emsp;&emsp;4 如果是搞病毒木马分析，要注意 server和 广播。</p>
-<div class="highlight"><pre><span class="mh">0x02</span> <span class="err">定位</span>
-</pre></div>
-
-
-<p>&emsp;&emsp;1 信息反馈法</p>
-<div class="highlight"><pre>    <span class="n">a</span> <span class="err">上面我们提到先看字符串信息，根据你需求，你应该对一些字符串很敏感。比如你是想找内支付的，那有可能出现“支付成功”</span><span class="p">,</span><span class="err">“支付失败”；你要找登录验证的，可能有</span><span class="s">&quot;登录成功&quot;</span><span class="err">、“登录失败”；病毒木马可能有“指令”“</span><span class="n">xxx</span><span class="err">成功等 ...</span></pre></div> </div><!-- /.entry-content -->
-
-								<div class="medium primary btn"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-chu-tan-di-ying" rel="bookmark" title="Permalink to android逆向分析之初探敌营">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-								<div class="row tag-row">
-										<span>Tagged as : </span>
-											<a class="danger label" href="/tag/android.html">Android</a>
-											<a class="danger label" href="/tag/ni-xiang-fen-xi.html">逆向分析</a>
-								</div>
-
-
-
-				        </article></li>
-				        <li><article class="hentry">
-				                <header> <h2 class="entry-title"><a href="/pages/2014/06/about-me" rel="bookmark" title="Permalink to About me">About me</a></h2> </header>
-				                <footer class="post-info">
-				                    <!--<abbr class="published" title="2014-06-20T00:00:00"> 五 20 六月 2014 </abbr>
-<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
-								 <address class="vcard author" style="font-style:italic;">
-									五 20 六月 2014
-										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
-								  </address>
-									
-				                </footer><!-- /.post-info -->
-				                <div class="entry-content"> <p><em>伪码农一枚</em><br />
-<em>伪安全工作者一枚</em><br />
-<em>业余Android安全研究人员</em><br />
-<em>擅长apk逆向分析，逆向工具编写</em>   </p>
-<p><em>邮箱:feiqishizu2014#foxmail.com(把#换成@)</em>   </p> </div><!-- /.entry-content -->
-
-								<div class="medium primary btn"><a href="/pages/2014/06/about-me" rel="bookmark" title="Permalink to About me">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-								<div class="row tag-row">
-										<span>Tagged as : </span>
-											<a class="danger label" href="/tag/guan-yu-wo.html">关于我</a>
-								</div>
-
-
-
-				        </article></li>
-				        <li><article class="hentry">
-				                <header> <h2 class="entry-title"><a href="/pages/2014/05/android-java-hook-na-dian-shi-2" rel="bookmark" title="Permalink to android java hook 那点事(2)">android java hook 那点事(2)</a></h2> </header>
-				                <footer class="post-info">
-				                    <!--<abbr class="published" title="2014-05-11T00:00:00"> 日 11 五月 2014 </abbr>
-<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
-								 <address class="vcard author" style="font-style:italic;">
-									日 11 五月 2014
-										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
-								  </address>
-									
-				                </footer><!-- /.post-info -->
-				                <div class="entry-content"> <p>(不知攻，焉知防！)  </p>
-<p>&emsp;&emsp;要说到<strong>android</strong> 的<strong>java hook</strong>不得不提国外大神的<a href="https://github.com/rovo89">xposed框架</a>（<a href="http://www.kanxue.com/bbs/showthread.php?t=181436&amp;viewgoodnees=1&amp;prefixid=">看雪上有贴子对它的分析</a>），刚开始看源码的时候，有些地方不知道为什么这么做，why？why？,一直在脑子里转。带着疑问研究<strong>android</strong>源码的之后，才晓其理。  </p>
-<p>&emsp;&emsp;通过<a href="/pages/2014/03/android-java-hook-na-dian-shi-1">之前的日志</a>我们知道了基本的<strong>android java hook</strong> 原理，里面有一步是把method的nativeFunc值设为<strong>dvmResolveNativeMethod</strong>，为什么这么做，可以看看<a href="http://shyluo.blog.51cto.com/5725845/1229257">老罗的日志Dalvik虚拟机JNI方法的注册过程分析</a>。<strong>xposed</strong>和我们不同的是自己写了处理函数<strong>xposedCallHandler</strong>,我好奇的是大神为什么这样实现？思路？记得<strong>java</strong>里面有个<strong>proxy</strong>类，也修改函数的执行，因此我看<strong>android</strong>里这个类的实现源码，后面我追到了<a href="http://androidxref.com/4.1.2/xref/dalvik/vm/reflect/Proxy.cpp">Proxy.cpp</a>,发现......   </p>
-<div class="highlight"><pre><span class="cm">/*</span>
-<span class="cm"> * Create ...</span></pre></div> </div><!-- /.entry-content -->
-
-								<div class="medium primary btn"><a href="/pages/2014/05/android-java-hook-na-dian-shi-2" rel="bookmark" title="Permalink to android java hook 那点事(2)">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-								<div class="row tag-row">
-										<span>Tagged as : </span>
-											<a class="danger label" href="/tag/android.html">Android</a>
-											<a class="danger label" href="/tag/hook.html">Hook</a>
-								</div>
-
-
-
-				        </article></li>
-				        <li><article class="hentry">
-				                <header> <h2 class="entry-title"><a href="/pages/2014/03/android-java-hook-na-dian-shi-1" rel="bookmark" title="Permalink to android java hook 那点事(1)">android java hook 那点事(1)</a></h2> </header>
-				                <footer class="post-info">
-				                    <!--<abbr class="published" title="2014-03-20T00:00:00"> 四 20 三月 2014 </abbr>
-<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
-								 <address class="vcard author" style="font-style:italic;">
-									四 20 三月 2014
-										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
-								  </address>
-									
-				                </footer><!-- /.post-info -->
-				                <div class="entry-content"> <p>(不知攻，焉知防)  </p>
-<p>&emsp;&emsp;通过这篇<a href="http://blog.csdn.net/luoshengyang/article/details/8914953">老罗的日志</a>，我们可以了解到 dalvik在执行函数时会先调用dvmIsNativeMethod来判断一个method是否是native方法。如果是native函数的话，那么它所指向的一个Method对象的成员变量nativeFunc就指向该JNI方法的地址，因此就可以直接对它进行调用。否则的话，就说明参数method描述的是一个Java函数，这时候就需要继续调用函数dvmInterpret来执行它的代码。因此我们可以把一个非native的java函数变成native method，让dalvik执行我们的native方法而达到hook的目的。</p>
-<p>&emsp;&emsp;先看android代码的两个片段</p>
-<p><strong>0x01</strong>  <a href="http://androidxref.com/4.1.2/xref/dalvik/vm/oo/Class.cpp#2148">loadMethodFromDex</a></p>
-<div class="highlight"><pre> <span class="k">if</span> <span class="o">(</span><span class="n">pDexCode</span> <span class="o">!=</span> <span class="n">NULL</span><span class="o">)</span> <span class="o">{</span>
-        <span class="cm">/* integer constants, copy over for faster access */</span>
-        <span class="n">meth</span><span class="o">-&gt;</span><span class="n">registersSize</span> <span class="o">=</span> <span class="n">pDexCode</span><span class="o">-&gt;</span><span class="n">registersSize</span><span class="o">;</span>
-        <span class="n">meth</span><span class="o">-&gt;</span><span class="n">insSize</span> <span class="o">=</span> <span class="n">pDexCode</span><span class="o">-&gt;</span><span class="n">insSize</span><span class="o">;</span>
-        <span class="n">meth</span><span class="o">-&gt;</span><span class="n">outsSize</span> <span class="o">=</span> <span class="n">pDexCode</span><span class="o">-&gt;</span><span class="n">outsSize</span><span class="o">;</span>
-
-        <span class="cm">/* pointer to code area */</span>
-        <span class="n">meth</span><span class="o">-&gt;</span><span class="n">insns</span> <span class="o">=</span> <span class="n">pDexCode</span><span class="o">-&gt;</span><span class="n">insns</span><span class="o">;</span>
-    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-        <span class="cm">/*</span>
-<span class="cm">         * We ...</span></pre></div> </div><!-- /.entry-content -->
-
-								<div class="medium primary btn"><a href="/pages/2014/03/android-java-hook-na-dian-shi-1" rel="bookmark" title="Permalink to android java hook 那点事(1)">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-								<div class="row tag-row">
-										<span>Tagged as : </span>
-											<a class="danger label" href="/tag/android.html">Android</a>
-											<a class="danger label" href="/tag/hook.html">Hook</a>
-								</div>
-
-
-
-				        </article></li>
-				        <li><article class="hentry">
-				                <header> <h2 class="entry-title"><a href="/pages/2014/03/losermen-de-gong-tong-te-zheng" rel="bookmark" title="Permalink to loser们的共同特征">loser们的共同特征</a></h2> </header>
-				                <footer class="post-info">
-				                    <!--<abbr class="published" title="2014-03-20T00:00:00"> 四 20 三月 2014 </abbr>
-<address class="vcard author">By <a class="url fn" href="/author/hu-lian-wang.html">互联网</a></address>-->
-								 <address class="vcard author" style="font-style:italic;">
-									四 20 三月 2014
-										&nbsp;&nbsp;Write By <a class="url fn" href="/author/hu-lian-wang.html">互联网</a>
-								  </address>
-									
-				                </footer><!-- /.post-info -->
-				                <div class="entry-content"> <p>互联网提供了一个很好的窗口，使我们可以观察形形色色的人们，那么看到最多的，大概就是loser了。这也符合社会人群构成的分布，失意者往往是大多数，成功者往往是极少数。</p>
-<p>怎样摆脱失意，成就自己，不妨先看看loser有哪些共性，再看看自己占了几条。</p>
-<p>loser共性之一， 怨天尤人
-  别人有个好老板，我们老板真抠门；别人有背景，我们是草根；等等，把自己的无能用“客观环境”来掩盖，乍一听条条是理，其实呢，别人成功都是偶然，自己的失败都是命不好。这样的人能成功才是没天理。今天无论是网络社区里，街边聊天里，听到最多的就是这种谈资，“我们老板不成，太黑，你看人家谁那单位”，每个行业，顶尖的人才都是极少数，而平庸的人总是过剩，你跨入那个门槛，你就会发现，其实你的老板非常大方，一点都不黑，关键是，你在门槛外，然后看着门槛内的人，觉得他们似乎是命运的宠儿。却从来无视这个门槛的存在，所以有人说某某网游公司核心工程师月薪2万3万，人家公司待遇多好，自己才拿两三千，却从来不肯面对自己的水平和人家的水平差多少。</p>
-<p>loser共性之二，不肯面对现实 ...</p> </div><!-- /.entry-content -->
-
-								<div class="medium primary btn"><a href="/pages/2014/03/losermen-de-gong-tong-te-zheng" rel="bookmark" title="Permalink to loser们的共同特征">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-								<div class="row tag-row">
-										<span>Tagged as : </span>
-											<a class="danger label" href="/tag/za-wen.html">杂文</a>
-								</div>
-
-
-
-				        </article></li>
 				</ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -451,10 +278,10 @@
 	<h4>Tags</h4>
 		<ul>
 			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
-			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
 			<li class="tag-3"><a href="/tag/hook.html">Hook</a></li>
-			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
+			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
 			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
+			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
 		</ul>
 </div>
 
@@ -472,7 +299,8 @@
 </div> </div><!-- /.row -->
 
 <p class="paginator">
-    Page 1 / 1
+    Page 1 / 2
+        <a href="/index2.html"><i class="icon-arrow-right"></i></a>
 </p>
 </section><!-- /#content -->
 

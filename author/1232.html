@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 
-        <title>9Hao - Hook</title>
+        <title>9Hao - Articles by #123</title>
         <meta charset="utf-8" />
 
 
@@ -59,9 +59,84 @@
    <div class="row">
 
         <div class="eleven columns">
-
+<h2>Articles by #123</h2>
 		
 		         <ol id="post-list">
+				        <li><article class="hentry">
+				                <header> <h2 class="entry-title"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-chu-tan-di-ying" rel="bookmark" title="Permalink to android逆向分析之初探敌营">android逆向分析之初探敌营</a></h2> </header>
+				                <footer class="post-info">
+				                    <!--<abbr class="published" title="2014-07-15T00:00:00"> 二 15 七月 2014 </abbr>
+<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
+								 <address class="vcard author" style="font-style:italic;">
+									二 15 七月 2014
+										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+								  </address>
+									
+				                </footer><!-- /.post-info -->
+				                <div class="entry-content"> <p>(不知攻，焉知防！)</p>
+<div class="highlight"><pre><span class="err">前言</span>
+</pre></div>
+
+
+<p>&emsp;&emsp;参考非虫大大的书和写一些个人经验。在逆向一个Android程序，如果盲目的分析，有可能遇到阅读成千上万的反汇编代码才能找到程序的关键点，这无疑是浪费时间的表现。那么我们要对一个陌生的apk后怎么入手？</p>
+<div class="highlight"><pre><span class="mh">0x01</span> <span class="err">初探</span>
+</pre></div>
+
+
+<p>&emsp;&emsp;1 拿到一个apk，不要急于直接看汇编代码，先浏览一下apk的字符串信息，再大略浏览一下类和函数,大体在脑子里留个印象。</p>
+<p>&emsp;&emsp;2 application类 apk一般初始化配置的地方，壳初始化,如果有要注意下。</p>
+<p>&emsp;&emsp;3 主activity,程序的一般入口。</p>
+<p>&emsp;&emsp;4 如果是搞病毒木马分析，要注意 server和 广播。</p>
+<div class="highlight"><pre><span class="mh">0x02</span> <span class="err">定位</span>
+</pre></div>
+
+
+<p>&emsp;&emsp;1 信息反馈法</p>
+<div class="highlight"><pre>    <span class="n">a</span> <span class="err">上面我们提到先看字符串信息，根据你需求，你应该对一些字符串很敏感。比如你是想找内支付的，那有可能出现“支付成功”</span><span class="p">,</span><span class="err">“支付失败”；你要找登录验证的，可能有</span><span class="s">&quot;登录成功&quot;</span><span class="err">、“登录失败”；病毒木马可能有“指令”“</span><span class="n">xxx</span><span class="err">成功等 ...</span></pre></div> </div><!-- /.entry-content -->
+
+								<div class="medium primary btn"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-chu-tan-di-ying" rel="bookmark" title="Permalink to android逆向分析之初探敌营">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+								<div class="row tag-row">
+										<span>Tagged as : </span>
+											<a class="danger label" href="/tag/android.html">Android</a>
+											<a class="danger label" href="/tag/ni-xiang-fen-xi.html">逆向分析</a>
+								</div>
+
+
+
+				        </article></li>
+				        <li><article class="hentry">
+				                <header> <h2 class="entry-title"><a href="/pages/2014/06/about-me" rel="bookmark" title="Permalink to About me">About me</a></h2> </header>
+				                <footer class="post-info">
+				                    <!--<abbr class="published" title="2014-06-20T00:00:00"> 五 20 六月 2014 </abbr>
+<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
+								 <address class="vcard author" style="font-style:italic;">
+									五 20 六月 2014
+										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+								  </address>
+									
+				                </footer><!-- /.post-info -->
+				                <div class="entry-content"> <p><img alt="头像" src="http://www.opendrive.com/files/Ml82MjQ3MzE4OV9nNlRlTA/maoxiao.jpg" /><br />
+<em>伪码农一枚</em><br />
+<em>伪安全工作者一枚</em><br />
+<em>业余Android安全研究人员</em><br />
+<em>擅长apk逆向分析，逆向工具编写</em>   </p>
+<p><em>邮箱:feiqishizu2014#foxmail.com(把#换成@)</em>    </p> </div><!-- /.entry-content -->
+
+								<div class="medium primary btn"><a href="/pages/2014/06/about-me" rel="bookmark" title="Permalink to About me">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+								<div class="row tag-row">
+										<span>Tagged as : </span>
+											<a class="danger label" href="/tag/guan-yu-wo.html">关于我</a>
+								</div>
+
+
+
+				        </article></li>
 				        <li><article class="hentry">
 				                <header> <h2 class="entry-title"><a href="/pages/2014/05/android-java-hook-na-dian-shi-2" rel="bookmark" title="Permalink to android java hook 那点事(2)">android java hook 那点事(2)</a></h2> </header>
 				                <footer class="post-info">
@@ -178,7 +253,8 @@
 </div> </div><!-- /.row -->
 
 <p class="paginator">
-    Page 1 / 1
+            <a href="/author/123.html"><i class="icon-arrow-left"></i></a>
+    Page 2 / 2
 </p>
 </section><!-- /#content -->
 

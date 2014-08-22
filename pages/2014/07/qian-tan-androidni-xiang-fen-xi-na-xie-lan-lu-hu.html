@@ -163,8 +163,22 @@
 
 
 <p><strong><em>b 调试工具附加内存dump</em></strong><br />
-ida、gdb  这样，就不用说了<br />
-<strong><em>c 系统定制/hook</em></strong>   </p>
+ida、gdb</p>
+<div class="highlight"><pre><span class="n">idapython</span><span class="err">内存</span><span class="n">dump</span><span class="err">命令</span>
+<span class="n">idc</span><span class="p">.</span><span class="n">SaveFile</span><span class="p">(</span><span class="err">要保存的文件</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="err">起始位置</span><span class="p">,</span><span class="err">大小</span><span class="p">)</span>
+
+<span class="n">gdb</span>  <span class="o">--</span><span class="n">pid</span>  <span class="err">你要</span><span class="n">dump</span><span class="err">的进程</span><span class="n">pid</span><span class="err">号</span>
+<span class="n">gcore</span>
+<span class="n">gcore</span><span class="err">会生成内存</span><span class="n">dump</span><span class="err">名为</span> <span class="n">core</span><span class="p">.</span><span class="n">pid</span><span class="err">号</span>
+<span class="n">core</span><span class="p">.</span><span class="n">pid</span><span class="err">号</span> <span class="err">文件</span><span class="n">pull</span><span class="err">出来，再把</span><span class="n">dex</span><span class="err">解析出来</span><span class="p">(</span><span class="err">这些</span><span class="n">dex</span> <span class="err">包含</span><span class="n">odex</span><span class="err">的指令，需要进行处理下</span> <span class="p">)</span>
+
+<span class="n">gdb</span>   <span class="err">如果不能附加到主进程，可以连上其他线程，</span> <span class="err">这些线程的</span><span class="n">tid</span><span class="err">在</span><span class="o">/</span><span class="n">proc</span><span class="o">/</span><span class="p">[</span><span class="n">pid</span><span class="p">]</span><span class="o">/</span><span class="n">task</span><span class="o">/</span><span class="err">目录下</span><span class="p">.</span>
+<span class="n">gdb</span>  <span class="o">--</span><span class="n">pid</span>  <span class="err">线程号</span>
+<span class="err">后面同上</span>
+</pre></div>
+
+
+<p><strong><em>c 系统定制/hook</em></strong>   </p>
 <p><strong>~~再后来是内存加载，反ptrace~~</strong>   <br />
 后来网上放出内存dump之后，加固软件升级后,内存加载，反ptrace，ptrace之后附加dump暂时歇菜了
 这个时候要跟踪调试或者定制系统了<br />
@@ -175,12 +189,15 @@ ida、gdb  这样，就不用说了<br />
 </pre></div>
 
 
-<p><strong><em>hook或定制系统处理函数</em></strong>  </p>
+<p>推荐大家读下<a href="http://blog.csdn.net/caimouse/article/details/6747073">dex文件打开流程</a>,再去读下源码，熟悉一下dex加载过程中的常用函数<br />
+思考dex加载到内存中经历了哪些操作，源码中见真相。
+<strong><em>hook或定制系统处理函数</em></strong>  </p>
 <div class="highlight"><pre><span class="n">dexclassloader</span>
 <span class="n">dvmjarFileOpen</span>
 <span class="n">dvmDexFileOpenPartial</span>
 <span class="n">openDexFile</span>
 <span class="n">java</span> <span class="n">zipfile</span><span class="err">的构造函数</span>
+
 <span class="err">自己实现</span><span class="n">dump</span>
 </pre></div>
 
@@ -283,10 +300,10 @@ ida、gdb  这样，就不用说了<br />
 	<h4>Tags</h4>
 		<ul>
 			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
-			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
 			<li class="tag-3"><a href="/tag/hook.html">Hook</a></li>
-			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
+			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
 			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
+			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
 		</ul>
 </div>
 
