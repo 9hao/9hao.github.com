@@ -1,0 +1,479 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>android so壳入口浅析</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+<!-- Fork me on github -->
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                 <!-- <h1><a href="/">9Hao <strong>人若无名,正是安心练剑之时</strong></a></h1>  -->
+                 <h1><a href="/"><strong>9Hao</strong><p style="font-size:50%">人若无名,正是安心练剑之时</p></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="/">Home</a></li>
+					<!--<li><a href="/category/about-me.html">About me</a></li>-->
+					<li><a href="/category/about-me.html">About me</a></li>
+					<!--<li class="active"><a href="/category/android.html">Android</a></li>-->
+					<li><a href="/category/android.html">Android</a></li>
+					<!--<li><a href="/category/internet.html">Internet</a></li>-->
+					<li><a href="/category/internet.html">Internet</a></li>
+				<li><a href="/functions/archives.html">Archives</a></li>
+				<!--<li><a href="/functions/random.html">Random Article</a></li>
+				<!--
+				
+				-->
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/pages/2014/08/android-soke-ru-kou-qian-xi" rel="bookmark"
+                   title="Permalink to android so壳入口浅析">android so壳入口浅析</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <!--
+			  <abbr class="published" title="2014-08-13T00:00:00">
+                三 13 八月 2014
+              </abbr>
+              <address class="vcard author">
+                By <a class="url fn" href="/author/123.html">#123</a>
+              </address>
+			  -->
+			  <address class="vcard author" style="font-style:italic;margin-bottom:-10px;">
+				三 13 八月 2014
+					&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+	
+			  </address>
+			  <hr />			  
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <blockquote>
+<p>前言  </p>
+</blockquote>
+<p>&emsp;&emsp;开年来开始接触一些加固样本，基本都对了so进行了处理，拖入ida一看，要么没有 <strong>JNI_OnLoad</strong>   ,要么 <strong>JNI_OnLoad</strong>   汇编代码羞涩难懂，让人无法下手。 <strong>JNI_OnLoad</strong>   是真正入口么？  </p>
+<p>先看看几个文档  </p>
+<p><strong>1  摘自属性服务一节（《深入理解Android卷1》）</strong>  </p>
+<div class="highlight"><pre>     <span class="err">利用</span><span class="nx">gcc</span><span class="err">的</span><span class="nx">constructor</span><span class="err">属性，这个属性指明了一个</span><span class="nx">__libc_prenit</span><span class="err">函数</span><span class="p">(</span><span class="err">这个函数内部就将完成共享内存到本地进程的映射工作</span><span class="p">)</span><span class="err">。用法：当</span><span class="nx">bionic</span> <span class="nx">libc</span><span class="err">库被加载时，将自动调用</span><span class="nx">__libc_prenit</span><span class="err">函数。这样在</span><span class="nx">bionic</span> <span class="nx">libc</span><span class="err">动态库被装载时，系统属性缓冲区地址就被确定了，后续的</span><span class="nx">API</span><span class="err">调用就能找对位置了。</span>
+
+<span class="cm">/* We flag the __libc_preinit function as a constructor to ensure * that its address is listed in libc.so&#39;s .init_array section. * This ensures that the function is called by the dynamic linker * as soon as the shared library is loaded. */</span> 
+
+<span class="c1">//constructor属性指示加载器加载该库之后，首先调用__libc_prenit函数。这一点和windows上的动态库的DllMain函数类似</span>
+<span class="k">void</span> <span class="nx">__attribute__</span><span class="p">((</span><span class="nx">constructor</span><span class="p">))</span> <span class="nx">__libc_prenit</span><span class="p">(</span><span class="k">void</span><span class="p">);</span>
+</pre></div>
+
+
+<p>从英文说明里面提到到.init_array section，我们可以搜索一下这一节的说明  </p>
+<p><strong>2 .init_array section </strong>  </p>
+<div class="highlight"><pre><span class="p">.</span><span class="n">init_array</span> <span class="n">contains</span> <span class="n">pointers</span> <span class="n">to</span> <span class="n">blocks</span> <span class="n">of</span> <span class="n">code</span> <span class="n">that</span> <span class="n">need</span> <span class="n">to</span> <span class="n">be</span> <span class="n">executed</span> <span class="n">when</span> <span class="n">an</span> <span class="n">application</span> <span class="n">is</span> <span class="n">being</span> <span class="n">initialized</span> <span class="p">(</span><span class="n">before</span> <span class="n">main</span><span class="p">()</span> <span class="n">is</span> <span class="n">called</span><span class="p">).</span> <span class="n">It</span> <span class="n">is</span> <span class="n">used</span> <span class="k">for</span> <span class="n">a</span> <span class="n">number</span> <span class="n">of</span> <span class="n">things</span><span class="p">,</span> <span class="n">but</span> <span class="n">the</span> <span class="n">primary</span> <span class="n">use</span> <span class="n">is</span> <span class="n">in</span> <span class="n">C</span><span class="o">++</span> <span class="k">for</span> <span class="n">running</span> <span class="k">static</span> <span class="n">constructors</span><span class="p">;</span> <span class="n">a</span> <span class="n">secondary</span> <span class="n">use</span> <span class="n">that</span> <span class="n">is</span> <span class="n">sometimes</span> <span class="n">used</span> <span class="n">is</span> <span class="n">to</span> <span class="n">initialize</span> <span class="n">IO</span> <span class="n">systems</span> <span class="n">in</span> <span class="n">the</span> <span class="n">C</span> <span class="n">library</span><span class="p">.</span>
+<span class="n">If</span> <span class="n">you</span> <span class="n">are</span> <span class="n">not</span> <span class="n">using</span> <span class="n">C</span><span class="o">++</span> <span class="n">you</span> <span class="n">may</span> <span class="p">(</span><span class="n">depending</span> <span class="n">on</span> <span class="n">your</span> <span class="n">C</span> <span class="n">library</span><span class="p">)</span> <span class="n">be</span> <span class="n">able</span> <span class="n">to</span> <span class="n">live</span> <span class="n">without</span> <span class="n">it</span> <span class="n">entirely</span><span class="p">;</span> <span class="n">but</span> <span class="n">you</span><span class="err">’</span><span class="n">d</span> <span class="n">need</span> <span class="n">to</span> <span class="n">hack</span> <span class="n">your</span> <span class="n">startup</span> <span class="n">code</span> <span class="n">to</span> <span class="n">deal</span> <span class="n">with</span> <span class="n">this</span><span class="p">.</span>
+<span class="p">.</span><span class="n">init_array</span> <span class="n">probably</span> <span class="n">ends</span> <span class="n">up</span> <span class="n">in</span> <span class="n">ram</span> <span class="n">because</span> <span class="n">its</span> <span class="n">marked</span> <span class="n">read</span><span class="o">/</span><span class="n">write</span> <span class="err">—</span> <span class="n">that</span> <span class="n">happens</span> <span class="n">because</span> <span class="n">in</span> <span class="n">a</span> <span class="n">dynamic</span> <span class="n">linking</span> <span class="n">environment</span> <span class="n">the</span> <span class="n">dynamic</span> <span class="n">linker</span> <span class="n">has</span> <span class="n">to</span> <span class="n">fix</span> <span class="n">up</span> <span class="n">all</span> <span class="n">the</span> <span class="n">pointers</span> <span class="n">it</span> <span class="n">contains</span> <span class="n">before</span> <span class="n">it</span> <span class="n">can</span> <span class="n">be</span> <span class="n">used</span><span class="p">.</span> <span class="n">In</span> <span class="n">a</span> <span class="k">static</span> <span class="n">environment</span> <span class="n">you</span> <span class="n">might</span> <span class="n">be</span> <span class="n">able</span> <span class="n">to</span> <span class="n">get</span> <span class="n">away</span> <span class="n">with</span> <span class="n">forcing</span> <span class="n">it</span> <span class="n">into</span> <span class="n">a</span> <span class="n">read</span><span class="o">-</span><span class="n">only</span> <span class="n">section</span><span class="p">.</span>
+<span class="err">来源：</span> <span class="o">&lt;</span><span class="n">http</span><span class="o">:</span><span class="c1">//blog.sina.com.cn/s/blog_a9303fd901019kvq.html&gt;</span>
+</pre></div>
+
+
+<p><strong>3 摘自dlopen小结(《程序员的自我修养》) </strong>    </p>
+<div class="highlight"><pre><span class="err">动态连接器在加载模块时，会执行</span><span class="s">&quot;.init&quot;</span><span class="err">段的代码</span><span class="p">,</span><span class="err">用以完成模块的初始化工作，</span><span class="n">dlopen</span><span class="err">的加载过程基本跟动态连接器一致，在完成装载、映射和重定向以后，就会执行</span><span class="s">&quot;.init&quot;</span><span class="err">段的代码然后返回</span>
+</pre></div>
+
+
+<p>看完这个3段资料，我们可以知道在系统加载so，在完成装载、映射和重定向以后，就首先执行<strong>.init</strong>和<strong>.init_array</strong>段的代码.  </p>
+<blockquote>
+<p>探本溯源，在源码中追踪  </p>
+</blockquote>
+<p>我们先从<a href="http://androidxref.com/4.1.2/xref/libcore/luni/src/main/java/java/lang/System.java#534">System.loadLibrary</a> -&gt;<a href="http://androidxref.com/4.1.2/xref/libcore/luni/src/main/java/java/lang/Runtime.java#354">Runtime.loadLibrary</a>  </p>
+<div class="highlight"><pre>  <span class="n">public</span> <span class="kt">void</span> <span class="nf">loadLibrary</span><span class="p">(</span><span class="n">String</span> <span class="n">libName</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">loadLibrary</span><span class="p">(</span><span class="n">libName</span><span class="p">,</span> <span class="n">VMStack</span><span class="p">.</span><span class="n">getCallingClassLoader</span><span class="p">());</span>
+   <span class="p">}</span>
+
+    <span class="cm">/*</span>
+<span class="cm">     * Loads and links a library without security checks.</span>
+<span class="cm">     */</span>
+   <span class="kt">void</span> <span class="nf">loadLibrary</span><span class="p">(</span><span class="n">String</span> <span class="n">libraryName</span><span class="p">,</span> <span class="n">ClassLoader</span> <span class="n">loader</span><span class="p">)</span> <span class="p">{</span>
+        <span class="err">代码略</span><span class="p">...</span>
+        <span class="n">String</span> <span class="n">error</span> <span class="o">=</span> <span class="n">nativeLoad</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">loader</span><span class="p">);</span>       
+        <span class="err">代码略</span><span class="p">...</span>
+ <span class="p">}</span>
+</pre></div>
+
+
+<p>-&gt; <a href="http://androidxref.com/4.1.2/xref/dalvik/vm/native/java_lang_Runtime.cpp#Dalvik_java_lang_Runtime_nativeLoad">nativeLoad</a>   </p>
+<div class="highlight"><pre><span class="k">static</span> <span class="kt">void</span> <span class="nf">Dalvik_java_lang_Runtime_nativeLoad</span><span class="p">(</span><span class="k">const</span> <span class="n">u4</span><span class="o">*</span> <span class="n">args</span><span class="p">,</span>
+  <span class="n">JValue</span><span class="o">*</span> <span class="n">pResult</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="err">代码略</span><span class="p">...</span>
+   <span class="n">StringObject</span><span class="o">*</span> <span class="n">fileNameObj</span> <span class="o">=</span> <span class="p">(</span><span class="n">StringObject</span><span class="o">*</span><span class="p">)</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+   <span class="n">success</span> <span class="o">=</span> <span class="n">dvmLoadNativeCode</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="n">classLoader</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">reason</span><span class="p">);</span>
+   <span class="err">代码略</span><span class="p">...</span>
+<span class="p">}</span>
+<span class="err">来源：</span> <span class="o">&lt;</span><span class="n">http</span><span class="o">:</span><span class="c1">//androidxref.com/4.1.2/xref/dalvik/vm/native/java_lang_Runtime.cpp#72&gt;</span>
+</pre></div>
+
+
+<p>-&gt;<a href="http://androidxref.com/4.1.2/xref/dalvik/vm/Native.cpp#318">dvmLoadNativeCode</a></p>
+<div class="highlight"><pre><span class="nx">bool</span> <span class="nx">dvmLoadNativeCode</span><span class="p">(</span><span class="kr">const</span> <span class="kr">char</span><span class="o">*</span> <span class="nx">pathName</span><span class="p">,</span> <span class="nb">Object</span><span class="o">*</span> <span class="nx">classLoader</span><span class="p">,</span>
+        <span class="kr">char</span><span class="o">**</span> <span class="nx">detail</span><span class="p">)</span>
+<span class="p">{</span>
+         <span class="err">代码略</span><span class="p">...</span>
+        <span class="nx">handle</span> <span class="o">=</span> <span class="nx">dlopen</span><span class="p">(</span><span class="nx">pathName</span><span class="p">,</span> <span class="nx">RTLD_LAZY</span><span class="p">);</span>
+
+         <span class="err">代码略</span><span class="p">...</span>
+        <span class="nx">vonLoad</span> <span class="o">=</span> <span class="nx">dlsym</span><span class="p">(</span><span class="nx">handle</span><span class="p">,</span> <span class="s2">&quot;JNI_OnLoad&quot;</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">vonLoad</span> <span class="o">==</span> <span class="nx">NULL</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">ALOGD</span><span class="p">(</span><span class="s2">&quot;No JNI_OnLoad found in %s %p, skipping init&quot;</span><span class="p">,</span>
+                <span class="nx">pathName</span><span class="p">,</span> <span class="nx">classLoader</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="cm">/*</span>
+<span class="cm">             * Call JNI_OnLoad.  We have to override the current class</span>
+<span class="cm">             * loader, which will always be &quot;null&quot; since the stuff at the</span>
+<span class="cm">             * top of the stack is around Runtime.loadLibrary().  (See</span>
+<span class="cm">             * the comments in the JNI FindClass function.)</span>
+<span class="cm">             */</span>
+            <span class="nx">OnLoadFunc</span> <span class="nx">func</span> <span class="o">=</span> <span class="p">(</span><span class="nx">OnLoadFunc</span><span class="p">)</span><span class="nx">vonLoad</span><span class="p">;</span>
+            <span class="nb">Object</span><span class="o">*</span> <span class="nx">prevOverride</span> <span class="o">=</span> <span class="nx">self</span><span class="o">-&gt;</span><span class="nx">classLoaderOverride</span><span class="p">;</span>
+
+            <span class="nx">self</span><span class="o">-&gt;</span><span class="nx">classLoaderOverride</span> <span class="o">=</span> <span class="nx">classLoader</span><span class="p">;</span>
+            <span class="nx">oldStatus</span> <span class="o">=</span> <span class="nx">dvmChangeStatus</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="nx">THREAD_NATIVE</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">gDvm</span><span class="p">.</span><span class="nx">verboseJni</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">ALOGI</span><span class="p">(</span><span class="err">&quot;</span><span class="cp">[</span><span class="nx">Calling</span> <span class="nx">JNI_OnLoad</span> <span class="nb">for</span> <span class="o">\</span><span class="s2">&quot;%s</span><span class="se">\&quot;</span><span class="s2">]&quot;</span><span class="p">,</span> <span class="nx">pathName</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="n">version</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="nx">func</span><span class="p">)(</span><span class="nx">gDvmJni.jniVm</span><span class="p">,</span> <span class="kt">NULL</span><span class="p">);</span>
+            <span class="nx">dvmChangeStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nx">oldStatus</span><span class="p">);</span>
+           <span class="bp">self</span><span class="o">-&gt;</span><span class="nx">classLoaderOverride</span> <span class="o">=</span> <span class="nx">prevOverride</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="err">代码略</span><span class="nx">...</span>
+<span class="p">}</span>
+
+<span class="err">来源：</span> <span class="o">&lt;</span><span class="nx">http</span><span class="p">:</span><span class="c1">//androidxref.com/4.1.2/xref/dalvik/vm/Native.cpp#318&gt;</span>
+</pre></div>
+
+
+<p>通过dvmLoadNativeCode函数我们知道系统用dlopen加载so完成后，会查看有没有<strong>JNI_OnLoad</strong>函数，有的话就调用.  </p>
+<p>我们再到<a href="http://androidxref.com/4.1.2/xref/bionic/linker/dlfcn.c#54">dlopen</a>函数探个究竟:  </p>
+<div class="highlight"><pre><span class="kt">void</span> <span class="o">*</span><span class="nf">dlopen</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">filename</span><span class="p">,</span> <span class="kt">int</span> <span class="n">flag</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">soinfo</span> <span class="o">*</span><span class="n">ret</span><span class="p">;</span>
+
+    <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dl_lock</span><span class="p">);</span>
+    <span class="cm">/*find_library 会判断so是否已经加载，如果没有加载，对so进行加载，完成一些初始化工作,有兴趣的读者可自行分析 */</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">find_library</span><span class="p">(</span><span class="n">filename</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">unlikely</span><span class="p">(</span><span class="n">ret</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">set_dlerror</span><span class="p">(</span><span class="n">DL_ERR_CANNOT_LOAD_LIBRARY</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">call_constructors_recursive</span><span class="p">(</span><span class="n">ret</span><span class="p">);</span>
+        <span class="n">ret</span><span class="o">-&gt;</span><span class="n">refcount</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dl_lock</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>-&gt;<a href="http://androidxref.com/4.1.2/xref/bionic/linker/linker.c#1519">call_constructors_recursive</a>  </p>
+<div class="highlight"><pre><span class="kt">void</span> <span class="nf">call_constructors_recursive</span><span class="p">(</span><span class="n">soinfo</span> <span class="o">*</span><span class="n">si</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">si</span><span class="o">-&gt;</span><span class="n">constructors_called</span><span class="p">)</span>
+        <span class="k">return</span><span class="p">;</span>
+
+    <span class="c1">// Set this before actually calling the constructors, otherwise it doesn&#39;t</span>
+    <span class="c1">// protect against recursive constructor calls. One simple example of</span>
+    <span class="c1">// constructor recursion is the libc debug malloc, which is implemented in</span>
+    <span class="c1">// libc_malloc_debug_leak.so:</span>
+    <span class="c1">// 1. The program depends on libc, so libc&#39;s constructor is called here.</span>
+    <span class="c1">// 2. The libc constructor calls dlopen() to load libc_malloc_debug_leak.so.</span>
+    <span class="c1">// 3. dlopen() calls call_constructors_recursive() with the newly created</span>
+    <span class="c1">//    soinfo for libc_malloc_debug_leak.so.</span>
+    <span class="c1">// 4. The debug so depends on libc, so call_constructors_recursive() is</span>
+    <span class="c1">//    called again with the libc soinfo. If it doesn&#39;t trigger the early-</span>
+    <span class="c1">//    out above, the libc constructor will be called again (recursively!).</span>
+    <span class="n">si</span><span class="o">-&gt;</span><span class="n">constructors_called</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">si</span><span class="o">-&gt;</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="n">FLAG_EXE</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">TRACE</span><span class="p">(</span><span class="s">&quot;[ %5d Calling preinit_array @ 0x%08x [%d] for &#39;%s&#39; ]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+              <span class="n">pid</span><span class="p">,</span> <span class="p">(</span><span class="kt">unsigned</span><span class="p">)</span><span class="n">si</span><span class="o">-&gt;</span><span class="n">preinit_array</span><span class="p">,</span> <span class="n">si</span><span class="o">-&gt;</span><span class="n">preinit_array_count</span><span class="p">,</span>
+              <span class="n">si</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+        <span class="n">call_array</span><span class="p">(</span><span class="n">si</span><span class="o">-&gt;</span><span class="n">preinit_array</span><span class="p">,</span> <span class="n">si</span><span class="o">-&gt;</span><span class="n">preinit_array_count</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="n">TRACE</span><span class="p">(</span><span class="s">&quot;[ %5d Done calling preinit_array for &#39;%s&#39; ]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">si</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">si</span><span class="o">-&gt;</span><span class="n">preinit_array</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">DL_ERR</span><span class="p">(</span><span class="s">&quot;%5d Shared library &#39;%s&#39; has a preinit_array table @ 0x%08x.&quot;</span>
+                  <span class="s">&quot; This is INVALID.&quot;</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">si</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span>
+                   <span class="p">(</span><span class="kt">unsigned</span><span class="p">)</span><span class="n">si</span><span class="o">-&gt;</span><span class="n">preinit_array</span><span class="p">);</span>
+       <span class="p">}</span>
+   <span class="p">}</span>
+
+    <span class="err">代码略</span><span class="p">...</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">si</span><span class="o">-&gt;</span><span class="n">init_func</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">TRACE</span><span class="p">(</span><span class="s">&quot;[ %5d Calling init_func @ 0x%08x for &#39;%s&#39; ]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span>
+             <span class="p">(</span><span class="kt">unsigned</span><span class="p">)</span><span class="n">si</span><span class="o">-&gt;</span><span class="n">init_func</span><span class="p">,</span> <span class="n">si</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+       <span class="n">si</span><span class="o">-&gt;</span><span class="n">init_func</span><span class="p">();</span>
+       <span class="n">TRACE</span><span class="p">(</span><span class="s">&quot;[ %5d Done calling init_func for &#39;%s&#39; ]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">si</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">si</span><span class="o">-&gt;</span><span class="n">init_array</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">TRACE</span><span class="p">(</span><span class="s">&quot;[ %5d Calling init_array @ 0x%08x [%d] for &#39;%s&#39; ]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span>
+            <span class="p">(</span><span class="kt">unsigned</span><span class="p">)</span><span class="n">si</span><span class="o">-&gt;</span><span class="n">init_array</span><span class="p">,</span> <span class="n">si</span><span class="o">-&gt;</span><span class="n">init_array_count</span><span class="p">,</span> <span class="n">si</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+    <span class="c1">//遍历函数数组并执行</span>
+    <span class="n">call_array</span><span class="p">(</span><span class="n">si</span><span class="o">-&gt;</span><span class="n">init_array</span><span class="p">,</span> <span class="n">si</span><span class="o">-&gt;</span><span class="n">init_array_count</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+       <span class="n">TRACE</span><span class="p">(</span><span class="s">&quot;[ %5d Done calling init_array for &#39;%s&#39; ]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">si</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+  <span class="c1">//ps:看到这么多TRACE这么多调试信息，我们把调试开关打开，是不是能拿到诸多信息？</span>
+ <span class="p">}</span>
+<span class="p">}</span>
+<span class="err">来源：</span> <span class="o">&lt;</span><span class="n">http</span><span class="o">:</span><span class="c1">//androidxref.com/4.1.2/xref/bionic/linker/linker.c#1519&gt;</span>
+</pre></div>
+
+
+<p>通过可以函数我们知道<strong>si-&gt;init_func</strong>和<strong>si-&gt;init_array</strong>存在的时候，会执行指向的函数<br />
+(不知道大家注意到么si-&gt;flags &amp; FLAG_EXE时，还有si-&gt;preinit_array？ 以后会不会有这方面的东西？)<br />
+再找下 <strong>si-&gt;init_func</strong>和<strong>si-&gt;init_array</strong>   的赋值  </p>
+<div class="highlight"><pre> <span class="k">case</span> <span class="n">DT_INIT</span>:
+           <span class="n">si</span><span class="o">-&gt;</span><span class="n">init_func</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="p">)(</span><span class="kt">void</span><span class="p">))(</span><span class="n">si</span><span class="o">-&gt;</span><span class="n">base</span> <span class="o">+</span> <span class="o">*</span><span class="n">d</span><span class="p">);</span>
+           <span class="n">DEBUG</span><span class="p">(</span><span class="s">&quot;%5d %s constructors (init func) found at %p</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+                  <span class="n">pid</span><span class="p">,</span> <span class="n">si</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span> <span class="n">si</span><span class="o">-&gt;</span><span class="n">init_func</span><span class="p">);</span>
+
+ <span class="k">case</span> <span class="n">DT_INIT_ARRAY</span>:
+            <span class="n">si</span><span class="o">-&gt;</span><span class="n">init_array</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="o">*</span><span class="p">)(</span><span class="n">si</span><span class="o">-&gt;</span><span class="n">base</span> <span class="o">+</span> <span class="o">*</span><span class="n">d</span><span class="p">);</span>
+      <span class="n">DEBUG</span><span class="p">(</span><span class="s">&quot;%5d %s constructors (init_array) found at %p</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+                  <span class="n">pid</span><span class="p">,</span> <span class="n">si</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span> <span class="n">si</span><span class="o">-&gt;</span><span class="n">init_array</span><span class="p">);</span>
+           <span class="k">break</span><span class="p">;</span>
+</pre></div>
+
+
+<p>DEBUG的说明 constructors (init func)和constructors (init_array)
+我们再看看一份文档<a href="http://www.netmite.com/android/mydroid/1.6/bionic/linker/README.TXT">Android Dynamic Linker Design Notes</a></p>
+<div class="highlight"><pre><span class="nx">DT_INIT</span>
+      <span class="nx">Points</span> <span class="nx">to</span> <span class="nx">the</span> <span class="nx">address</span> <span class="nx">of</span> <span class="nx">an</span> <span class="nx">initialization</span> <span class="kd">function</span>
+      <span class="nx">that</span> <span class="nx">must</span> <span class="nx">be</span> <span class="nx">called</span> <span class="nx">when</span> <span class="nx">the</span> <span class="nx">file</span> <span class="nx">is</span> <span class="nx">loaded</span><span class="p">.</span>
+<span class="nx">DT_INIT_ARRAY</span>
+      <span class="nx">Points</span> <span class="nx">to</span> <span class="nx">an</span> <span class="nx">array</span> <span class="nx">of</span> <span class="kd">function</span> <span class="nx">addresses</span> <span class="nx">that</span> <span class="nx">must</span> <span class="nx">be</span>
+      <span class="nx">called</span><span class="p">,</span> <span class="k">in</span><span class="o">-</span><span class="nx">order</span><span class="p">,</span> <span class="nx">to</span> <span class="nx">perform</span> <span class="nx">initialization</span><span class="p">.</span> <span class="nx">Some</span> <span class="nx">of</span>
+      <span class="nx">the</span> <span class="nx">entries</span> <span class="k">in</span> <span class="nx">the</span> <span class="nx">array</span> <span class="nx">can</span> <span class="nx">be</span> <span class="mi">0</span> <span class="nx">or</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nx">and</span> <span class="nx">should</span>
+      <span class="nx">be</span> <span class="nx">ignored</span><span class="p">.</span>
+
+      <span class="nx">Note</span><span class="o">:</span> <span class="k">this</span> <span class="nx">is</span> <span class="nx">generally</span> <span class="nx">stored</span> <span class="k">in</span> <span class="nx">a</span> <span class="p">.</span><span class="nx">init_array</span> <span class="nx">section</span>
+</pre></div>
+
+
+<p>通过层层分析，我们很清楚知道了系统加载so，在完成装载、映射和重定向以后，就首先执行<strong>.init</strong>和<strong>.init_array</strong>段的代码   </p>
+<p>前面有一篇文章我已经对so加壳进行简单说明  </p>
+<div class="highlight"><pre><span class="err">把源码的</span><span class="n">dlopen</span><span class="err">复制出来修改，在把自己</span><span class="n">so</span><span class="err">加载起来的时候</span> <span class="p">,</span><span class="err">把自己内存里面某部分地址解密后</span><span class="p">,</span><span class="err">用自己的</span><span class="n">dlopen</span><span class="err">打开返回一个</span><span class="n">soinfo</span><span class="err">结构体</span> <span class="err">然后把当前</span><span class="n">soinfo</span><span class="err">结构体替换原来的</span><span class="n">soinfo</span><span class="err">结构体</span>   
+</pre></div>
+
+
+<blockquote>
+<p>小结  </p>
+</blockquote>
+<p>系统加载so，在完成装载、映射和重定向以后，就首先执行<strong>.init</strong>和<strong>.init_array</strong>段的代码，之后如果存在<strong>JNI_OnLoad</strong> 就调用该函数.我们要对一个so进行分析，需要先看看有没有<strong>.init_array section</strong>和<strong>.init   section</strong>，so加壳一般会在初始化函数进行脱壳操作。  </p>
+<blockquote>
+<p>如何在<strong>.init</strong>和<strong>.init_array</strong>段添加我们的函数  </p>
+</blockquote>
+<div class="highlight"><pre><span class="cp">[</span><span class="mi">1</span><span class="cp">]</span> <span class="err">共享构造函数，在函数声明时加上</span><span class="s2">&quot;__attribute__((constructor))&quot;</span><span class="err">属性</span>
+    <span class="k">void</span> <span class="nx">__attribute__</span><span class="p">((</span><span class="nx">constructor</span><span class="p">))</span> <span class="nx">init_function</span><span class="p">(</span><span class="k">void</span><span class="p">);</span>
+    <span class="err">对应有共享虚构函数，在程序</span><span class="nx">exit</span><span class="p">()</span><span class="err">或者</span><span class="nx">dlclose</span><span class="p">()</span><span class="err">返回前执行</span>
+    <span class="k">void</span> <span class="nx">__attribute__</span><span class="p">((</span><span class="nx">destructor</span><span class="p">))</span> <span class="nx">fini_function</span><span class="p">(</span><span class="k">void</span><span class="p">);</span>
+
+<span class="cp">[</span><span class="mi">2</span><span class="cp">]</span><span class="nx">c</span><span class="o">++</span> <span class="err">静态构造函数</span>
+</pre></div>
+
+
+<blockquote>
+<p>在<strong>.init</strong>和<strong>.init_array</strong>下断点  </p>
+</blockquote>
+<div class="highlight"><pre><span class="n">init_array</span>  <span class="err">用</span><span class="n">ida</span><span class="err">可以看到，</span>  <span class="err">可以对里面的函数数组下断点</span>
+<span class="n">init</span> <span class="n">ida</span><span class="err">有时没识别出来</span><span class="p">,</span><span class="err">可用</span><span class="n">readelf</span><span class="err">查看入口点</span>
+
+<span class="n">xxx</span><span class="err">@</span><span class="n">xx</span><span class="o">:~</span><span class="err">$</span> <span class="n">readelf</span> <span class="o">-</span><span class="n">a</span> <span class="err">&#39;</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">xxx</span><span class="o">/</span><span class="err">桌面</span><span class="o">/</span><span class="n">libsecexe</span><span class="p">.</span><span class="n">so</span><span class="err">&#39;</span>
+
+ <span class="mh">0x00000010</span> <span class="p">(</span><span class="n">SYMBOLIC</span><span class="p">)</span>                   <span class="mh">0x0</span>
+ <span class="mh">0x0000000c</span> <span class="p">(</span><span class="n">INIT</span><span class="p">)</span>                       <span class="mh">0x11401</span>
+ <span class="mh">0x00000019</span> <span class="p">(</span><span class="n">INIT_ARRAY</span><span class="p">)</span>                 <span class="mh">0x28ca4</span>
+ <span class="mh">0x0000001b</span> <span class="p">(</span><span class="n">INIT_ARRAYSZ</span><span class="p">)</span>               <span class="mi">8</span> <span class="p">(</span><span class="n">bytes</span><span class="p">)</span>
+ <span class="mh">0x0000001a</span> <span class="p">(</span><span class="n">FINI_ARRAY</span><span class="p">)</span>                 <span class="mh">0x28cac</span>
+ <span class="mh">0x0000001c</span> <span class="p">(</span><span class="n">FINI_ARRAYSZ</span><span class="p">)</span>               <span class="mi">12</span> <span class="p">(</span><span class="n">bytes</span><span class="p">)</span>
+ <span class="mh">0x00000004</span> <span class="p">(</span><span class="n">HASH</span><span class="p">)</span>                       <span class="mh">0xf4</span>
+
+<span class="err">我们看到</span> <span class="n">INIT</span> <span class="err">入口为</span>    <span class="mh">0x11401</span>
+<span class="p">(</span><span class="n">ps</span><span class="o">:</span><span class="err">有时你在</span><span class="mh">0x11401</span><span class="err">是数据，你需要</span><span class="n">make</span> <span class="n">code</span><span class="err">，由于对齐关系，要从</span><span class="mh">0x11401</span><span class="o">+</span><span class="mi">1</span><span class="err">开始）</span>
+<span class="err">样本：梆梆</span> <span class="err">爱加密</span>
+</pre></div>
+
+
+<p>参考： 
+[1] 《深入理解Android卷1》
+[2] 《程序员的自我修养-链接、装载与库》
+[3] <a href="http://blog.csdn.net/dinuliang/article/details/5509009">android linker 浅析</a>
+[4] <a href="http://www.netmite.com/android/mydroid/1.6/bionic/linker/README.TXT">Android Dynamic Linker Design Notes</a></p>
+            </div><!-- /.entry-content -->
+			            <aside>
+            <hr/>
+            <!-- all by Qxia -->
+
+            <nav>
+            <ul class="articles_timeline">
+ 
+                <li class="previous_article">« <a href="/pages/2014/07/androidgong-ju-xiang-chi-xu-geng-xin" title="Previous: android工具箱(持续更新)">android工具箱(持续更新)</a></li>
+            </ul>
+            </nav>
+            </aside>
+			<!--neighbors plugin take -->
+			<ul style="float:right;">
+			</ul>
+			
+			
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "pages/2014/08/android-soke-ru-kou-qian-xi";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://9haoblog.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+        
+<div class="three columns">
+
+<div class="sidebarbg">
+	<h4>Pages</h4>
+	<ul>
+	</ul>
+</div>
+
+<div class="sidebarbg">
+<h4>Categories</h4>
+	<ul>
+			<li><a href="/category/about-me.html">About me</a></li>
+			<li><a href="/category/android.html">Android</a></li>
+			<li><a href="/category/internet.html">Internet</a></li>
+	</ul>
+</div>
+
+<div class="sidebarbg">
+	<h4>Tags</h4>
+		<ul>
+			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
+			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
+			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
+			<li class="tag-3"><a href="/tag/hook.html">Hook</a></li>
+			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
+		</ul>
+</div>
+
+
+
+<nav class="widget sidebarbg">
+  <h4>Links</h4>
+  <ul>
+	<li><a target="_blank" href="http://getpelican.com/">Pelican</a></li>
+	<li><a target="_blank" href="http://python.org/">Python.org</a></li>
+	<li><a target="_blank" href="http://pallergabor.uw.hu/androidblog/dalvik_opcodes.html">Dalvik opcodes</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+					本博客使用Pelican+GitHub Pages搭建，详细请参考<a href="http://www.xycoding.com/articles/2013/11/21/blog-create/" class="active" target="_blank">教程</a>。
+				   </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = '9haoblog';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+      <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+	<script>
+	(function() {
+		var $backToTopTxt = "返回顶部", $backToTopEle = $('<div class="backToTop"></div>').appendTo($("body"))
+			.text($backToTopTxt).attr("title", $backToTopTxt).click(function() {
+				$("html, body").animate({ scrollTop: 0 }, 120);
+		}), $backToTopFun = function() {
+			var st = $(document).scrollTop(), winh = $(window).height();
+			(st > 0)? $backToTopEle.show(): $backToTopEle.hide();
+			//IE6下的定位
+			if (!window.XMLHttpRequest) {
+				$backToTopEle.css("top", st + winh - 166);
+			}
+		};
+		$(window).bind("scroll", $backToTopFun);
+		$(function() { $backToTopFun(); });
+	})();
+	</script>
+</body>
+</html>
