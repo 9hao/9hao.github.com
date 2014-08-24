@@ -1,0 +1,349 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+        <title>浅谈android完整性检测</title>
+        <meta charset="utf-8" />
+
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+
+        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+
+
+
+
+
+
+</head>
+
+<body id="index" class="home">
+
+<!-- Fork me on github -->
+
+    <div class="container">
+
+        <div class="row">
+
+          <header id="banner" class="body">
+                 <!-- <h1><a href="/">9Hao <strong>人若无名,正是安心练剑之时</strong></a></h1>  -->
+                 <h1><a href="/"><strong>9Hao</strong><p style="font-size:50%">人若无名,正是安心练剑之时</p></a></h1>
+          </header><!-- /#banner -->
+
+            <div id="navigation" class="navbar row">
+              <a href="#" gumby-trigger="#navigation &gt; ul" class="toggle"><i class="icon-menu"></i></a>
+             
+              <ul class="columns">
+                <li><a href="/">Home</a></li>
+					<!--<li><a href="/category/about-me.html">About me</a></li>-->
+					<li><a href="/category/about-me.html">About me</a></li>
+					<!--<li class="active"><a href="/category/android.html">Android</a></li>-->
+					<li><a href="/category/android.html">Android</a></li>
+					<!--<li><a href="/category/internet.html">Internet</a></li>-->
+					<li><a href="/category/internet.html">Internet</a></li>
+				<li><a href="/functions/archives.html">Archives</a></li>
+				<!--<li><a href="/functions/random.html">Random Article</a></li>
+				<!--
+				
+				-->
+              </ul>
+            </div>
+
+<section id="content" class="body">
+
+   <div class="row">
+        <div class="eleven columns">
+
+
+            <header>
+              <h2 class="entry-title">
+                <a href="/pages/2014/08/qian-tan-androidwan-zheng-xing-jian-ce" rel="bookmark"
+                   title="Permalink to 浅谈android完整性检测">浅谈android完整性检测</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <!--
+			  <abbr class="published" title="2014-08-24T00:00:00">
+                日 24 八月 2014
+              </abbr>
+              <address class="vcard author">
+                By <a class="url fn" href="/author/123.html">#123</a>
+              </address>
+			  -->
+			  <address class="vcard author" style="font-style:italic;margin-bottom:-10px;">
+				日 24 八月 2014
+					&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+	
+			  </address>
+			  <hr />			  
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <blockquote>
+<p>常见android完整性检测</p>
+</blockquote>
+<div class="highlight"><pre><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="err">检测签名</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="err">校验</span><span class="n">classes</span><span class="p">.</span><span class="n">dex</span>
+<span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="err">检验整个</span><span class="n">apk</span><span class="p">(</span><span class="err">这种比较少见</span><span class="p">)</span>
+</pre></div>
+
+
+<blockquote>
+<p>验证哪方面的检测</p>
+</blockquote>
+<p>&emsp;&emsp;先直接对apk进行签名，然后安装运行，如果运行出错那么可以推测有签名检测；如果签名没问题，那反编译再回编译安装运行出问题，那么说明有校验classes.dex校验。</p>
+<blockquote>
+<p>找到校验的地方</p>
+</blockquote>
+<div class="highlight"><pre><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="err">针对签名</span> <span class="o">:</span> <span class="err">可以搜索</span><span class="n">getPackageInfo</span> <span class="err">、</span><span class="n">PackageManager</span><span class="err">、</span> <span class="n">Signature</span><span class="err">、</span><span class="n">signatures</span><span class="err">、签名信息</span><span class="n">RSA</span><span class="err">文件。</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="err">针对</span><span class="n">classes</span><span class="p">.</span><span class="n">dex</span><span class="p">,</span> <span class="err">搜索</span><span class="n">classes</span><span class="p">.</span><span class="n">dex</span><span class="p">,</span><span class="err">解压缩</span><span class="n">ZipEntry</span><span class="err">，资源文件读取也可以注意下</span><span class="p">.(</span><span class="err">还有一些，暂时不记得了</span><span class="p">)</span><span class="err">。</span>
+<span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="err">算法</span> <span class="n">md5</span><span class="p">,</span><span class="n">hash</span><span class="err">。</span>
+<span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="err">退出函数、错误提示等。</span>
+<span class="err">搜索这些特征函数和字符串，找到校验的地方。</span>
+<span class="err">````</span>
+<span class="o">&gt;</span> <span class="err">突破校验</span>
+
+<span class="o">*</span><span class="mi">1</span> <span class="err">爆破</span><span class="o">*</span>
+</pre></div>
+
+
+<p>如果只是本地校验，可以找到校验函数后修改调转;如果是网络验证，直接爆破容易失效。</p>
+<div class="highlight"><pre><span class="o">*</span><span class="mi">2</span> <span class="err">文件重定向</span><span class="o">*</span>
+<span class="err">我们先看看两个常见的检测代码（摘自《</span><span class="n">Android</span><span class="err">安全与逆向分析》</span> <span class="err">防止重编译小结）</span>  
+<span class="o">**</span><span class="err">签名获取</span><span class="o">**:</span>  
+<span class="err">```</span><span class="n">java</span>
+    <span class="n">public</span> <span class="kt">int</span> <span class="n">getSignature</span><span class="p">(</span><span class="n">String</span> <span class="n">packageName</span><span class="p">)</span> <span class="p">{</span>      
+        <span class="n">PackageManager</span> <span class="n">pm</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">getPackageManager</span><span class="p">();</span>
+        <span class="n">PackageInfo</span> <span class="n">pi</span> <span class="o">=</span> <span class="n">null</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">sig</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">try</span> <span class="p">{</span>
+            <span class="n">pi</span> <span class="o">=</span> <span class="n">pm</span><span class="p">.</span><span class="n">getPackageInfo</span><span class="p">(</span><span class="n">packageName</span><span class="p">,</span> <span class="n">PackageManager</span><span class="p">.</span><span class="n">GET_SIGNATURES</span><span class="p">);</span>
+            <span class="n">Signature</span><span class="p">[]</span> <span class="n">s</span> <span class="o">=</span> <span class="n">pi</span><span class="p">.</span><span class="n">signatures</span><span class="p">;</span>
+            <span class="n">sig</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">hashCode</span><span class="p">();</span>  
+        <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">sig</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="n">e1</span><span class="p">.</span><span class="n">printStackTrace</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">sig</span><span class="p">;</span>
+    <span class="p">}</span>
+</pre></div>
+
+
+<p>签名重定向:
+pi = pm.getPackageInfo(packageName, PackageManager.GET_SIGNATURES);<br />
+getPackageInfo hook掉 获取到原始的pi信息  (网上说如果动态加载的.是没法hook住的??，没验证，不可能把 00)</p>
+<p><strong>classes.dex校验</strong>:  </p>
+<div class="highlight"><pre>    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">checkCRC</span><span class="o">()</span> <span class="o">{</span>
+        <span class="kt">boolean</span> <span class="n">beModified</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="kt">long</span> <span class="n">crc</span> <span class="o">=</span> <span class="n">Long</span><span class="o">.</span><span class="na">parseLong</span><span class="o">(</span><span class="n">getString</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">crc</span><span class="o">));</span>
+        <span class="n">ZipFile</span> <span class="n">zf</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">zf</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ZipFile</span><span class="o">(</span><span class="n">getApplicationContext</span><span class="o">().</span><span class="na">getPackageCodePath</span><span class="o">());</span>
+            <span class="n">ZipEntry</span> <span class="n">ze</span> <span class="o">=</span> <span class="n">zf</span><span class="o">.</span><span class="na">getEntry</span><span class="o">(</span><span class="s">&quot;classes.dex&quot;</span><span class="o">);</span>
+            <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="s">&quot;com.droider.checkcrc&quot;</span><span class="o">,</span> <span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">ze</span><span class="o">.</span><span class="na">getCrc</span><span class="o">()));</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">ze</span><span class="o">.</span><span class="na">getCrc</span><span class="o">()</span> <span class="o">==</span> <span class="n">crc</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">beModified</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="o">}</span> 
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="n">beModified</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">beModified</span><span class="o">;</span>
+    <span class="o">}</span> 
+</pre></div>
+
+
+<p>dex重定向:<br />
+zf = new ZipFile(getApplicationContext().getPackageCodePath()); <br />
+hook ZipFile定向到原始的apk.  </p>
+<p>如果你能搜索到<strong>明文classes.dex</strong>信息，可以修改明文字符串来重定向,参考帖子:<br />
+http://www.kanxue.com/bbs/showthread.php?t=190711  </p>
+<p><strong>你可以直接修改系统，把系统的签名校验给patch了</strong>(参考:http://www.kanxue.com/bbs/showthread.php?t=190876)</p>
+<div class="highlight"><pre>       <span class="kd">public</span> <span class="kt">void</span> <span class="nf">initZygote</span><span class="o">(</span><span class="n">StartupParam</span> <span class="n">startupParam</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
+
+               <span class="n">XposedHelpers</span><span class="o">.</span><span class="na">findAndHookMethod</span><span class="o">(</span><span class="s">&quot;java.security.Signature&quot;</span><span class="o">,</span><span class="kc">null</span><span class="o">,</span><span class="s">&quot;verify&quot;</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[].</span><span class="na">class</span><span class="o">,</span><span class="k">new</span> <span class="n">XC_MethodHook</span><span class="o">(){</span>
+             <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">afterHookedMethod</span><span class="o">(</span><span class="n">MethodHookParam</span> <span class="n">param</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
+               <span class="n">XposedBridge</span><span class="o">.</span><span class="na">log</span><span class="o">(</span><span class="s">&quot;disabled verifysignature......&quot;</span><span class="o">);</span>
+               <span class="n">param</span><span class="o">.</span><span class="na">setResult</span><span class="o">(</span><span class="n">Boolean</span><span class="o">.</span><span class="na">TRUE</span><span class="o">);</span>
+          <span class="o">}</span>  
+               <span class="o">});</span>
+</pre></div>
+
+
+<p>ps:这样有写局限，别人要装你修改的apk，需要装个xposed，当然自己也可以实现一个hook用于文件重定向，还有就是给系统带来风险.  </p>
+<p><em>3 安装文件替换</em><br />
+ 程序安装完成，apk文件将保存在/data/app（名字一般为：<strong>包名-1.apk或包名-2.apk</strong>）、系统程序apk文件保存在/system/app </p>
+<div class="highlight"><pre><span class="n">root</span><span class="err">@</span><span class="n">android</span><span class="o">:/</span> <span class="err">#</span> <span class="n">ls</span> <span class="o">-</span><span class="n">l</span> <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">app</span> <span class="o">|</span><span class="n">busybox</span> <span class="n">grep</span> <span class="n">com</span><span class="p">.</span><span class="n">citicbank</span><span class="p">.</span><span class="n">cyberpay</span><span class="p">.</span><span class="n">ui</span>
+<span class="n">ls</span> <span class="o">-</span><span class="n">l</span> <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">app</span> <span class="o">|</span><span class="n">busybox</span> <span class="n">grep</span> <span class="n">com</span><span class="p">.</span><span class="n">citicbank</span><span class="p">.</span><span class="n">cyberpay</span><span class="p">.</span><span class="n">ui</span>
+<span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span> <span class="n">system</span>   <span class="n">system</span>    <span class="mi">7892655</span> <span class="mi">2014</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">24</span> <span class="mi">18</span><span class="o">:</span><span class="mi">51</span> <span class="n">com</span><span class="p">.</span><span class="n">citicbank</span><span class="p">.</span><span class="n">cyberpay</span><span class="p">.</span><span class="n">ui</span><span class="o">-</span><span class="mf">2.</span><span class="n">apk</span>
+</pre></div>
+
+
+<p>classes.dex文件保存在/data/dalvik-cache，供dalvik执行，命名方式<strong>data@app@包名-数字-apk@classes.dex</strong>  </p>
+<div class="highlight"><pre><span class="mi">255</span><span class="o">|</span><span class="n">root</span><span class="err">@</span><span class="n">android</span><span class="o">:/</span><span class="n">data</span><span class="o">/</span><span class="n">dalvik</span><span class="o">-</span><span class="n">cache</span> <span class="err">#</span> <span class="n">ls</span> <span class="o">-</span><span class="n">l</span> <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">dalvik</span><span class="o">-</span><span class="n">cache</span><span class="o">|</span><span class="n">busybox</span> <span class="n">grep</span> <span class="n">com</span><span class="p">.</span><span class="n">citicbank</span><span class="p">.</span><span class="n">cyberpay</span><span class="p">.</span><span class="n">ui</span>
+<span class="n">ache</span><span class="o">|</span><span class="n">busybox</span> <span class="n">grep</span> <span class="n">com</span><span class="p">.</span><span class="n">citicbank</span><span class="p">.</span><span class="n">cyberpay</span><span class="p">.</span><span class="n">ui</span>                                   <span class="o">&lt;</span>
+<span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span> <span class="n">system</span>   <span class="n">u0_a66</span>    <span class="mi">4974920</span> <span class="mi">2014</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">24</span> <span class="mi">19</span><span class="o">:</span><span class="mi">27</span> <span class="n">data</span><span class="err">@</span><span class="n">app</span><span class="err">@</span><span class="n">com</span><span class="p">.</span><span class="n">citicbank</span><span class="p">.</span><span class="n">cyberpay</span><span class="p">.</span><span class="n">ui</span><span class="o">-</span><span class="mf">2.</span><span class="n">apk</span><span class="err">@</span><span class="n">classes</span><span class="p">.</span><span class="n">dex</span>
+</pre></div>
+
+
+<p>android系统在安装的时候校验签名，安装之后不校验, 这样我们就可以替换安装文件来绕过检测的目的 ^^.<br />
+把修改apk的签名替换成原本的apk的签名，然后在替换系统里面的apk和dex.</p>
+<div class="highlight"><pre><span class="n">adb</span> <span class="n">push</span> <span class="n">E</span><span class="o">:</span><span class="err">\测试\</span><span class="n">zhifu_sign</span><span class="p">.</span><span class="n">apk</span> <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">dalvik</span><span class="o">-</span><span class="n">cache</span><span class="o">/</span><span class="n">data</span><span class="err">@</span><span class="n">app</span><span class="err">@</span><span class="n">com</span><span class="p">.</span><span class="n">citicbank</span><span class="p">.</span><span class="n">cyberpay</span><span class="p">.</span><span class="n">ui</span><span class="o">-</span><span class="mf">2.</span><span class="n">apk</span><span class="err">@</span><span class="n">classes</span><span class="p">.</span><span class="n">dex</span>
+<span class="mi">4160</span> <span class="n">KB</span><span class="o">/</span><span class="n">s</span> <span class="p">(</span><span class="mi">7902332</span> <span class="n">bytes</span> <span class="n">in</span> <span class="mf">1.854</span><span class="n">s</span><span class="p">)</span>
+<span class="p">(</span><span class="n">ps</span><span class="o">:</span> <span class="n">apk</span><span class="err">和</span><span class="n">dex</span><span class="err">都可以</span><span class="p">)</span>
+<span class="n">Desktop</span><span class="o">&gt;</span><span class="n">adb</span> <span class="n">push</span> <span class="n">E</span><span class="o">:</span><span class="err">\测试\</span><span class="n">zhifu_sign</span><span class="p">.</span><span class="n">apk</span> <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">app</span><span class="o">/</span><span class="n">com</span><span class="p">.</span><span class="n">citicbank</span><span class="p">.</span><span class="n">cyberpay</span><span class="p">.</span><span class="n">ui</span><span class="o">-</span><span class="mf">2.</span><span class="n">apk</span>
+<span class="mi">3235</span> <span class="n">KB</span><span class="o">/</span><span class="n">s</span> <span class="p">(</span><span class="mi">7902332</span> <span class="n">bytes</span> <span class="n">in</span> <span class="mf">2.385</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+
+
+<p>写个脚本，杠杠的 00.   </p>
+<p>----------------------------------------------------分割线-------------------------------------------  </p>
+<p>但是呢，理想很丰满，现实很骨感------<br />
+签名还能怎么读  ？<br />
+特征字符串和特征函数有这么容易搜索到？<br />
+还有个apktool指纹 ^^  </p>
+<p>发现有人不会xposed插件编写，不打算为此写文章了，可以看朋友的<a href="http://0nly3nd.sinaapp.com/?p=613">教程文章</a></p>
+            </div><!-- /.entry-content -->
+			            <aside>
+            <hr/>
+            <!-- all by Qxia -->
+
+            <nav>
+            <ul class="articles_timeline">
+ 
+                <li class="previous_article">« <a href="/pages/2014/08/android-soke-ru-kou-qian-xi" title="Previous: android so壳入口浅析">android so壳入口浅析</a></li>
+            </ul>
+            </nav>
+            </aside>
+			<!--neighbors plugin take -->
+			<ul style="float:right;">
+			</ul>
+			
+			
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "pages/2014/08/qian-tan-androidwan-zheng-xing-jian-ce";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://9haoblog.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
+
+
+        </div><!-- /.eleven.columns -->
+        
+<div class="three columns">
+
+<div class="sidebarbg">
+	<h4>Pages</h4>
+	<ul>
+	</ul>
+</div>
+
+<div class="sidebarbg">
+<h4>Categories</h4>
+	<ul>
+			<li><a href="/category/about-me.html">About me</a></li>
+			<li><a href="/category/android.html">Android</a></li>
+			<li><a href="/category/internet.html">Internet</a></li>
+	</ul>
+</div>
+
+<div class="sidebarbg">
+	<h4>Tags</h4>
+		<ul>
+			<li class="tag-3"><a href="/tag/hook.html">Hook</a></li>
+			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
+			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
+			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
+			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
+		</ul>
+</div>
+
+
+
+<nav class="widget sidebarbg">
+  <h4>Links</h4>
+  <ul>
+	<li><a target="_blank" href="http://getpelican.com/">Pelican</a></li>
+	<li><a target="_blank" href="http://python.org/">Python.org</a></li>
+	<li><a target="_blank" href="http://pallergabor.uw.hu/androidblog/dalvik_opcodes.html">Dalvik opcodes</a></li>
+	<li><a target="_blank" href="http://0nly3nd.sinaapp.com">0nly3nd(后生可畏)</a></li>
+  </ul>
+</nav>
+
+</div> </div><!-- /.row -->
+
+
+</section>
+
+       </div><!-- /.row -->
+    </div><!-- /.container -->
+
+
+       <div class="container.nopad bg">
+
+    
+        <footer id="credits" class="row">
+          <div class="seven columns left-center">
+					本博客使用Pelican+GitHub Pages搭建，详细请参考<a href="http://www.xycoding.com/articles/2013/11/21/blog-create/" class="active" target="_blank">教程</a>。
+				   </address>
+          </div>
+
+
+          <div class="seven columns">
+            <div class="row">
+              <ul class="socbtns">
+
+
+
+
+
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+    </div>
+
+
+<script type="text/javascript">
+    var disqus_shortname = '9haoblog';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+      <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="/theme/js/libs/gumby.min.js"></script>
+  <script src="/theme/js/plugins.js"></script>
+	<script>
+	(function() {
+		var $backToTopTxt = "返回顶部", $backToTopEle = $('<div class="backToTop"></div>').appendTo($("body"))
+			.text($backToTopTxt).attr("title", $backToTopTxt).click(function() {
+				$("html, body").animate({ scrollTop: 0 }, 120);
+		}), $backToTopFun = function() {
+			var st = $(document).scrollTop(), winh = $(window).height();
+			(st > 0)? $backToTopEle.show(): $backToTopEle.hide();
+			//IE6下的定位
+			if (!window.XMLHttpRequest) {
+				$backToTopEle.css("top", st + winh - 166);
+			}
+		};
+		$(window).bind("scroll", $backToTopFun);
+		$(function() { $backToTopFun(); });
+	})();
+	</script>
+</body>
+</html>
