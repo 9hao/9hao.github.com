@@ -144,6 +144,88 @@
 <p>推荐阅读一篇分析<a href="http://securityintelligence.com/diy-android-malware-analysis-taking-apart-obad-part-1/#.U_a9VPmSy7J">DIY: Android Malware Analysis – Taking Apart OBAD (Part 1)</a>.学习分析思路和工具使用<br />
 每种调试工具都接触下，技多不压身^^。  </p>
 <p><strong>ps:不必每次都在目标APK中的manifest文件中加入android:debuggable="true"，root手机把ro.debuggable设置为1，默认所有的apk都可调试</strong></p>
+<blockquote>
+<p>2014.8.24更新</p>
+</blockquote>
+<p><strong>jdb的简单用法</strong></p>
+<div class="highlight"><pre><span class="mi">1</span> <span class="err">以调试模式启动</span><span class="nx">apk</span><span class="p">:</span><span class="nx">adb</span> <span class="nx">shell</span> <span class="nb">am</span> <span class="nb">start</span> <span class="na">-D</span> <span class="na">-n</span> <span class="err">包名</span><span class="o">/</span><span class="err">入口主类</span>
+<span class="nx">C</span><span class="p">:</span><span class="o">\</span><span class="nx">Users</span><span class="o">\</span><span class="nx">xxx</span><span class="o">\</span><span class="nx">Desktop</span><span class="o">&gt;</span><span class="nx">adb</span> <span class="nx">shell</span> <span class="nb">am</span> <span class="nb">start</span> <span class="na">-D</span> <span class="na">-n</span> <span class="nx">com.bee</span><span class="p">/</span><span class="nx">com.bee.MainActivity</span>
+<span class="nx">Starting</span><span class="p">:</span> <span class="nx">Intent</span> <span class="p">{</span> <span class="n">cmp</span><span class="o">=</span><span class="nx">com.bee</span><span class="p">/</span><span class="nx">.MainActivity</span> <span class="p">}</span>
+
+<span class="mi">2</span> <span class="nx">jdwp</span><span class="err">端口转发</span><span class="p">:</span><span class="nx">adb</span> <span class="nb">forward</span> <span class="nx">tcp</span><span class="p">:</span><span class="err">要转发端口</span> <span class="nx">jdwp</span><span class="p">:</span><span class="nx">app</span><span class="err">的进程号</span>
+<span class="nx">C</span><span class="p">:</span><span class="o">\</span><span class="nx">Users</span><span class="o">\</span><span class="nx">xxx</span><span class="o">\</span><span class="nx">Desktop</span><span class="o">&gt;</span><span class="nx">adb</span> <span class="nb">forward</span> <span class="nx">tcp</span><span class="p">:</span><span class="mi">9999</span> <span class="nx">jdwp</span><span class="p">:</span><span class="mi">10706</span>
+
+<span class="mi">3</span><span class="err">附加</span><span class="p">:</span><span class="nx">jdb</span> <span class="na">-connect</span> <span class="nx">com.sun.jdi.SocketAttach</span><span class="p">:</span><span class="n">port</span><span class="o">=</span> <span class="err">转发端口</span> <span class="p">,</span><span class="n">hostname</span><span class="o">=</span><span class="nx">localhost</span>
+<span class="nx">C</span><span class="p">:</span><span class="o">\</span><span class="nx">Users</span><span class="o">\</span><span class="nx">xxx</span><span class="o">\</span><span class="nx">Desktop</span><span class="o">&gt;</span><span class="nx">jdb</span> <span class="na">-connect</span> <span class="nx">com.sun.jdi.SocketAttach</span><span class="p">:</span><span class="n">port</span><span class="o">=</span><span class="mi">9999</span><span class="p">,</span><span class="n">hostname</span><span class="o">=</span><span class="nx">localhost</span> 
+
+<span class="mi">4</span><span class="err">查看所有加载类</span><span class="p">:</span> <span class="nx">classes</span>
+
+<span class="mi">5</span><span class="err">查看类方法：</span><span class="nx">methods</span> <span class="err">类名</span>
+
+<span class="nx">main</span><span class="err">[</span><span class="mi">1</span><span class="cp">]</span> methods Bee.PhoneInfo
+** 方法列表 **
+Bee.PhoneInfo <span class="nt">&lt;init&gt;</span>(android.content.Context)
+Bee.PhoneInfo getAndroidId(android.content.Context)
+Bee.PhoneInfo getInfoFromTelephonyManager(android.content.Context)
+Bee.PhoneInfo getNumCores()
+Bee.PhoneInfo getTotalMemory()
+Bee.PhoneInfo isRoot()
+Bee.PhoneInfo getCpuInfo()
+Bee.PhoneInfo getProp(android.content.Context, java.lang.String)
+Bee.PhoneInfo getProp()
+Bee.PhoneInfo getResolution()
+Bee.PhoneInfo toString()
+
+6 查看类有哪些字段: fields Bee.PhoneInfo
+
+<span class="nt">&lt;1&gt;</span> main<span class="cp">[</span><span class="mi">1</span><span class="cp">]</span> fields Bee.PhoneInfo
+** 字段列表 **
+android.content.Context context
+Bee.UserInfo userInfo
+
+7 设置断点:stop in 类名.方法名（注意带全路径和签名）
+&gt; stop in Bee.PhoneInfo.getProp()
+设置断点Bee.PhoneInfo.getProp()
+
+8 断点触发提示
+断点命中: &quot;线程=<span class="nt">&lt;1&gt;</span> main&quot;, Bee.PhoneInfo.getProp(), 行=173 bci=0
+
+9 查看当前类信息: dump this
+   <span class="nt">&lt;1&gt;</span> main<span class="cp">[</span><span class="mi">1</span><span class="cp">]</span> dump this
+ this = {
+    context: instance of com.bee.MainActivity(id=830037271688)
+    userInfo: instance of Bee.UserInfo(id=830037247560)
+}
+   查看当前字段信息:dump this.字段名 (后面给张图)
+
+10 查看函数堆栈信息:where
+<span class="nt">&lt;1&gt;</span> main<span class="cp">[</span><span class="mi">1</span><span class="cp">]</span> where
+  <span class="cp">[</span><span class="mi">1</span><span class="cp">]</span> Bee.PhoneInfo.getProp (PhoneInfo.java:173)
+  <span class="cp">[</span><span class="mi">2</span><span class="cp">]</span> Bee.PhoneInfo.<span class="nt">&lt;init&gt;</span> (PhoneInfo.java:33)
+  <span class="cp">[</span><span class="mi">3</span><span class="cp">]</span> com.bee.MainActivity.onCreate (MainActivity.java:29)
+  <span class="cp">[</span><span class="mi">4</span><span class="cp">]</span> android.app.Activity.performCreate (Activity.java:5,020)
+  <span class="cp">[</span><span class="mi">5</span><span class="cp">]</span> android.app.Instrumentation.callActivityOnCreate (Instrumentation.java:1,080)
+  <span class="cp">[</span><span class="mi">6</span><span class="cp">]</span> com.lbe.security.service.core.client.b.x.callActivityOnCreate (null)
+  <span class="cp">[</span><span class="mi">7</span><span class="cp">]</span> android.app.ActivityThread.performLaunchActivity (ActivityThread.java:2,153)
+  <span class="cp">[</span><span class="mi">8</span><span class="cp">]</span> android.app.ActivityThread.handleLaunchActivity (ActivityThread.java:2,216)
+  <span class="cp">[</span><span class="mi">9</span><span class="cp">]</span> android.app.ActivityThread.access$600 (ActivityThread.java:149)
+  <span class="cp">[</span><span class="mi">10</span><span class="cp">]</span> android.app.ActivityThread$H.handleMessage (ActivityThread.java:1,305)
+  <span class="cp">[</span><span class="mi">11</span><span class="cp">]</span> android.os.Handler.dispatchMessage (Handler.java:99)
+
+11 单步: step
+</pre></div>
+
+
+<p>dump图<br />
+<img alt="dump图" src="http://www.opendrive.com/files/Ml82MjU2NzY1M19tMVNOWg/dumpthisinfo.jpg" />  </p>
+<p><strong>jswat</strong>  </p>
+<p>前两步同jdb。
+附加:点session-&gt;<br />
+<img alt="jswatattach" src="http://www.opendrive.com/files/Ml82MjU2ODMxMV9ldnZGaA/jswatattach.jpg" /><br />
+断点<br />
+<img alt="jswatbreak" src="http://www.opendrive.com/files/Ml82MjU2ODMxMl94S2ZDdw/jswatbreak.jpg" /><br />
+有界面jswat是有中文界面的，别的自己尝试吧   </p>
+<p><strong>万用方法:help命令，google/baidu</strong></p>
             </div><!-- /.entry-content -->
 			            <aside>
             <hr/>
@@ -199,11 +281,11 @@
 <div class="sidebarbg">
 	<h4>Tags</h4>
 		<ul>
-			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
-			<li class="tag-3"><a href="/tag/hook.html">Hook</a></li>
 			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
-			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
 			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
+			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
+			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
+			<li class="tag-3"><a href="/tag/hook.html">Hook</a></li>
 		</ul>
 </div>
 
