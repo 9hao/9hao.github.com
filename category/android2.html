@@ -63,6 +63,40 @@
 		
 		         <ol id="post-list">
 				        <li><article class="hentry">
+				                <header> <h2 class="entry-title"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-logpian" rel="bookmark" title="Permalink to android逆向分析之log篇">android逆向分析之log篇</a></h2> </header>
+				                <footer class="post-info">
+				                    <!--<abbr class="published" title="2014-07-20T00:00:00"> 日 20 七月 2014 </abbr>
+<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
+								 <address class="vcard author" style="font-style:italic;">
+									日 20 七月 2014
+										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+								  </address>
+									
+				                </footer><!-- /.post-info -->
+				                <div class="entry-content"> <p>(不知攻，焉知防！)   </p>
+<blockquote>
+<p><strong>0x0 前言</strong>  </p>
+</blockquote>
+<p>&emsp;&emsp;在以前逆向分析的分析，动态调试不成熟的时候，需要在反汇编程序smali插入汇编代码来追踪apk运行信息（也有人叫这种为smali注入）。想一下程序调试过程，断点，单步跟踪，查看寄存器/变量信息，看函数调用堆栈等等，通过调试过程来反馈的信息来分析apk。那么我们怎么用smali注入来达到“动态调试”目的?</p>
+<blockquote>
+<p><strong>0x1 "断点"，"单步跟踪"，查看寄存器/变量信息</strong>  </p>
+</blockquote>
+<p>&emsp;&emsp; 我们在关键的地方插入了log打印，如果程序执行到这个我们插入log的地方，输出我们打印的信息，这样是不是有点像"断点"触发","跟踪"，还输出了寄存器/变量信息?  虽然不能单步调试，至少能拿到一些信息。刚开始接触日志打印的时候，网上给的经验都是用系统log类调试。你用这个类会发现一个问题，他需要两个寄存器的值，invoke-static {vx, vy}, Landroid/util/Log;-&gt;v(Ljava/lang/String;Ljava/lang ...</p> </div><!-- /.entry-content -->
+
+								<div class="medium primary btn"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-logpian" rel="bookmark" title="Permalink to android逆向分析之log篇">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+								<div class="row tag-row">
+										<span>Tagged as : </span>
+											<a class="danger label" href="/tag/android.html">Android</a>
+											<a class="danger label" href="/tag/ni-xiang-fen-xi.html">逆向分析</a>
+								</div>
+
+
+
+				        </article></li>
+				        <li><article class="hentry">
 				                <header> <h2 class="entry-title"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-chu-tan-di-ying" rel="bookmark" title="Permalink to android逆向分析之初探敌营">android逆向分析之初探敌营</a></h2> </header>
 				                <footer class="post-info">
 				                    <!--<abbr class="published" title="2014-07-15T00:00:00"> 二 15 七月 2014 </abbr>
@@ -201,11 +235,11 @@
 <div class="sidebarbg">
 	<h4>Tags</h4>
 		<ul>
-			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
-			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
 			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
-			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
+			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
 			<li class="tag-3"><a href="/tag/hook.html">Hook</a></li>
+			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
+			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
 		</ul>
 </div>
 

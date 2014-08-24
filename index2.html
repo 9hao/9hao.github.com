@@ -63,6 +63,40 @@
 		
 		         <ol id="post-list">
 				        <li><article class="hentry">
+				                <header> <h2 class="entry-title"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-logpian" rel="bookmark" title="Permalink to android逆向分析之log篇">android逆向分析之log篇</a></h2> </header>
+				                <footer class="post-info">
+				                    <!--<abbr class="published" title="2014-07-20T00:00:00"> 日 20 七月 2014 </abbr>
+<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
+								 <address class="vcard author" style="font-style:italic;">
+									日 20 七月 2014
+										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+								  </address>
+									
+				                </footer><!-- /.post-info -->
+				                <div class="entry-content"> <p>(不知攻，焉知防！)   </p>
+<blockquote>
+<p><strong>0x0 前言</strong>  </p>
+</blockquote>
+<p>&emsp;&emsp;在以前逆向分析的分析，动态调试不成熟的时候，需要在反汇编程序smali插入汇编代码来追踪apk运行信息（也有人叫这种为smali注入）。想一下程序调试过程，断点，单步跟踪，查看寄存器/变量信息，看函数调用堆栈等等，通过调试过程来反馈的信息来分析apk。那么我们怎么用smali注入来达到“动态调试”目的?</p>
+<blockquote>
+<p><strong>0x1 "断点"，"单步跟踪"，查看寄存器/变量信息</strong>  </p>
+</blockquote>
+<p>&emsp;&emsp; 我们在关键的地方插入了log打印，如果程序执行到这个我们插入log的地方，输出我们打印的信息，这样是不是有点像"断点"触发","跟踪"，还输出了寄存器/变量信息?  虽然不能单步调试，至少能拿到一些信息。刚开始接触日志打印的时候，网上给的经验都是用系统log类调试。你用这个类会发现一个问题，他需要两个寄存器的值，invoke-static {vx, vy}, Landroid/util/Log;-&gt;v(Ljava/lang/String;Ljava/lang ...</p> </div><!-- /.entry-content -->
+
+								<div class="medium primary btn"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-logpian" rel="bookmark" title="Permalink to android逆向分析之log篇">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+								<div class="row tag-row">
+										<span>Tagged as : </span>
+											<a class="danger label" href="/tag/android.html">Android</a>
+											<a class="danger label" href="/tag/ni-xiang-fen-xi.html">逆向分析</a>
+								</div>
+
+
+
+				        </article></li>
+				        <li><article class="hentry">
 				                <header> <h2 class="entry-title"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-chu-tan-di-ying" rel="bookmark" title="Permalink to android逆向分析之初探敌营">android逆向分析之初探敌营</a></h2> </header>
 				                <footer class="post-info">
 				                    <!--<abbr class="published" title="2014-07-15T00:00:00"> 二 15 七月 2014 </abbr>
@@ -207,35 +241,6 @@
 
 
 				        </article></li>
-				        <li><article class="hentry">
-				                <header> <h2 class="entry-title"><a href="/pages/2014/03/losermen-de-gong-tong-te-zheng" rel="bookmark" title="Permalink to loser们的共同特征">loser们的共同特征</a></h2> </header>
-				                <footer class="post-info">
-				                    <!--<abbr class="published" title="2014-03-20T00:00:00"> 四 20 三月 2014 </abbr>
-<address class="vcard author">By <a class="url fn" href="/author/hu-lian-wang.html">互联网</a></address>-->
-								 <address class="vcard author" style="font-style:italic;">
-									四 20 三月 2014
-										&nbsp;&nbsp;Write By <a class="url fn" href="/author/hu-lian-wang.html">互联网</a>
-								  </address>
-									
-				                </footer><!-- /.post-info -->
-				                <div class="entry-content"> <p>互联网提供了一个很好的窗口，使我们可以观察形形色色的人们，那么看到最多的，大概就是loser了。这也符合社会人群构成的分布，失意者往往是大多数，成功者往往是极少数。</p>
-<p>怎样摆脱失意，成就自己，不妨先看看loser有哪些共性，再看看自己占了几条。</p>
-<p>loser共性之一， 怨天尤人
-  别人有个好老板，我们老板真抠门；别人有背景，我们是草根；等等，把自己的无能用“客观环境”来掩盖，乍一听条条是理，其实呢，别人成功都是偶然，自己的失败都是命不好。这样的人能成功才是没天理。今天无论是网络社区里，街边聊天里，听到最多的就是这种谈资，“我们老板不成，太黑，你看人家谁那单位”，每个行业，顶尖的人才都是极少数，而平庸的人总是过剩，你跨入那个门槛，你就会发现，其实你的老板非常大方，一点都不黑，关键是，你在门槛外，然后看着门槛内的人，觉得他们似乎是命运的宠儿。却从来无视这个门槛的存在，所以有人说某某网游公司核心工程师月薪2万3万，人家公司待遇多好，自己才拿两三千，却从来不肯面对自己的水平和人家的水平差多少。</p>
-<p>loser共性之二，不肯面对现实 ...</p> </div><!-- /.entry-content -->
-
-								<div class="medium primary btn"><a href="/pages/2014/03/losermen-de-gong-tong-te-zheng" rel="bookmark" title="Permalink to loser们的共同特征">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-								<div class="row tag-row">
-										<span>Tagged as : </span>
-											<a class="danger label" href="/tag/za-wen.html">杂文</a>
-								</div>
-
-
-
-				        </article></li>
 				</ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -260,11 +265,11 @@
 <div class="sidebarbg">
 	<h4>Tags</h4>
 		<ul>
-			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
-			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
 			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
-			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
+			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
 			<li class="tag-3"><a href="/tag/hook.html">Hook</a></li>
+			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
+			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
 		</ul>
 </div>
 
@@ -283,7 +288,8 @@
 
 <p class="paginator">
             <a href="/index.html"><i class="icon-arrow-left"></i></a>
-    Page 2 / 2
+    Page 2 / 3
+        <a href="/index3.html"><i class="icon-arrow-right"></i></a>
 </p>
 </section><!-- /#content -->
 
