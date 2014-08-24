@@ -104,32 +104,34 @@
 <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="err">算法</span> <span class="n">md5</span><span class="p">,</span><span class="n">hash</span><span class="err">。</span>
 <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="err">退出函数、错误提示等。</span>
 <span class="err">搜索这些特征函数和字符串，找到校验的地方。</span>
-<span class="err">````</span>
-<span class="o">&gt;</span> <span class="err">突破校验</span>
-
-<span class="o">*</span><span class="mi">1</span> <span class="err">爆破</span><span class="o">*</span>
 </pre></div>
 
 
-<p>如果只是本地校验，可以找到校验函数后修改调转;如果是网络验证，直接爆破容易失效。</p>
-<div class="highlight"><pre><span class="o">*</span><span class="mi">2</span> <span class="err">文件重定向</span><span class="o">*</span>
-<span class="err">我们先看看两个常见的检测代码（摘自《</span><span class="n">Android</span><span class="err">安全与逆向分析》</span> <span class="err">防止重编译小结）</span>  
-<span class="o">**</span><span class="err">签名获取</span><span class="o">**:</span>  
-<span class="err">```</span><span class="n">java</span>
-    <span class="n">public</span> <span class="kt">int</span> <span class="n">getSignature</span><span class="p">(</span><span class="n">String</span> <span class="n">packageName</span><span class="p">)</span> <span class="p">{</span>      
-        <span class="n">PackageManager</span> <span class="n">pm</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">getPackageManager</span><span class="p">();</span>
-        <span class="n">PackageInfo</span> <span class="n">pi</span> <span class="o">=</span> <span class="n">null</span><span class="p">;</span>
-        <span class="kt">int</span> <span class="n">sig</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="n">try</span> <span class="p">{</span>
-            <span class="n">pi</span> <span class="o">=</span> <span class="n">pm</span><span class="p">.</span><span class="n">getPackageInfo</span><span class="p">(</span><span class="n">packageName</span><span class="p">,</span> <span class="n">PackageManager</span><span class="p">.</span><span class="n">GET_SIGNATURES</span><span class="p">);</span>
-            <span class="n">Signature</span><span class="p">[]</span> <span class="n">s</span> <span class="o">=</span> <span class="n">pi</span><span class="p">.</span><span class="n">signatures</span><span class="p">;</span>
-            <span class="n">sig</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">hashCode</span><span class="p">();</span>  
-        <span class="p">}</span> <span class="n">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">e1</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">sig</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="n">e1</span><span class="p">.</span><span class="n">printStackTrace</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">sig</span><span class="p">;</span>
-    <span class="p">}</span>
+<blockquote>
+<p>突破校验</p>
+</blockquote>
+<p><em>1 爆破</em></p>
+<div class="highlight"><pre><span class="err">如果只是本地校验，可以找到校验函数后修改调转</span><span class="p">;</span><span class="err">如果是网络验证，直接爆破容易失效。</span>
+</pre></div>
+
+
+<p><em>2 文件重定向</em>
+我们先看看两个常见的检测代码（摘自《Android安全与逆向分析》 防止重编译小结）<br />
+<strong>签名获取</strong>:  </p>
+<div class="highlight"><pre>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getSignature</span><span class="o">(</span><span class="n">String</span> <span class="n">packageName</span><span class="o">)</span> <span class="o">{</span>      
+        <span class="n">PackageManager</span> <span class="n">pm</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">getPackageManager</span><span class="o">();</span>
+        <span class="n">PackageInfo</span> <span class="n">pi</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">sig</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">pi</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="na">getPackageInfo</span><span class="o">(</span><span class="n">packageName</span><span class="o">,</span> <span class="n">PackageManager</span><span class="o">.</span><span class="na">GET_SIGNATURES</span><span class="o">);</span>
+            <span class="n">Signature</span><span class="o">[]</span> <span class="n">s</span> <span class="o">=</span> <span class="n">pi</span><span class="o">.</span><span class="na">signatures</span><span class="o">;</span>
+            <span class="n">sig</span> <span class="o">=</span> <span class="n">s</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na">hashCode</span><span class="o">();</span>  
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e1</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">sig</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+            <span class="n">e1</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">sig</span><span class="o">;</span>
+    <span class="o">}</span>
 </pre></div>
 
 
@@ -260,10 +262,10 @@ http://www.kanxue.com/bbs/showthread.php?t=190711  </p>
 <div class="sidebarbg">
 	<h4>Tags</h4>
 		<ul>
-			<li class="tag-3"><a href="/tag/hook.html">Hook</a></li>
-			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
 			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
+			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
 			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
+			<li class="tag-3"><a href="/tag/hook.html">Hook</a></li>
 			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
 		</ul>
 </div>
