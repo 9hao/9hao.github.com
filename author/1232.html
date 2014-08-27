@@ -63,6 +63,50 @@
 		
 		         <ol id="post-list">
 				        <li><article class="hentry">
+				                <header> <h2 class="entry-title"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-smalidong-tai-diao-shi" rel="bookmark" title="Permalink to android逆向分析之smali动态调试">android逆向分析之smali动态调试</a></h2> </header>
+				                <footer class="post-info">
+				                    <!--<abbr class="published" title="2014-07-21T00:00:00"> 一 21 七月 2014 </abbr>
+<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
+								 <address class="vcard author" style="font-style:italic;">
+									一 21 七月 2014
+										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+								  </address>
+									
+				                </footer><!-- /.post-info -->
+				                <div class="entry-content"> <p>(不知攻，焉知防！) </p>
+<p>smali动态调试网上已经有很多文章了，刚开始开始是Apktool1.4.2支持，后面后面几个版本就阉割，貌似不稳定，到了 Apktool 2.0之后的版本又重新放出。给几个教程连接：</p>
+<p><a href="http://code.google.com/p/android-apktool/wiki/SmaliDebugging">官网说明SmaliDebugging</a></p>
+<blockquote>
+<p><strong>Netbean</strong> </p>
+</blockquote>
+<p>[1]<a href="http://www.rover12421.com/2012/11/05/using-netbean-and-apktool-debugging-smali-code.html">使用Netbean和Apktool调试smali</a><br />
+[2]<a href="http://www.colordancer.net/blog/2013/09/16/apktool-2-0-netbeans-7-3-%E8%B0%83%E8%AF%95apk/">apktool 2.0+netbeans 7.3调试apk</a><br />
+[3]<a href="http://0nly3nd.sinaapp.com/?p=576">Netbeans 6.8 + apktool_2.0.0b9 动态调试smali文件</a>  </p>
+<blockquote>
+<p><strong>eclipse</strong> </p>
+</blockquote>
+<p><a href="http://blog.csdn.net/xbalien29/article/details/27564365">apktool + eclipse 动态调试APK</a></p>
+<p>个人用eclipse习惯了，比较倾向于eclipse。</p>
+<p>动态调试还有jdb，andbug，JSwat Debugger，ida等等，谈谈每种调试的优劣.  </p>
+<blockquote>
+<p>jdb</p>
+</blockquote>
+<div class="highlight"><pre><span class="err">刚开始接触动态调试的时候是</span><span class="n">jdb</span><span class="err">，支持调试的基本功能，优点：可以在配置文件里面预下断点 ...</span></pre></div> </div><!-- /.entry-content -->
+
+								<div class="medium primary btn"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-smalidong-tai-diao-shi" rel="bookmark" title="Permalink to android逆向分析之smali动态调试">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+								<div class="row tag-row">
+										<span>Tagged as : </span>
+											<a class="danger label" href="/tag/android.html">Android</a>
+											<a class="danger label" href="/tag/ni-xiang-fen-xi.html">逆向分析</a>
+								</div>
+
+
+
+				        </article></li>
+				        <li><article class="hentry">
 				                <header> <h2 class="entry-title"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-logpian" rel="bookmark" title="Permalink to android逆向分析之log篇">android逆向分析之log篇</a></h2> </header>
 				                <footer class="post-info">
 				                    <!--<abbr class="published" title="2014-07-20T00:00:00"> 日 20 七月 2014 </abbr>
@@ -201,46 +245,6 @@
 
 
 				        </article></li>
-				        <li><article class="hentry">
-				                <header> <h2 class="entry-title"><a href="/pages/2014/03/android-java-hook-na-dian-shi-1" rel="bookmark" title="Permalink to android java hook 那点事(1)">android java hook 那点事(1)</a></h2> </header>
-				                <footer class="post-info">
-				                    <!--<abbr class="published" title="2014-03-20T00:00:00"> 四 20 三月 2014 </abbr>
-<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
-								 <address class="vcard author" style="font-style:italic;">
-									四 20 三月 2014
-										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
-								  </address>
-									
-				                </footer><!-- /.post-info -->
-				                <div class="entry-content"> <p>(不知攻，焉知防)  </p>
-<p>&emsp;&emsp;通过这篇<a href="http://blog.csdn.net/luoshengyang/article/details/8914953">老罗的日志</a>，我们可以了解到 dalvik在执行函数时会先调用dvmIsNativeMethod来判断一个method是否是native方法。如果是native函数的话，那么它所指向的一个Method对象的成员变量nativeFunc就指向该JNI方法的地址，因此就可以直接对它进行调用。否则的话，就说明参数method描述的是一个Java函数，这时候就需要继续调用函数dvmInterpret来执行它的代码。因此我们可以把一个非native的java函数变成native method，让dalvik执行我们的native方法而达到hook的目的。</p>
-<p>&emsp;&emsp;先看android代码的两个片段</p>
-<p><strong>0x01</strong>  <a href="http://androidxref.com/4.1.2/xref/dalvik/vm/oo/Class.cpp#2148">loadMethodFromDex</a></p>
-<div class="highlight"><pre> <span class="k">if</span> <span class="o">(</span><span class="n">pDexCode</span> <span class="o">!=</span> <span class="n">NULL</span><span class="o">)</span> <span class="o">{</span>
-        <span class="cm">/* integer constants, copy over for faster access */</span>
-        <span class="n">meth</span><span class="o">-&gt;</span><span class="n">registersSize</span> <span class="o">=</span> <span class="n">pDexCode</span><span class="o">-&gt;</span><span class="n">registersSize</span><span class="o">;</span>
-        <span class="n">meth</span><span class="o">-&gt;</span><span class="n">insSize</span> <span class="o">=</span> <span class="n">pDexCode</span><span class="o">-&gt;</span><span class="n">insSize</span><span class="o">;</span>
-        <span class="n">meth</span><span class="o">-&gt;</span><span class="n">outsSize</span> <span class="o">=</span> <span class="n">pDexCode</span><span class="o">-&gt;</span><span class="n">outsSize</span><span class="o">;</span>
-
-        <span class="cm">/* pointer to code area */</span>
-        <span class="n">meth</span><span class="o">-&gt;</span><span class="n">insns</span> <span class="o">=</span> <span class="n">pDexCode</span><span class="o">-&gt;</span><span class="n">insns</span><span class="o">;</span>
-    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-        <span class="cm">/*</span>
-<span class="cm">         * We ...</span></pre></div> </div><!-- /.entry-content -->
-
-								<div class="medium primary btn"><a href="/pages/2014/03/android-java-hook-na-dian-shi-1" rel="bookmark" title="Permalink to android java hook 那点事(1)">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-								<div class="row tag-row">
-										<span>Tagged as : </span>
-											<a class="danger label" href="/tag/android.html">Android</a>
-											<a class="danger label" href="/tag/hook.html">Hook</a>
-								</div>
-
-
-
-				        </article></li>
 				</ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -265,11 +269,11 @@
 <div class="sidebarbg">
 	<h4>Tags</h4>
 		<ul>
-			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
 			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
-			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
 			<li class="tag-3"><a href="/tag/hook.html">Hook</a></li>
 			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
+			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
+			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
 		</ul>
 </div>
 
@@ -289,7 +293,8 @@
 
 <p class="paginator">
             <a href="/author/123.html"><i class="icon-arrow-left"></i></a>
-    Page 2 / 2
+    Page 2 / 3
+        <a href="/author/1233.html"><i class="icon-arrow-right"></i></a>
 </p>
 </section><!-- /#content -->
 
