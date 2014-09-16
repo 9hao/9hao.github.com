@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 
-        <title>9Hao - Hook</title>
+        <title>9Hao</title>
         <meta charset="utf-8" />
 
 
@@ -42,7 +42,7 @@
                 <li><a href="/">Home</a></li>
 					<!--<li><a href="/category/about-me.html">About me</a></li>-->
 					<li><a href="/category/about-me.html">About me</a></li>
-					<!--<li><a href="/category/android.html">Android</a></li>-->
+					<!--<li class="active"><a href="/category/android.html">Android</a></li>-->
 					<li><a href="/category/android.html">Android</a></li>
 					<!--<li><a href="/category/internet.html">Internet</a></li>-->
 					<li><a href="/category/internet.html">Internet</a></li>
@@ -59,39 +59,9 @@
    <div class="row">
 
         <div class="eleven columns">
-
+<h2>Articles in the Android category</h2>
 		
 		         <ol id="post-list">
-				        <li><article class="hentry">
-				                <header> <h2 class="entry-title"><a href="/pages/2014/05/android-java-hook-na-dian-shi-2" rel="bookmark" title="Permalink to android java hook 那点事(2)">android java hook 那点事(2)</a></h2> </header>
-				                <footer class="post-info">
-				                    <!--<abbr class="published" title="2014-05-11T00:00:00"> 日 11 五月 2014 </abbr>
-<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
-								 <address class="vcard author" style="font-style:italic;">
-									日 11 五月 2014
-										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
-								  </address>
-									
-				                </footer><!-- /.post-info -->
-				                <div class="entry-content"> <p>(不知攻，焉知防！)  </p>
-<p>&emsp;&emsp;要说到<strong>android</strong> 的<strong>java hook</strong>不得不提国外大神的<a href="https://github.com/rovo89">xposed框架</a>（<a href="http://www.kanxue.com/bbs/showthread.php?t=181436&amp;viewgoodnees=1&amp;prefixid=">看雪上有贴子对它的分析</a>），刚开始看源码的时候，有些地方不知道为什么这么做，why？why？,一直在脑子里转。带着疑问研究<strong>android</strong>源码的之后，才晓其理。  </p>
-<p>&emsp;&emsp;通过<a href="/pages/2014/03/android-java-hook-na-dian-shi-1">之前的日志</a>我们知道了基本的<strong>android java hook</strong> 原理，里面有一步是把method的nativeFunc值设为<strong>dvmResolveNativeMethod</strong>，为什么这么做，可以看看<a href="http://shyluo.blog.51cto.com/5725845/1229257">老罗的日志Dalvik虚拟机JNI方法的注册过程分析</a>。<strong>xposed</strong>和我们不同的是自己写了处理函数<strong>xposedCallHandler</strong>,我好奇的是大神为什么这样实现？思路？记得<strong>java</strong>里面有个<strong>proxy</strong>类，也修改函数的执行，因此我看<strong>android</strong>里这个类的实现源码，后面我追到了<a href="http://androidxref.com/4.1.2/xref/dalvik/vm/reflect/Proxy.cpp">Proxy.cpp</a>,发现......   </p>
-<div class="highlight"><pre><span class="cm">/*</span>
-<span class="cm"> * Create ...</span></pre></div> </div><!-- /.entry-content -->
-
-								<div class="medium primary btn"><a href="/pages/2014/05/android-java-hook-na-dian-shi-2" rel="bookmark" title="Permalink to android java hook 那点事(2)">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-								<div class="row tag-row">
-										<span>Tagged as : </span>
-											<a class="danger label" href="/tag/android.html">Android</a>
-											<a class="danger label" href="/tag/hook.html">Hook</a>
-								</div>
-
-
-
-				        </article></li>
 				        <li><article class="hentry">
 				                <header> <h2 class="entry-title"><a href="/pages/2014/03/android-java-hook-na-dian-shi-1" rel="bookmark" title="Permalink to android java hook 那点事(1)">android java hook 那点事(1)</a></h2> </header>
 				                <footer class="post-info">
@@ -179,7 +149,8 @@
 </div> </div><!-- /.row -->
 
 <p class="paginator">
-    Page 1 / 1
+            <a href="/category/android2.html"><i class="icon-arrow-left"></i></a>
+    Page 3 / 3
 </p>
 </section><!-- /#content -->
 

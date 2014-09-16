@@ -63,6 +63,46 @@
 		
 		         <ol id="post-list">
 				        <li><article class="hentry">
+				                <header> <h2 class="entry-title"><a href="/pages/2014/07/qian-tan-androidni-xiang-fen-xi-na-xie-lan-lu-hu" rel="bookmark" title="Permalink to 浅谈android逆向分析那些拦路虎">浅谈android逆向分析那些拦路虎</a></h2> </header>
+				                <footer class="post-info">
+				                    <!--<abbr class="published" title="2014-07-27T00:00:00"> 日 27 七月 2014 </abbr>
+<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
+								 <address class="vcard author" style="font-style:italic;">
+									日 27 七月 2014
+										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+								  </address>
+									
+				                </footer><!-- /.post-info -->
+				                <div class="entry-content"> <blockquote>
+<p><strong>0x0 前言</strong>   </p>
+</blockquote>
+<p>&emsp;&emsp;接触android逆向分析一年有余,碰到好些Android的逆向的拦路虎，也见证了android软件防护在一年中的发展历程，记录下遇到的一些问题。   </p>
+<blockquote>
+<p><strong>0x1 混淆</strong>    </p>
+</blockquote>
+<p>&emsp;&emsp;刚开始的android软件没经过代码混淆，这中些apk的smali看起来很明了，把dex转换成jar，用jd-gui查看，跟看源码差不多了（ps：jd-gui处理多重异常会出问题），后面混淆出现，大概有三种：   </p>
+<div class="highlight"><pre><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="err">普通混淆，类名、变量名、函数名变成</span> <span class="n">a</span><span class="err">、</span><span class="n">b</span><span class="err">、</span><span class="n">c</span><span class="err">这种，最常见</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="err">自定义混淆，类名、变量名、函数名变成</span> <span class="mi">0</span><span class="n">oOO0o</span><span class="err">、</span><span class="n">li1Ll</span><span class="err">这种，你看</span><span class="n">smali</span><span class="err">就眼花撩乱</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="n">unicode</span><span class="err">混淆</span> <span class="o">?</span>  <span class="err">这种混淆没还研究到，类名、变量名、函数名变成</span> <span class="err">中文乱码，样本是</span> <span class="err">豌豆荚</span>
+</pre></div>
+
+
+<p>~~<strong>反混淆 ...</strong></p> </div><!-- /.entry-content -->
+
+								<div class="medium primary btn"><a href="/pages/2014/07/qian-tan-androidni-xiang-fen-xi-na-xie-lan-lu-hu" rel="bookmark" title="Permalink to 浅谈android逆向分析那些拦路虎">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+								<div class="row tag-row">
+										<span>Tagged as : </span>
+											<a class="danger label" href="/tag/android.html">Android</a>
+											<a class="danger label" href="/tag/ni-xiang-fen-xi.html">逆向分析</a>
+								</div>
+
+
+
+				        </article></li>
+				        <li><article class="hentry">
 				                <header> <h2 class="entry-title"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-smalidong-tai-diao-shi" rel="bookmark" title="Permalink to android逆向分析之smali动态调试">android逆向分析之smali动态调试</a></h2> </header>
 				                <footer class="post-info">
 				                    <!--<abbr class="published" title="2014-07-21T00:00:00"> 一 21 七月 2014 </abbr>
@@ -215,36 +255,6 @@
 
 
 				        </article></li>
-				        <li><article class="hentry">
-				                <header> <h2 class="entry-title"><a href="/pages/2014/05/android-java-hook-na-dian-shi-2" rel="bookmark" title="Permalink to android java hook 那点事(2)">android java hook 那点事(2)</a></h2> </header>
-				                <footer class="post-info">
-				                    <!--<abbr class="published" title="2014-05-11T00:00:00"> 日 11 五月 2014 </abbr>
-<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
-								 <address class="vcard author" style="font-style:italic;">
-									日 11 五月 2014
-										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
-								  </address>
-									
-				                </footer><!-- /.post-info -->
-				                <div class="entry-content"> <p>(不知攻，焉知防！)  </p>
-<p>&emsp;&emsp;要说到<strong>android</strong> 的<strong>java hook</strong>不得不提国外大神的<a href="https://github.com/rovo89">xposed框架</a>（<a href="http://www.kanxue.com/bbs/showthread.php?t=181436&amp;viewgoodnees=1&amp;prefixid=">看雪上有贴子对它的分析</a>），刚开始看源码的时候，有些地方不知道为什么这么做，why？why？,一直在脑子里转。带着疑问研究<strong>android</strong>源码的之后，才晓其理。  </p>
-<p>&emsp;&emsp;通过<a href="/pages/2014/03/android-java-hook-na-dian-shi-1">之前的日志</a>我们知道了基本的<strong>android java hook</strong> 原理，里面有一步是把method的nativeFunc值设为<strong>dvmResolveNativeMethod</strong>，为什么这么做，可以看看<a href="http://shyluo.blog.51cto.com/5725845/1229257">老罗的日志Dalvik虚拟机JNI方法的注册过程分析</a>。<strong>xposed</strong>和我们不同的是自己写了处理函数<strong>xposedCallHandler</strong>,我好奇的是大神为什么这样实现？思路？记得<strong>java</strong>里面有个<strong>proxy</strong>类，也修改函数的执行，因此我看<strong>android</strong>里这个类的实现源码，后面我追到了<a href="http://androidxref.com/4.1.2/xref/dalvik/vm/reflect/Proxy.cpp">Proxy.cpp</a>,发现......   </p>
-<div class="highlight"><pre><span class="cm">/*</span>
-<span class="cm"> * Create ...</span></pre></div> </div><!-- /.entry-content -->
-
-								<div class="medium primary btn"><a href="/pages/2014/05/android-java-hook-na-dian-shi-2" rel="bookmark" title="Permalink to android java hook 那点事(2)">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-								<div class="row tag-row">
-										<span>Tagged as : </span>
-											<a class="danger label" href="/tag/android.html">Android</a>
-											<a class="danger label" href="/tag/hook.html">Hook</a>
-								</div>
-
-
-
-				        </article></li>
 				</ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -269,11 +279,11 @@
 <div class="sidebarbg">
 	<h4>Tags</h4>
 		<ul>
-			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
-			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
-			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
-			<li class="tag-3"><a href="/tag/hook.html">Hook</a></li>
 			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
+			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
+			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
+			<li class="tag-3"><a href="/tag/hook.html">Hook</a></li>
+			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
 		</ul>
 </div>
 
