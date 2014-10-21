@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
 
-        <title>o</title>
+        <title>轻量dalvik java hook框架</title>
         <meta charset="utf-8" />
 
 
@@ -42,11 +42,11 @@
                 <li><a href="/">Home</a></li>
 					<!--<li><a href="/category/about-me.html">About me</a></li>-->
 					<li><a href="/category/about-me.html">About me</a></li>
-					<!--<li><a href="/category/android.html">Android</a></li>-->
+					<!--<li class="active"><a href="/category/android.html">Android</a></li>-->
 					<li><a href="/category/android.html">Android</a></li>
 					<!--<li><a href="/category/internet.html">Internet</a></li>-->
 					<li><a href="/category/internet.html">Internet</a></li>
-					<!--<li class="active"><a href="/category/za-sui-sui.html">杂碎碎</a></li>-->
+					<!--<li><a href="/category/za-sui-sui.html">杂碎碎</a></li>-->
 					<li><a href="/category/za-sui-sui.html">杂碎碎</a></li>
 				<li><a href="/functions/archives.html">Archives</a></li>
 				<!--<li><a href="/functions/random.html">Random Article</a></li>
@@ -64,33 +64,34 @@
 
             <header>
               <h2 class="entry-title">
-                <a href="/pages/2014/09/o" rel="bookmark"
-                   title="Permalink to o">o</a></h2>
+                <a href="/pages/2014/10/qing-liang-dalvik-java-hookkuang-jia" rel="bookmark"
+                   title="Permalink to 轻量dalvik java hook框架">轻量dalvik java hook框架</a></h2>
            
             </header>
             <footer class="post-info">
               <!--
-			  <abbr class="published" title="2014-09-21T00:00:00">
-                日 21 九月 2014
+			  <abbr class="published" title="2014-10-20T00:00:00">
+                一 20 十月 2014
               </abbr>
               <address class="vcard author">
                 By <a class="url fn" href="/author/123.html">#123</a>
               </address>
 			  -->
 			  <address class="vcard author" style="font-style:italic;margin-bottom:-10px;">
-				日 21 九月 2014
+				一 20 十月 2014
 					&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
 	
 			  </address>
 			  <hr />			  
             </footer><!-- /.post-info -->
             <div class="entry-content">
-              <p>&emsp;&emsp;最近不知道怎么，有点小迷茫。  </p>
-<p>&emsp;&emsp;想起不久前发生的一件事，在校安全群里几个人在讨论一些安全问题，这时有人说了句“兄弟们，我已经听不懂你们说的话了”，这时大家都安静了。看到这句话，突然有些伤感，想想曾经因为计算机安全这个兴趣走到一起的那些哥们，如今只剩下偶尔搭搭话蒋骚和coltor。  </p>
-<p>&emsp;&emsp;想起了那些年，跟胜B学习安全技术的时候，碰到问题，通宵调试，coding，查资料.....'搞定之后，想对方说'Fuck,我知道为什么了'。碰到新奇东西，互相分享"!!?居然还有这东西，我们研究研究".........可是，毕业后，我们都换了行业，胜B搞算法去了，而我转到移动安全。毕业时，我们那摞安全书都卖了，凑够寝室的散伙饭--囧。如今，偶尔碰到一些新奇安全方面的东西，很兴奋的转身跟旁边的人分享，换来只有一声“哦”，慢慢自己沉默了。   </p>
-<p>&emsp;&emsp;昨天参加了阿里的android安全沙龙，看着讲台上意气风发的讲师，看到阿里上市后他们穿的T恤上面的字“梦想还是要有的 万一实现了呢”,想想自己的梦想，10年过去了，虽然步履蹒跚，但是还是前行了呐.....然而，自己现在做的事......曾记得组员走之前，问我这种繁杂枯燥无聊的事，你居然坚持了这么久，哥几个搞了3个多月都受不了都撤了，那时我还很淡然的说“有时候生活不是我们所期望的，但是我能找到我想要的”。然而现在...  </p>
-<p>&emsp;&emsp;午后，听段音乐，静下心,转过身，看看来时的脚印、看看走过的路，细想着这每一个脚印当时的朝向、思索着这条路何以弯曲、回忆起点上自己画下的那个箭头的方向，问自己，自己在追求什么？自己为了什么而出发？  </p>
-<p>&emsp;&emsp;勿忘初衷！   </p>
+              <p>&emsp;&emsp;很早之前学习xposed源码写了个java hook框架，不过配置比较麻烦，需要源码下编译，后面看了boyliang的《<a href="http://blog.csdn.net/l173864930/article/details/39667355">Hook Java的的一个改进版本</a>》,编译配置比较容易，花时间自己重写一个。(git:https://github.com/9hao/SwatHookV2)</p>
+<p>&emsp;&emsp;两个对比了下，个人感觉xposed的 xposedAddLocalReference 函数用得很好，把Object*转为jobject,而boyliang的dvmGetMethodParamTypes函数用得很好，学习了ArrayObject的构造放方法，利用Object* 来调用一些函数。  </p>
+<p>有人问我两个问题：<br />
+[1] hook imsi对某些软件没效果。<br />
+&emsp;&emsp; 对此这类读取可以hook更底层的函数，服务的代理类，比如获取IMSI的函数getSubscriberId，可以对它的代理类com.android.internal.telephony.IPhoneSubInfo$Stub$Proxy的getSubscriberId进行hook，同理别的服务也类似。（反过来，你也可以反射代理类来过别人简单的hook）  </p>
+<p>[2]动态加载hook不起效果<br />
+&emsp;&emsp;这个应该是hook的时机不对，xposed的一般hook是从加载apk后就进行FindClass查找目标函数进行hook，后面动态加载的class还没加载进来，FindClass目标函数就失败了，hook就不上了，针对这个情况，应检测动态加载的模块是否加载进来再hook，或者hook动态加载函数，检测加载完成后进行hook。  </p>
             </div><!-- /.entry-content -->
 			            <aside>
             <hr/>
@@ -99,9 +100,7 @@
             <nav>
             <ul class="articles_timeline">
  
-                <li class="previous_article">« <a href="/pages/2014/09/apkprsi-wei-dao-tu" title="Previous: apkpr思维导图">apkpr思维导图</a></li>
- 
-                <li class="next_article"><a href="/pages/2014/10/qing-liang-dalvik-java-hookkuang-jia" title="Next: 轻量dalvik java hook框架">轻量dalvik java hook框架</a> »</li>
+                <li class="previous_article">« <a href="/pages/2014/09/o" title="Previous: o">o</a></li>
             </ul>
             </nav>
             </aside>
@@ -114,7 +113,7 @@
               <h3>Comments</h3>
               <div id="disqus_thread"></div>
               <script type="text/javascript">
-                var disqus_identifier = "pages/2014/09/o";
+                var disqus_identifier = "pages/2014/10/qing-liang-dalvik-java-hookkuang-jia";
                 (function() {
                 var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
                 dsq.src = 'http://9haoblog.disqus.com/embed.js';
