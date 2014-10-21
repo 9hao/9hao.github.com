@@ -1,8 +1,8 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="zh">
 <head>
 
-        <title>9Hao - Articles by 互联网</title>
+        <title>dalvik java hook工程</title>
         <meta charset="utf-8" />
 
 
@@ -42,7 +42,7 @@
                 <li><a href="/">Home</a></li>
 					<!--<li><a href="/category/about-me.html">About me</a></li>-->
 					<li><a href="/category/about-me.html">About me</a></li>
-					<!--<li><a href="/category/android.html">Android</a></li>-->
+					<!--<li class="active"><a href="/category/android.html">Android</a></li>-->
 					<li><a href="/category/android.html">Android</a></li>
 					<!--<li><a href="/category/internet.html">Internet</a></li>-->
 					<li><a href="/category/internet.html">Internet</a></li>
@@ -56,44 +56,72 @@
               </ul>
             </div>
 
-<section id="content">
+<section id="content" class="body">
 
    <div class="row">
-
         <div class="eleven columns">
-<h2>Articles by 互联网</h2>
-		
-		         <ol id="post-list">
-				        <li><article class="hentry">
-				                <header> <h2 class="entry-title"><a href="/pages/2014/03/losermen-de-gong-tong-te-zheng" rel="bookmark" title="Permalink to loser们的共同特征">loser们的共同特征</a></h2> </header>
-				                <footer class="post-info">
-				                    <!--<abbr class="published" title="2014-03-20T00:00:00"> 四 20 三月 2014 </abbr>
-<address class="vcard author">By <a class="url fn" href="/author/hu-lian-wang.html">互联网</a></address>-->
-								 <address class="vcard author" style="font-style:italic;">
-									四 20 三月 2014
-										&nbsp;&nbsp;Write By <a class="url fn" href="/author/hu-lian-wang.html">互联网</a>
-								  </address>
-									
-				                </footer><!-- /.post-info -->
-				                <div class="entry-content"> <p>互联网提供了一个很好的窗口，使我们可以观察形形色色的人们，那么看到最多的，大概就是loser了。这也符合社会人群构成的分布，失意者往往是大多数，成功者往往是极少数。</p>
-<p>怎样摆脱失意，成就自己，不妨先看看loser有哪些共性，再看看自己占了几条。</p>
-<p>loser共性之一， 怨天尤人
-  别人有个好老板，我们老板真抠门；别人有背景，我们是草根；等等，把自己的无能用“客观环境”来掩盖，乍一听条条是理，其实呢，别人成功都是偶然，自己的失败都是命不好。这样的人能成功才是没天理。今天无论是网络社区里，街边聊天里，听到最多的就是这种谈资，“我们老板不成，太黑，你看人家谁那单位”，每个行业，顶尖的人才都是极少数，而平庸的人总是过剩，你跨入那个门槛，你就会发现，其实你的老板非常大方，一点都不黑，关键是，你在门槛外，然后看着门槛内的人，觉得他们似乎是命运的宠儿。却从来无视这个门槛的存在，所以有人说某某网游公司核心工程师月薪2万3万，人家公司待遇多好，自己才拿两三千，却从来不肯面对自己的水平和人家的水平差多少。</p>
-<p>loser共性之二，不肯面对现实 ...</p> </div><!-- /.entry-content -->
-
-								<div class="medium primary btn"><a href="/pages/2014/03/losermen-de-gong-tong-te-zheng" rel="bookmark" title="Permalink to loser们的共同特征">Read more <i class="icon-arrow-right"></i></a></div>
 
 
+            <header>
+              <h2 class="entry-title">
+                <a href="/pages/2014/10/dalvik-java-hookgong-cheng" rel="bookmark"
+                   title="Permalink to dalvik java hook工程">dalvik java hook工程</a></h2>
+           
+            </header>
+            <footer class="post-info">
+              <!--
+			  <abbr class="published" title="2014-10-20T00:00:00">
+                一 20 十月 2014
+              </abbr>
+              <address class="vcard author">
+                By <a class="url fn" href="/author/123.html">#123</a>
+              </address>
+			  -->
+			  <address class="vcard author" style="font-style:italic;margin-bottom:-10px;">
+				一 20 十月 2014
+					&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+	
+			  </address>
+			  <hr />			  
+            </footer><!-- /.post-info -->
+            <div class="entry-content">
+              <p>&emsp;&emsp;很早之前学习xposed源码写了个java hook框架，不过配置比较麻烦，需要源码下编译，后面看了boyliang的《<a href="http://blog.csdn.net/l173864930/article/details/39667355">Hook Java的的一个改进版本</a>》,编译配置比较容易，花时间自己重写一个。     (git:https://github.com/9hao/SwatHookV2)</p>
+<p>&emsp;&emsp;两个对比了下，个人感觉xposed的 xposedAddLocalReference 函数用得很好，把Object*转为jobject,而boyliang的dvmGetMethodParamTypes函数用得很好，学习了ArrayObject的构造放方法，利用Object* 来调用一些函数。  </p>
+<p>有人问我两个问题：<br />
+[1] hook imsi对某些软件没效果。<br />
+&emsp;&emsp; 对此这类读取可以hook更底层的函数，服务的代理类，比如获取IMSI的函数getSubscriberId，可以对它的代理类com.android.internal.telephony.IPhoneSubInfo\$Stub$Proxy的getSubscriberId进行hook，同理别的服务也类似。（反过来，你也可以反射代理类来过别人简单的hook）  </p>
+<p>[2]动态加载hook不起效果<br />
+&emsp;&emsp;这个应该是hook的时机不对，xposed的一般hook是从加载apk后就进行FindClass查找目标函数进行hook，后面动态加载的class还没加载进来，FindClass目标函数就失败了，hook就不上了，针对这个情况，应检测动态加载的模块是否加载进来再hook，或者hook动态加载函数，检测加载完成后进行hook。  </p>
+            </div><!-- /.entry-content -->
+			            <aside>
+            <hr/>
+            <!-- all by Qxia -->
 
-								<div class="row tag-row">
-										<span>Tagged as : </span>
-											<a class="danger label" href="/tag/za-wen.html">杂文</a>
-								</div>
+            <nav>
+            <ul class="articles_timeline">
+ 
+                <li class="previous_article">« <a href="/pages/2014/09/o" title="Previous: o">o</a></li>
+            </ul>
+            </nav>
+            </aside>
+			<!--neighbors plugin take -->
+			<ul style="float:right;">
+			</ul>
+			
+			
+            <div class="comments">
+              <h3>Comments</h3>
+              <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                var disqus_identifier = "pages/2014/10/dalvik-java-hookgong-cheng";
+                (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://9haoblog.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+              </script>
+            </div>
 
-
-
-				        </article></li>
-				</ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
         
@@ -141,10 +169,8 @@
 
 </div> </div><!-- /.row -->
 
-<p class="paginator">
-    Page 1 / 1
-</p>
-</section><!-- /#content -->
+
+</section>
 
        </div><!-- /.row -->
     </div><!-- /.container -->

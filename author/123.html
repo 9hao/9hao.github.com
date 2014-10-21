@@ -65,6 +65,39 @@
 		
 		         <ol id="post-list">
 				        <li><article class="hentry">
+				                <header> <h2 class="entry-title"><a href="/pages/2014/10/dalvik-java-hookgong-cheng" rel="bookmark" title="Permalink to dalvik java hook工程">dalvik java hook工程</a></h2> </header>
+				                <footer class="post-info">
+				                    <!--<abbr class="published" title="2014-10-20T00:00:00"> 一 20 十月 2014 </abbr>
+<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
+								 <address class="vcard author" style="font-style:italic;">
+									一 20 十月 2014
+										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+								  </address>
+									
+				                </footer><!-- /.post-info -->
+				                <div class="entry-content"> <p>&emsp;&emsp;很早之前学习xposed源码写了个java hook框架，不过配置比较麻烦，需要源码下编译，后面看了boyliang的《<a href="http://blog.csdn.net/l173864930/article/details/39667355">Hook Java的的一个改进版本</a>》,编译配置比较容易，花时间自己重写一个。     (git:https://github.com/9hao/SwatHookV2)</p>
+<p>&emsp;&emsp;两个对比了下，个人感觉xposed的 xposedAddLocalReference 函数用得很好，把Object*转为jobject,而boyliang的dvmGetMethodParamTypes函数用得很好，学习了ArrayObject的构造放方法，利用Object* 来调用一些函数。  </p>
+<p>有人问我两个问题：<br />
+[1] hook imsi对某些软件没效果。<br />
+&emsp;&emsp; 对此这类读取可以hook更底层的函数，服务的代理类，比如获取IMSI的函数getSubscriberId，可以对它的代理类com.android.internal.telephony.IPhoneSubInfo\$Stub$Proxy的getSubscriberId进行hook，同理别的服务也类似。（反过来，你也可以反射代理类来过别人简单的hook）  </p>
+<p>[2]动态加载hook不起效果<br />
+&emsp;&emsp;这个应该是hook的时机不对，xposed的一般hook是从加载apk后就进行FindClass查找目标函数进行hook，后面动态加载的class还没加载进来，FindClass目标函数就失败了，hook就不上了，针对这个情况 ...</p> </div><!-- /.entry-content -->
+
+								<div class="medium primary btn"><a href="/pages/2014/10/dalvik-java-hookgong-cheng" rel="bookmark" title="Permalink to dalvik java hook工程">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+								<div class="row tag-row">
+										<span>Tagged as : </span>
+											<a class="danger label" href="/tag/android.html">Android</a>
+											<a class="danger label" href="/tag/java.html">java</a>
+											<a class="danger label" href="/tag/hook.html">Hook</a>
+								</div>
+
+
+
+				        </article></li>
+				        <li><article class="hentry">
 				                <header> <h2 class="entry-title"><a href="/pages/2014/09/o" rel="bookmark" title="Permalink to o">o</a></h2> </header>
 				                <footer class="post-info">
 				                    <!--<abbr class="published" title="2014-09-21T00:00:00"> 日 21 九月 2014 </abbr>
@@ -189,40 +222,6 @@
 
 
 				        </article></li>
-				        <li><article class="hentry">
-				                <header> <h2 class="entry-title"><a href="/pages/2014/08/android-soke-ru-kou-qian-xi" rel="bookmark" title="Permalink to android so壳入口浅析">android so壳入口浅析</a></h2> </header>
-				                <footer class="post-info">
-				                    <!--<abbr class="published" title="2014-08-13T00:00:00"> 三 13 八月 2014 </abbr>
-<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
-								 <address class="vcard author" style="font-style:italic;">
-									三 13 八月 2014
-										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
-								  </address>
-									
-				                </footer><!-- /.post-info -->
-				                <div class="entry-content"> <blockquote>
-<p>前言  </p>
-</blockquote>
-<p>&emsp;&emsp;开年来开始接触一些加固样本，基本都对了so进行了处理，拖入ida一看，要么没有 <strong>JNI_OnLoad</strong>   ,要么 <strong>JNI_OnLoad</strong>   汇编代码羞涩难懂，让人无法下手。 <strong>JNI_OnLoad</strong>   是真正入口么？  </p>
-<p>先看看几个文档  </p>
-<p><strong>1  摘自属性服务一节（《深入理解Android卷1》）</strong>  </p>
-<div class="highlight"><pre>     <span class="err">利用</span><span class="nx">gcc</span><span class="err">的</span><span class="nx">constructor</span><span class="err">属性，这个属性指明了一个</span><span class="nx">__libc_prenit</span><span class="err">函数</span><span class="p">(</span><span class="err">这个函数内部就将完成共享内存到本地进程的映射工作</span><span class="p">)</span><span class="err">。用法：当</span><span class="nx">bionic</span> <span class="nx">libc</span><span class="err">库被加载时，将自动调用</span><span class="nx">__libc_prenit</span><span class="err">函数。这样在</span><span class="nx">bionic</span> <span class="nx">libc</span><span class="err">动态库被装载时，系统属性缓冲区地址就被确定了，后续的</span><span class="nx">API</span><span class="err">调用就能找对位置了。</span>
-
-<span class="cm">/* We flag the __libc_preinit function as a constructor to ...</span></pre></div> </div><!-- /.entry-content -->
-
-								<div class="medium primary btn"><a href="/pages/2014/08/android-soke-ru-kou-qian-xi" rel="bookmark" title="Permalink to android so壳入口浅析">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-								<div class="row tag-row">
-										<span>Tagged as : </span>
-											<a class="danger label" href="/tag/android.html">Android</a>
-											<a class="danger label" href="/tag/ni-xiang-fen-xi.html">逆向分析</a>
-								</div>
-
-
-
-				        </article></li>
 				</ol><!-- /#posts-list -->
 
         </div><!-- /.eleven.columns -->
@@ -248,11 +247,12 @@
 <div class="sidebarbg">
 	<h4>Tags</h4>
 		<ul>
-			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
 			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
 			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
 			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
-			<li class="tag-3"><a href="/tag/hook.html">Hook</a></li>
+			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
+			<li class="tag-2"><a href="/tag/hook.html">Hook</a></li>
+			<li class="tag-4"><a href="/tag/java.html">java</a></li>
 		</ul>
 </div>
 
