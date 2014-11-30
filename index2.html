@@ -4,16 +4,17 @@
 
         <title>9Hao</title>
         <meta charset="utf-8" />
+        <link href="http://9hao.info/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="9Hao Full RSS Feed" />
 
 
         <!-- Mobile viewport optimized: j.mp/bplateviewport -->
         <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
 
-        <link rel="stylesheet" type="text/css" href="/theme/gumby.css" />
-        <link rel="stylesheet" type="text/css" href="/theme/style.css" />
-        <link rel="stylesheet" type="text/css" href="/theme/pygment.css" />
+        <link rel="stylesheet" type="text/css" href="http://9hao.info/theme/gumby.css" />
+        <link rel="stylesheet" type="text/css" href="http://9hao.info/theme/style.css" />
+        <link rel="stylesheet" type="text/css" href="http://9hao.info/theme/pygment.css" />
 
-        <script src="/theme/js/libs/modernizr-2.6.2.min.js"></script>
+        <script src="http://9hao.info/theme/js/libs/modernizr-2.6.2.min.js"></script>
 
 
 
@@ -40,14 +41,12 @@
              
               <ul class="columns">
                 <li><a href="/">Home</a></li>
-					<!--<li><a href="/category/about-me.html">About me</a></li>-->
-					<li><a href="/category/about-me.html">About me</a></li>
-					<!--<li><a href="/category/android.html">Android</a></li>-->
-					<li><a href="/category/android.html">Android</a></li>
-					<!--<li><a href="/category/internet.html">Internet</a></li>-->
-					<li><a href="/category/internet.html">Internet</a></li>
-					<!--<li><a href="/category/za-sui-sui.html">杂碎碎</a></li>-->
-					<li><a href="/category/za-sui-sui.html">杂碎碎</a></li>
+					<!--<li><a href="http://9hao.info/category/about-me.html">About me</a></li>-->
+					<li><a href="http://9hao.info/category/about-me.html">About me</a></li>
+					<!--<li><a href="http://9hao.info/category/android.html">Android</a></li>-->
+					<li><a href="http://9hao.info/category/android.html">Android</a></li>
+					<!--<li><a href="http://9hao.info/category/internet.html">Internet</a></li>-->
+					<li><a href="http://9hao.info/category/internet.html">Internet</a></li>
 				<li><a href="/functions/archives.html">Archives</a></li>
 				<!--<li><a href="/functions/random.html">Random Article</a></li>
 				<!--
@@ -65,47 +64,13 @@
 		
 		         <ol id="post-list">
 				        <li><article class="hentry">
-				                <header> <h2 class="entry-title"><a href="/pages/2014/08/android-soke-ru-kou-qian-xi" rel="bookmark" title="Permalink to android so壳入口浅析">android so壳入口浅析</a></h2> </header>
-				                <footer class="post-info">
-				                    <!--<abbr class="published" title="2014-08-13T00:00:00"> 三 13 八月 2014 </abbr>
-<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
-								 <address class="vcard author" style="font-style:italic;">
-									三 13 八月 2014
-										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
-								  </address>
-									
-				                </footer><!-- /.post-info -->
-				                <div class="entry-content"> <blockquote>
-<p>前言  </p>
-</blockquote>
-<p>&emsp;&emsp;开年来开始接触一些加固样本，基本都对了so进行了处理，拖入ida一看，要么没有 <strong>JNI_OnLoad</strong>   ,要么 <strong>JNI_OnLoad</strong>   汇编代码羞涩难懂，让人无法下手。 <strong>JNI_OnLoad</strong>   是真正入口么？  </p>
-<p>先看看几个文档  </p>
-<p><strong>1  摘自属性服务一节（《深入理解Android卷1》）</strong>  </p>
-<div class="highlight"><pre>     <span class="err">利用</span><span class="nx">gcc</span><span class="err">的</span><span class="nx">constructor</span><span class="err">属性，这个属性指明了一个</span><span class="nx">__libc_prenit</span><span class="err">函数</span><span class="p">(</span><span class="err">这个函数内部就将完成共享内存到本地进程的映射工作</span><span class="p">)</span><span class="err">。用法：当</span><span class="nx">bionic</span> <span class="nx">libc</span><span class="err">库被加载时，将自动调用</span><span class="nx">__libc_prenit</span><span class="err">函数。这样在</span><span class="nx">bionic</span> <span class="nx">libc</span><span class="err">动态库被装载时，系统属性缓冲区地址就被确定了，后续的</span><span class="nx">API</span><span class="err">调用就能找对位置了。</span>
-
-<span class="cm">/* We flag the __libc_preinit function as a constructor to ...</span></pre></div> </div><!-- /.entry-content -->
-
-								<div class="medium primary btn"><a href="/pages/2014/08/android-soke-ru-kou-qian-xi" rel="bookmark" title="Permalink to android so壳入口浅析">Read more <i class="icon-arrow-right"></i></a></div>
-
-
-
-								<div class="row tag-row">
-										<span>Tagged as : </span>
-											<a class="danger label" href="/tag/android.html">Android</a>
-											<a class="danger label" href="/tag/ni-xiang-fen-xi.html">逆向分析</a>
-								</div>
-
-
-
-				        </article></li>
-				        <li><article class="hentry">
-				                <header> <h2 class="entry-title"><a href="/pages/2014/07/androidgong-ju-xiang-chi-xu-geng-xin" rel="bookmark" title="Permalink to android工具箱(持续更新)">android工具箱(持续更新)</a></h2> </header>
+				                <header> <h2 class="entry-title"><a href="http://9hao.info/pages/2014/07/androidgong-ju-xiang-chi-xu-geng-xin" rel="bookmark" title="Permalink to android工具箱(持续更新)">android工具箱(持续更新)</a></h2> </header>
 				                <footer class="post-info">
 				                    <!--<abbr class="published" title="2014-07-30T00:00:00"> 三 30 七月 2014 </abbr>
-<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
+<address class="vcard author">By <a class="url fn" href="http://9hao.info/author/123.html">#123</a></address>-->
 								 <address class="vcard author" style="font-style:italic;">
 									三 30 七月 2014
-										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+										&nbsp;&nbsp;Write By <a class="url fn" href="http://9hao.info/author/123.html">#123</a>
 								  </address>
 									
 				                </footer><!-- /.post-info -->
@@ -124,27 +89,27 @@
 <span class="mi">5</span><span class="n">smali</span><span class="err">生成</span><span class="n">dex</span><span class="err">文件</span><span class="p">.</span><span class="n">bat</span>
 <span class="mi">6 ...</span></pre></div> </div><!-- /.entry-content -->
 
-								<div class="medium primary btn"><a href="/pages/2014/07/androidgong-ju-xiang-chi-xu-geng-xin" rel="bookmark" title="Permalink to android工具箱(持续更新)">Read more <i class="icon-arrow-right"></i></a></div>
+								<div class="medium primary btn"><a href="http://9hao.info/pages/2014/07/androidgong-ju-xiang-chi-xu-geng-xin" rel="bookmark" title="Permalink to android工具箱(持续更新)">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
 								<div class="row tag-row">
 										<span>Tagged as : </span>
-											<a class="danger label" href="/tag/android.html">Android</a>
-											<a class="danger label" href="/tag/ni-xiang-fen-xi.html">逆向分析</a>
+											<a class="danger label" href="http://9hao.info/tag/android.html">Android</a>
+											<a class="danger label" href="http://9hao.info/tag/ni-xiang-fen-xi.html">逆向分析</a>
 								</div>
 
 
 
 				        </article></li>
 				        <li><article class="hentry">
-				                <header> <h2 class="entry-title"><a href="/pages/2014/07/qian-tan-androidni-xiang-fen-xi-na-xie-lan-lu-hu" rel="bookmark" title="Permalink to 浅谈android逆向分析那些拦路虎">浅谈android逆向分析那些拦路虎</a></h2> </header>
+				                <header> <h2 class="entry-title"><a href="http://9hao.info/pages/2014/07/qian-tan-androidni-xiang-fen-xi-na-xie-lan-lu-hu" rel="bookmark" title="Permalink to 浅谈android逆向分析那些拦路虎">浅谈android逆向分析那些拦路虎</a></h2> </header>
 				                <footer class="post-info">
 				                    <!--<abbr class="published" title="2014-07-27T00:00:00"> 日 27 七月 2014 </abbr>
-<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
+<address class="vcard author">By <a class="url fn" href="http://9hao.info/author/123.html">#123</a></address>-->
 								 <address class="vcard author" style="font-style:italic;">
 									日 27 七月 2014
-										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+										&nbsp;&nbsp;Write By <a class="url fn" href="http://9hao.info/author/123.html">#123</a>
 								  </address>
 									
 				                </footer><!-- /.post-info -->
@@ -164,27 +129,27 @@
 
 <p>~~<strong>反混淆 ...</strong></p> </div><!-- /.entry-content -->
 
-								<div class="medium primary btn"><a href="/pages/2014/07/qian-tan-androidni-xiang-fen-xi-na-xie-lan-lu-hu" rel="bookmark" title="Permalink to 浅谈android逆向分析那些拦路虎">Read more <i class="icon-arrow-right"></i></a></div>
+								<div class="medium primary btn"><a href="http://9hao.info/pages/2014/07/qian-tan-androidni-xiang-fen-xi-na-xie-lan-lu-hu" rel="bookmark" title="Permalink to 浅谈android逆向分析那些拦路虎">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
 								<div class="row tag-row">
 										<span>Tagged as : </span>
-											<a class="danger label" href="/tag/android.html">Android</a>
-											<a class="danger label" href="/tag/ni-xiang-fen-xi.html">逆向分析</a>
+											<a class="danger label" href="http://9hao.info/tag/android.html">Android</a>
+											<a class="danger label" href="http://9hao.info/tag/ni-xiang-fen-xi.html">逆向分析</a>
 								</div>
 
 
 
 				        </article></li>
 				        <li><article class="hentry">
-				                <header> <h2 class="entry-title"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-smalidong-tai-diao-shi" rel="bookmark" title="Permalink to android逆向分析之smali动态调试">android逆向分析之smali动态调试</a></h2> </header>
+				                <header> <h2 class="entry-title"><a href="http://9hao.info/pages/2014/07/androidni-xiang-fen-xi-zhi-smalidong-tai-diao-shi" rel="bookmark" title="Permalink to android逆向分析之smali动态调试">android逆向分析之smali动态调试</a></h2> </header>
 				                <footer class="post-info">
 				                    <!--<abbr class="published" title="2014-07-21T00:00:00"> 一 21 七月 2014 </abbr>
-<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
+<address class="vcard author">By <a class="url fn" href="http://9hao.info/author/123.html">#123</a></address>-->
 								 <address class="vcard author" style="font-style:italic;">
 									一 21 七月 2014
-										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+										&nbsp;&nbsp;Write By <a class="url fn" href="http://9hao.info/author/123.html">#123</a>
 								  </address>
 									
 				                </footer><!-- /.post-info -->
@@ -208,27 +173,27 @@
 </blockquote>
 <div class="highlight"><pre><span class="err">刚开始接触动态调试的时候是</span><span class="n">jdb</span><span class="err">，支持调试的基本功能，优点：可以在配置文件里面预下断点 ...</span></pre></div> </div><!-- /.entry-content -->
 
-								<div class="medium primary btn"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-smalidong-tai-diao-shi" rel="bookmark" title="Permalink to android逆向分析之smali动态调试">Read more <i class="icon-arrow-right"></i></a></div>
+								<div class="medium primary btn"><a href="http://9hao.info/pages/2014/07/androidni-xiang-fen-xi-zhi-smalidong-tai-diao-shi" rel="bookmark" title="Permalink to android逆向分析之smali动态调试">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
 								<div class="row tag-row">
 										<span>Tagged as : </span>
-											<a class="danger label" href="/tag/android.html">Android</a>
-											<a class="danger label" href="/tag/ni-xiang-fen-xi.html">逆向分析</a>
+											<a class="danger label" href="http://9hao.info/tag/android.html">Android</a>
+											<a class="danger label" href="http://9hao.info/tag/ni-xiang-fen-xi.html">逆向分析</a>
 								</div>
 
 
 
 				        </article></li>
 				        <li><article class="hentry">
-				                <header> <h2 class="entry-title"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-logpian" rel="bookmark" title="Permalink to android逆向分析之log篇">android逆向分析之log篇</a></h2> </header>
+				                <header> <h2 class="entry-title"><a href="http://9hao.info/pages/2014/07/androidni-xiang-fen-xi-zhi-logpian" rel="bookmark" title="Permalink to android逆向分析之log篇">android逆向分析之log篇</a></h2> </header>
 				                <footer class="post-info">
 				                    <!--<abbr class="published" title="2014-07-20T00:00:00"> 日 20 七月 2014 </abbr>
-<address class="vcard author">By <a class="url fn" href="/author/123.html">#123</a></address>-->
+<address class="vcard author">By <a class="url fn" href="http://9hao.info/author/123.html">#123</a></address>-->
 								 <address class="vcard author" style="font-style:italic;">
 									日 20 七月 2014
-										&nbsp;&nbsp;Write By <a class="url fn" href="/author/123.html">#123</a>
+										&nbsp;&nbsp;Write By <a class="url fn" href="http://9hao.info/author/123.html">#123</a>
 								  </address>
 									
 				                </footer><!-- /.post-info -->
@@ -242,14 +207,59 @@
 </blockquote>
 <p>&emsp;&emsp; 我们在关键的地方插入了log打印，如果程序执行到这个我们插入log的地方，输出我们打印的信息，这样是不是有点像"断点"触发","跟踪"，还输出了寄存器/变量信息?  虽然不能单步调试，至少能拿到一些信息。刚开始接触日志打印的时候，网上给的经验都是用系统log类调试。你用这个类会发现一个问题，他需要两个寄存器的值，invoke-static {vx, vy}, Landroid/util/Log;-&gt;v(Ljava/lang/String;Ljava/lang ...</p> </div><!-- /.entry-content -->
 
-								<div class="medium primary btn"><a href="/pages/2014/07/androidni-xiang-fen-xi-zhi-logpian" rel="bookmark" title="Permalink to android逆向分析之log篇">Read more <i class="icon-arrow-right"></i></a></div>
+								<div class="medium primary btn"><a href="http://9hao.info/pages/2014/07/androidni-xiang-fen-xi-zhi-logpian" rel="bookmark" title="Permalink to android逆向分析之log篇">Read more <i class="icon-arrow-right"></i></a></div>
 
 
 
 								<div class="row tag-row">
 										<span>Tagged as : </span>
-											<a class="danger label" href="/tag/android.html">Android</a>
-											<a class="danger label" href="/tag/ni-xiang-fen-xi.html">逆向分析</a>
+											<a class="danger label" href="http://9hao.info/tag/android.html">Android</a>
+											<a class="danger label" href="http://9hao.info/tag/ni-xiang-fen-xi.html">逆向分析</a>
+								</div>
+
+
+
+				        </article></li>
+				        <li><article class="hentry">
+				                <header> <h2 class="entry-title"><a href="http://9hao.info/pages/2014/07/androidni-xiang-fen-xi-zhi-chu-tan-di-ying" rel="bookmark" title="Permalink to android逆向分析之初探敌营">android逆向分析之初探敌营</a></h2> </header>
+				                <footer class="post-info">
+				                    <!--<abbr class="published" title="2014-07-15T00:00:00"> 二 15 七月 2014 </abbr>
+<address class="vcard author">By <a class="url fn" href="http://9hao.info/author/123.html">#123</a></address>-->
+								 <address class="vcard author" style="font-style:italic;">
+									二 15 七月 2014
+										&nbsp;&nbsp;Write By <a class="url fn" href="http://9hao.info/author/123.html">#123</a>
+								  </address>
+									
+				                </footer><!-- /.post-info -->
+				                <div class="entry-content"> <p>(不知攻，焉知防！)</p>
+<div class="highlight"><pre><span class="err">前言</span>
+</pre></div>
+
+
+<p>&emsp;&emsp;参考非虫大大的书和写一些个人经验。在逆向一个Android程序，如果盲目的分析，有可能遇到阅读成千上万的反汇编代码才能找到程序的关键点，这无疑是浪费时间的表现。那么我们要对一个陌生的apk后怎么入手？</p>
+<div class="highlight"><pre><span class="mh">0x01</span> <span class="err">初探</span>
+</pre></div>
+
+
+<p>&emsp;&emsp;1 拿到一个apk，不要急于直接看汇编代码，先浏览一下apk的字符串信息，再大略浏览一下类和函数,大体在脑子里留个印象。</p>
+<p>&emsp;&emsp;2 application类 apk一般初始化配置的地方，壳初始化,如果有要注意下。</p>
+<p>&emsp;&emsp;3 主activity,程序的一般入口。</p>
+<p>&emsp;&emsp;4 如果是搞病毒木马分析，要注意 server和 广播。</p>
+<div class="highlight"><pre><span class="mh">0x02</span> <span class="err">定位</span>
+</pre></div>
+
+
+<p>&emsp;&emsp;1 信息反馈法</p>
+<div class="highlight"><pre>    <span class="n">a</span> <span class="err">上面我们提到先看字符串信息，根据你需求，你应该对一些字符串很敏感。比如你是想找内支付的，那有可能出现“支付成功”</span><span class="p">,</span><span class="err">“支付失败”；你要找登录验证的，可能有</span><span class="s">&quot;登录成功&quot;</span><span class="err">、“登录失败”；病毒木马可能有“指令”“</span><span class="n">xxx</span><span class="err">成功等 ...</span></pre></div> </div><!-- /.entry-content -->
+
+								<div class="medium primary btn"><a href="http://9hao.info/pages/2014/07/androidni-xiang-fen-xi-zhi-chu-tan-di-ying" rel="bookmark" title="Permalink to android逆向分析之初探敌营">Read more <i class="icon-arrow-right"></i></a></div>
+
+
+
+								<div class="row tag-row">
+										<span>Tagged as : </span>
+											<a class="danger label" href="http://9hao.info/tag/android.html">Android</a>
+											<a class="danger label" href="http://9hao.info/tag/ni-xiang-fen-xi.html">逆向分析</a>
 								</div>
 
 
@@ -270,22 +280,21 @@
 <div class="sidebarbg">
 <h4>Categories</h4>
 	<ul>
-			<li><a href="/category/about-me.html">About me</a></li>
-			<li><a href="/category/android.html">Android</a></li>
-			<li><a href="/category/internet.html">Internet</a></li>
-			<li><a href="/category/za-sui-sui.html">杂碎碎</a></li>
+			<li><a href="http://9hao.info/category/about-me.html">About me</a></li>
+			<li><a href="http://9hao.info/category/android.html">Android</a></li>
+			<li><a href="http://9hao.info/category/internet.html">Internet</a></li>
 	</ul>
 </div>
 
 <div class="sidebarbg">
 	<h4>Tags</h4>
 		<ul>
-			<li class="tag-4"><a href="/tag/za-wen.html">杂文</a></li>
-			<li class="tag-4"><a href="/tag/guan-yu-wo.html">关于我</a></li>
-			<li class="tag-4"><a href="/tag/java.html">java</a></li>
-			<li class="tag-2"><a href="/tag/hook.html">Hook</a></li>
-			<li class="tag-1"><a href="/tag/android.html">Android</a></li>
-			<li class="tag-1"><a href="/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
+			<li class="tag-1"><a href="http://9hao.info/tag/ni-xiang-fen-xi.html">逆向分析</a></li>
+			<li class="tag-4"><a href="http://9hao.info/tag/guan-yu-wo.html">关于我</a></li>
+			<li class="tag-4"><a href="http://9hao.info/tag/java.html">java</a></li>
+			<li class="tag-1"><a href="http://9hao.info/tag/android.html">Android</a></li>
+			<li class="tag-4"><a href="http://9hao.info/tag/za-wen.html">杂文</a></li>
+			<li class="tag-2"><a href="http://9hao.info/tag/hook.html">Hook</a></li>
 		</ul>
 </div>
 
@@ -298,15 +307,17 @@
 	<li><a target="_blank" href="http://python.org/">Python.org</a></li>
 	<li><a target="_blank" href="http://pallergabor.uw.hu/androidblog/dalvik_opcodes.html">Dalvik opcodes</a></li>
 	<li><a target="_blank" href="http://0nly3nd.sinaapp.com">0nly3nd</a></li>
+	<li><a target="_blank" href="http://blog.csdn.net/guiguzi1110">听鬼哥说故事(游戏破解控)</a></li>
+	<li><a target="_blank" href="http://blog.csdn.net/l173864930">简行之旅</a></li>
   </ul>
 </nav>
 
 </div> </div><!-- /.row -->
 
 <p class="paginator">
-            <a href="/index.html"><i class="icon-arrow-left"></i></a>
+            <a href="http://9hao.info/index.html"><i class="icon-arrow-left"></i></a>
     Page 2 / 3
-        <a href="/index3.html"><i class="icon-arrow-right"></i></a>
+        <a href="http://9hao.info/index3.html"><i class="icon-arrow-right"></i></a>
 </p>
 </section><!-- /#content -->
 
@@ -350,9 +361,9 @@
     })();
 </script>
 
-      <script src="/theme/js/libs/jquery-1.9.1.min.js"></script>
-  <script src="/theme/js/libs/gumby.min.js"></script>
-  <script src="/theme/js/plugins.js"></script>
+      <script src="http://9hao.info/theme/js/libs/jquery-1.9.1.min.js"></script>
+  <script src="http://9hao.info/theme/js/libs/gumby.min.js"></script>
+  <script src="http://9hao.info/theme/js/plugins.js"></script>
 	<script>
 	(function() {
 		var $backToTopTxt = "返回顶部", $backToTopEle = $('<div class="backToTop"></div>').appendTo($("body"))

@@ -4,105 +4,98 @@ xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitem
 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
-<loc>/index.html</loc>
-<lastmod>2014-10-21T22:16:44-00:00</lastmod>
+<loc>http://9hao.info/index.html</loc>
+<lastmod>2014-11-30T20:29:35-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tags.html</loc>
-<lastmod>2014-10-21T22:16:44-00:00</lastmod>
+<loc>http://9hao.info/tags.html</loc>
+<lastmod>2014-11-30T20:29:35-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/categories.html</loc>
-<lastmod>2014-10-21T22:16:44-00:00</lastmod>
+<loc>http://9hao.info/categories.html</loc>
+<lastmod>2014-11-30T20:29:35-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/category/about-me.html</loc>
+<loc>http://9hao.info/category/about-me.html</loc>
 <lastmod>2014-06-20T00:00:00-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/category/android.html</loc>
+<loc>http://9hao.info/category/android.html</loc>
 <lastmod>2014-10-20T00:00:00-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/category/internet.html</loc>
+<loc>http://9hao.info/category/internet.html</loc>
 <lastmod>2014-03-20T00:00:00-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/category/za-sui-sui.html</loc>
-<lastmod>2014-09-21T00:00:00-00:00</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.5</priority>
-</url>
-
-<url>
-<loc>/tag/java.html</loc>
+<loc>http://9hao.info/tag/java.html</loc>
 <lastmod>2014-10-20T00:00:00-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/ni-xiang-fen-xi.html</loc>
+<loc>http://9hao.info/tag/ni-xiang-fen-xi.html</loc>
 <lastmod>2014-09-16T00:00:00-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/za-wen.html</loc>
+<loc>http://9hao.info/tag/za-wen.html</loc>
 <lastmod>2014-03-20T00:00:00-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/hook.html</loc>
+<loc>http://9hao.info/tag/hook.html</loc>
 <lastmod>2014-10-20T00:00:00-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/guan-yu-wo.html</loc>
+<loc>http://9hao.info/tag/guan-yu-wo.html</loc>
 <lastmod>2014-06-20T00:00:00-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/tag/android.html</loc>
+<loc>http://9hao.info/tag/android.html</loc>
 <lastmod>2014-10-20T00:00:00-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/author/123.html</loc>
+<loc>http://9hao.info/author/123.html</loc>
 <lastmod>2014-10-20T00:00:00-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
-<loc>/author/hu-lian-wang.html</loc>
+<loc>http://9hao.info/author/hu-lian-wang.html</loc>
 <lastmod>2014-03-20T00:00:00-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
